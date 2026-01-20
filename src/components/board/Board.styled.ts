@@ -55,24 +55,36 @@ export const Chip = styled.div`
   font-size: 16px;
 `;
 
-export const VerticalSeparator = styled.div`
+export const VerticalAxis = styled.div`
   height: 1px;
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-size: 10px;
-  color: rgba(0, 0, 0, 0.9);
+  width: 100%;
+  background: #e6e8eb;
+
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+`;
+
+export const HorizontalAxis = styled.div`
+  width: 1px;
+  height: 100%;
+  background: #e6e8eb;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+`;
+export const VerticalSeparator = styled.div`
+  width: 20px;
+  height: 1px;
+  background: #c2c5c9;
 `;
 
 export const HorizontalSeparator = styled.div`
   width: 1px;
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-size: 10px;
-  color: rgba(0, 0, 0, 0.9);
+  height: 20px;
+  background: #c2c5c9;
 `;
 
 export const AxisRow = styled.div<{
@@ -179,7 +191,7 @@ export const PiecesGrid = styled.div<{ $rows: number; $cols: number }>`
 
   min-width: 0;
   min-height: 0;
-  place-items: center; /* 가로+세로 중앙 */
+  place-items: center;
 `;
 
 export const MicroCell = styled.div`

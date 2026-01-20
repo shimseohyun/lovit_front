@@ -1,10 +1,11 @@
 import { useBoardStatic } from "../../hooks/board/context/BoardContext";
+import type { Position } from "../../hooks/board/type";
 import useBoardCell from "../../hooks/board/useBoardCell";
 import * as S from "./Board.styled";
 import TouchBoardMarker from "./marker/TouchBoardMarker";
 
 const TouchBoard = () => {
-  const { summaryData } = useBoardStatic();
+  const { summaryData, rowSeparatedData, colSeparatedData } = useBoardStatic();
   const { rows, cols, cells, onCellClick } = useBoardCell();
 
   return (

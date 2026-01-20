@@ -6,7 +6,9 @@ import {
   rowGroupLabel,
 } from "../../hooks/board/useBoardDescription";
 import { useBoardStatic } from "../../hooks/board/context/BoardContext";
-import SwipeBoardMarker from "./marker/SwipeBoardMarker";
+
+import SwipeBoardMarkerHorizontal from "./marker/SwipeBoardMarkerHorizontal";
+import SwipeBoardMarkerVertical from "./marker/SwipeBoardMarkerVertical";
 
 const SwipeBoard = () => {
   const { config, rowData, colData, summaryData } = useBoardStatic();
@@ -25,7 +27,8 @@ const SwipeBoard = () => {
       width={screenWidth}
       height={screenHeight}
     >
-      <S.Cursor />
+      <S.VerticalAxis />
+      <S.HorizontalAxis />
 
       <S.AxisRow
         onTransitionEnd={onTransitionEnd}
@@ -38,10 +41,10 @@ const SwipeBoard = () => {
           <S.AxisCell key={colIndex}>
             {c < 0 ? (
               <S.HorizontalSeparator key={c}>
-                {colGroupLabel[c + 5]}
+                {/* {colGroupLabel[c + 5]} */}
               </S.HorizontalSeparator>
             ) : (
-              <SwipeBoardMarker key={c} info={summaryData[c]} />
+              <SwipeBoardMarkerHorizontal key={c} info={summaryData[c]} />
             )}
           </S.AxisCell>
         ))}
@@ -57,15 +60,16 @@ const SwipeBoard = () => {
           <S.AxisCell key={rowIndex}>
             {r < 0 ? (
               <S.VerticalSeparator key={r}>
-                {" "}
-                {rowGroupLabel[r + 5]}
+                {/* {rowGroupLabel[r + 5]} */}
               </S.VerticalSeparator>
             ) : (
-              <SwipeBoardMarker key={r} info={summaryData[r]} />
+              <SwipeBoardMarkerVertical key={r} info={summaryData[r]} />
             )}
           </S.AxisCell>
         ))}
       </S.AxisCol>
+
+      <S.Cursor />
     </S.Wrapper>
   );
 };
