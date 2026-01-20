@@ -11,7 +11,10 @@ const BoardLayout = () => {
 
   return (
     <>
-      <S.MainPageTitleContainer>{title}</S.MainPageTitleContainer>
+      <S.MainPageTitleContainer>
+        <span>가나다는</span>
+        <span>{title === "" || !title ? "어떤 영화인가요?" : title}</span>
+      </S.MainPageTitleContainer>
       <S.BoardContainer>
         {slot === undefined ? <TouchBoard /> : <SwipeBoard />}
       </S.BoardContainer>

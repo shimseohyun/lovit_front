@@ -43,6 +43,7 @@ type BoardStaticValue = {
   rowSeparatedData: SeparatedBoardData;
   colSeparatedData: SeparatedBoardData;
   getIdPosition: ReturnType<typeof useBoardData>["getIdPosition"];
+  idPositionMap: ReturnType<typeof useBoardData>["idPositionMap"];
   rowCount: number[];
   colCount: number[];
 
@@ -101,9 +102,11 @@ export const BoardProvider = (props: BoardProviderProps) => {
     colSlotToGroup,
     rowCount,
     colCount,
+    idPositionMap,
 
     getIdPosition,
-    getCenterSlot,
+    getRowCenterSlot,
+    getColCenterSlot,
   } = useBoardData({
     rowData: initialRow,
     colData: initialCol,
@@ -128,11 +131,11 @@ export const BoardProvider = (props: BoardProviderProps) => {
       );
 
       setSlotState({
-        r: getCenterSlot(rGroup, rowSeparatedData),
-        c: getCenterSlot(cGroup, colSeparatedData),
+        r: getRowCenterSlot(rGroup),
+        c: getColCenterSlot(cGroup),
       });
     },
-    [getCenterSlot, rowSeparatedData, colSeparatedData],
+    [rowSeparatedData, colSeparatedData],
   );
 
   const setSlot = useCallback((p: Position) => {
@@ -159,7 +162,10 @@ export const BoardProvider = (props: BoardProviderProps) => {
       if (typeof groupId !== "number" || typeof value !== "number") return;
 
       const nextTitle = getTitle(value, groupId, direction);
+
+      if (Array.isArray(nextTitle)) return; // ✅ string[]이면 탈출
       if (nextTitle === "") return;
+
       setTitleState(nextTitle);
     },
     [rowData, colData, rowSlotToGroup, colSlotToGroup],
@@ -172,8 +178,8 @@ export const BoardProvider = (props: BoardProviderProps) => {
 
   const rowMinSlot = 0;
   const colMinSlot = 0;
-  const rowMaxSlot = Math.max(0, rowData.length - 1);
-  const colMaxSlot = Math.max(0, colData.length - 1);
+  const rowMaxSlot = Math.max(0, rowData.length);
+  const colMaxSlot = Math.max(0, colData.length);
 
   // (호환) 예전 코드가 min/max만 쓰는 경우, 큰 쪽 기준으로 제공
   const minSlot = 0;
@@ -186,6 +192,7 @@ export const BoardProvider = (props: BoardProviderProps) => {
       rowSeparatedData,
       colSeparatedData,
       getIdPosition,
+      idPositionMap,
       rowCount,
       colCount,
       config: mergedConfig,
@@ -206,6 +213,7 @@ export const BoardProvider = (props: BoardProviderProps) => {
       rowSeparatedData,
       colSeparatedData,
       getIdPosition,
+      idPositionMap,
       rowCount,
       colCount,
       mergedConfig,
