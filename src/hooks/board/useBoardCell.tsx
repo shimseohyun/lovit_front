@@ -1,8 +1,5 @@
 import { useCallback, useMemo } from "react";
-import {
-  useBoardActions,
-  useBoardStatic,
-} from "../../hooks/board/BoardContext";
+import { useBoardActions, useBoardStatic } from "./context/BoardContext";
 
 type PieceVm = {
   id: number;

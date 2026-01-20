@@ -1,7 +1,10 @@
+import { useBoardStatic } from "../../hooks/board/context/BoardContext";
 import useBoardCell from "../../hooks/board/useBoardCell";
 import * as S from "./Board.styled";
+import TouchBoardMarker from "./marker/TouchBoardMarker";
 
 const TouchBoard = () => {
+  const { summaryData } = useBoardStatic();
   const { rows, cols, cells, onCellClick } = useBoardCell();
 
   return (
@@ -14,15 +17,14 @@ const TouchBoard = () => {
             onClick={() => onCellClick(cell.rIDX, cell.cIDX)}
           >
             {cell.pieces.map((p) => (
-              <S.PieceChip
-                key={p.id}
+              <div
                 style={{
                   gridRowStart: p.row_start,
                   gridColumnStart: p.col_start,
                 }}
               >
-                {p.id}
-              </S.PieceChip>
+                <TouchBoardMarker key={p.id} info={summaryData[p.id]} />
+              </div>
             ))}
           </S.PiecesGrid>
         </S.Cell>

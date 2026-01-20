@@ -6,7 +6,11 @@ import useSwipe, {
   type SwipeResult,
 } from "../swipe/useSwipe";
 
-import { useBoardActions, useBoardState, useBoardStatic } from "./BoardContext";
+import {
+  useBoardActions,
+  useBoardState,
+  useBoardStatic,
+} from "./context/BoardContext";
 import type { Position, SwipeAxis } from "./type";
 
 type Translate = { x: number; y: number };

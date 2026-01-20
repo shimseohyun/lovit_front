@@ -85,6 +85,7 @@ const useBoardData = ({ rowData, colData }: Params) => {
 
     getIdPosition,
     getRowCenterSlot,
+
     getColCenterSlot,
   };
 };

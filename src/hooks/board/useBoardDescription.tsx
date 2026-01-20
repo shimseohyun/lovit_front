@@ -1,3 +1,4 @@
+import { dummyData } from "../../dummy/data";
 import type { SwipeDirection } from "./type";
 
 // 찾기 위해서는 groupIndex +5해야함
@@ -52,5 +53,7 @@ export const getTitle = (
 
   const v = groupId < 3 ? L_VALUE : R_VALUE;
 
-  return `${value} 보다 ${directionDictionary[direction][v] ?? ""}`;
+  const valueName = dummyData[value].name;
+
+  return `${valueName} 보다 ${directionDictionary[direction][v] ?? ""}`;
 };
