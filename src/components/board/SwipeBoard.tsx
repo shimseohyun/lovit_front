@@ -39,7 +39,11 @@ const SwipeBoard = () => {
             <S.AxisCell key={colIndex}>
               {c < 0 ? (
                 <S.HorizontalSeparator key={c}>
-                  {/* {colGroupLabel[c + 5]} */}
+                  <S.HorizontalSeparatorChip>
+                    {Array.isArray(colGroupLabel[c + 5])
+                      ? "중심"
+                      : (colGroupLabel[c + 5] ?? "")}
+                  </S.HorizontalSeparatorChip>
                 </S.HorizontalSeparator>
               ) : (
                 <SwipeBoardMarkerHorizontal key={c} info={summaryData[c]} />
@@ -57,9 +61,15 @@ const SwipeBoard = () => {
           {rowData.map((r, rowIndex) => (
             <S.AxisCell key={rowIndex}>
               {r < 0 ? (
-                <S.VerticalSeparator key={r}>
-                  {/* {rowGroupLabel[r + 5]} */}
-                </S.VerticalSeparator>
+                <>
+                  <S.VerticalSeparator key={r}>
+                    <S.VerticalSeparatorChip>
+                      {Array.isArray(rowGroupLabel[r + 5])
+                        ? "중심"
+                        : (rowGroupLabel[r + 5] ?? "")}
+                    </S.VerticalSeparatorChip>
+                  </S.VerticalSeparator>
+                </>
               ) : (
                 <SwipeBoardMarkerVertical key={r} info={summaryData[r]} />
               )}

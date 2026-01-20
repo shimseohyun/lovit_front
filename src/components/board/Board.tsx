@@ -28,6 +28,7 @@ const BoardLayout = () => {
 
         {slot === undefined ? <TouchBoard /> : <SwipeBoard />}
       </S.BoardContainer>
+      {slot !== undefined && <S.Button>확인</S.Button>}
     </>
   );
 };

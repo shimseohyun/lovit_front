@@ -115,15 +115,48 @@ export const HorizontalAxis = styled.div`
   left: 50%;
 `;
 export const VerticalSeparator = styled.div`
-  width: 20px;
+  width: 4px;
   height: 1px;
-  background: #c2c5c9;
+  background: #e6e8eb;
+  position: relative;
 `;
 
 export const HorizontalSeparator = styled.div`
   width: 1px;
-  height: 20px;
-  background: #c2c5c9;
+  height: 4px;
+  background: #e6e8eb;
+  position: relative;
+`;
+
+export const VerticalSeparatorChip = styled.div`
+  width: auto;
+  white-space: nowrap;
+  z-index: 9;
+  position: absolute;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 8px;
+  background-color: #f9fafb;
+  color: #c2c5c9;
+  transform: translateY(-50%);
+  top: 50%;
+  left: 8px;
+  overflow: visible;
+`;
+export const HorizontalSeparatorChip = styled.div`
+  width: auto;
+  white-space: nowrap;
+  z-index: 9;
+  position: absolute;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 8px;
+  background-color: #f9fafb;
+  color: #c2c5c9;
+  transform: translateX(-50%);
+  bottom: 8px;
+  left: 50%;
+  overflow: visible;
 `;
 
 export const AxisRow = styled.div<{
@@ -175,10 +208,10 @@ export const AxisCell = styled.div`
 export const Button = styled.button`
   width: 360px;
   height: 44px;
-  transform: translateX(-50%);
+  margin-top: 30px;
 
-  bottom: 20px;
-  left: 50%;
+  background-color: black;
+  color: white;
 `;
 
 export const BoardContainer = styled.div`
@@ -242,18 +275,6 @@ export const MicroCell = styled.div`
   overflow: visible;
   min-width: 0;
   min-height: 0;
-`;
-
-export const PieceChip = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: white;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  z-index: 1;
 `;
 
 export const MainPageTitleContainer = styled.div`

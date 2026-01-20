@@ -40,7 +40,7 @@ export const colGroupLabel = [
 const directionDictionary: Record<SwipeDirection, [string, string]> = {
   left: ["덜 고양이", "더 강아지"],
   up: ["덜 두부", "더 버터"],
-  right: ["더 팝콘", "덜 강아지"],
+  right: ["더 고양이", "덜 강아지"],
   down: ["더 두부", "덜 버터"],
 };
 
