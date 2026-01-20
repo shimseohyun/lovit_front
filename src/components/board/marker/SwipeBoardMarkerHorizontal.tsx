@@ -6,6 +6,7 @@ type Parms = {
 };
 
 const Container = styled.div`
+  z-index: 11;
   position: relative;
   width: 1px;
   height: 1px;
@@ -23,11 +24,12 @@ const Img = styled.img`
   position: absolute;
 
   transform: translateX(-50%);
-  top: 8px;
+  top: 9px;
   left: 50%;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  object-fit: cover;
 `;
 
 const SwipeBoardMarkerHorizontal = (parms: Parms) => {

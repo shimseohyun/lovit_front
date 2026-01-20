@@ -6,6 +6,7 @@ type Parms = {
 };
 
 const Container = styled.div`
+  z-index: 11;
   position: relative;
   width: 1px;
   height: 1px;
@@ -24,10 +25,11 @@ const Img = styled.img`
 
   transform: translateY(-50%);
   top: 50%;
-  right: 8px;
-  width: 28px;
-  height: 28px;
+  right: 9px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  object-fit: cover;
 `;
 
 const SwipeBoardMarkerVertical = (parms: Parms) => {

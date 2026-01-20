@@ -1,4 +1,7 @@
 import styled from "@emotion/styled";
+import type { AxisPosition } from "../../hooks/board/utils/buildAxisModel";
+import { css } from "@emotion/react";
+import type { SwipeDirection } from "../../hooks/board/type";
 
 export const Wrapper = styled.div<{ width: number; height: number }>`
   width: ${({ width }) => width}px;
@@ -11,6 +14,7 @@ export const Wrapper = styled.div<{ width: number; height: number }>`
 `;
 
 export const Cursor = styled.div`
+  z-index: 10;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -45,17 +49,51 @@ export const Rail = styled.div<{
   will-change: transform;
 `;
 
-export const Chip = styled.div`
-  width: 20px;
-  height: 20px;
-  background: rgba(0, 0, 0, 0.06);
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-size: 16px;
+const getPosition = (position: SwipeDirection) => {
+  switch (position) {
+    case "right":
+      return css`
+        top: 50%;
+        right: 4px;
+        transform: translateY(-50%);
+      `;
+    case "up":
+      return css`
+        top: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+      `;
+    case "left":
+      return css`
+        top: 50%;
+        left: 4px;
+        transform: translateY(-50%);
+      `;
+    case "down":
+      return css`
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+      `;
+    default:
+      return css``;
+  }
+};
+
+export const Chip = styled.div<{
+  position: SwipeDirection;
+}>`
+  z-index: 10;
+  position: absolute;
+  padding: 6px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  background-color: #f2f4f6;
+  ${(p) => getPosition(p.position)}
 `;
 
 export const VerticalAxis = styled.div`
+  z-index: 10;
   height: 1px;
   width: 100%;
   background: #e6e8eb;
@@ -67,6 +105,7 @@ export const VerticalAxis = styled.div`
 `;
 
 export const HorizontalAxis = styled.div`
+  z-index: 10;
   width: 1px;
   height: 100%;
   background: #e6e8eb;
@@ -127,8 +166,8 @@ export const AxisCol = styled.div<{
 `;
 
 export const AxisCell = styled.div`
-  width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 60px;
   display: grid;
   place-items: center;
 `;
@@ -168,7 +207,7 @@ export const BoardGrid = styled.div<{
   grid-template-columns: repeat(${(p) => p.$cols}, 1fr);
   grid-template-rows: repeat(${(p) => p.$rows}, 1fr);
 
-  background: #ddd;
+  background: #f2f4f6;
   gap: 1px;
 `;
 
@@ -217,19 +256,6 @@ export const PieceChip = styled.div`
   z-index: 1;
 `;
 
-export const Marker = styled.div`
-  z-index: 2;
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 40px;
-
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-  position: absolute;
-`;
-
 export const MainPageTitleContainer = styled.div`
   padding-top: 24px;
   padding-bottom: 40px;
@@ -237,7 +263,14 @@ export const MainPageTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
 
-  font-size: 24px;
+  font-size: 16px;
+`;
+
+export const MainPageTitleImg = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 12px;
 `;

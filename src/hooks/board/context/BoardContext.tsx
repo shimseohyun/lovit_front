@@ -25,7 +25,7 @@ export type BoardConfig = {
 const DEFAULT_BOARD_CONFIG: BoardConfig = {
   screenWidth: 400,
   screenHeight: 400,
-  stepPx: 100,
+  stepPx: 60,
   minDistancePx: 10,
 };
 

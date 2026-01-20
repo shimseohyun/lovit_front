@@ -6,7 +6,7 @@ import {
   useBoardState,
 } from "../../hooks/board/context/BoardContext";
 
-import { dummyData, initialCol, initialRow } from "../../dummy/data";
+import { dummyData, initialCol, initialRow, newData } from "../../dummy/data";
 
 const BoardLayout = () => {
   const { slot, title } = useBoardState();
@@ -14,10 +14,18 @@ const BoardLayout = () => {
   return (
     <>
       <S.MainPageTitleContainer>
-        <span>가나다는</span>
-        <span>{title === "" || !title ? "어떤 영화인가요?" : title}</span>
+        <S.MainPageTitleImg src={newData.thumbnaeilURL} />
+        <span>{newData.name}</span>
+        <span>{title === "" || !title ? "어디에 속하나요?" : title}</span>
       </S.MainPageTitleContainer>
       <S.BoardContainer>
+        <S.VerticalAxis />
+        <S.HorizontalAxis />
+        <S.Chip position="up">두부</S.Chip>
+        <S.Chip position="down">버터</S.Chip>
+        <S.Chip position="left">고양이</S.Chip>
+        <S.Chip position="right">강아지</S.Chip>
+
         {slot === undefined ? <TouchBoard /> : <SwipeBoard />}
       </S.BoardContainer>
     </>
