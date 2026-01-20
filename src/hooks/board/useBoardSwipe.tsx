@@ -1,19 +1,29 @@
-import { useCallback, useRef, useState } from "react";
-import useSwipe from "../swipe/useSwipe";
-import { useBoardActions, useBoardState, useBoardStatic } from "./BoardContext";
-import type { Position } from "./type";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { PointerEventHandler } from "react";
 
-type Axis = "vertical" | "horizontal";
+import useSwipe, {
+  type SwipeProgressPayload,
+  type SwipeResult,
+} from "../swipe/useSwipe";
+
+import { useBoardActions, useBoardState, useBoardStatic } from "./BoardContext";
+import type { Position, SwipeAxis } from "./type";
+
 type Translate = { x: number; y: number };
 
 const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
 const useBoardSwipe = () => {
-  const { config, minSlot, maxSlot } = useBoardStatic();
+  const { config, rowMinSlot, rowMaxSlot, colMinSlot, colMaxSlot } =
+    useBoardStatic();
+
   const { setSlot, setTitle } = useBoardActions();
+
   const { stepPx, minDistancePx, screenHeight, screenWidth } = config;
-  const { slot = { r: 0, c: 0 } } = useBoardState();
+
+  const { slot } = useBoardState();
+  const safeSlot: Position = slot ?? { r: 0, c: 0 };
 
   const getTranslateX = useCallback(
     (slotNum: number) => screenWidth / 2 - slotNum * stepPx,
@@ -25,24 +35,44 @@ const useBoardSwipe = () => {
     [screenHeight, stepPx],
   );
 
-  const [translate, setTranslate] = useState<Translate>({
-    x: getTranslateX(slot.c),
-    y: getTranslateY(slot.r),
-  });
+  const [translate, setTranslate] = useState<Translate>(() => ({
+    x: getTranslateX(safeSlot.c),
+    y: getTranslateY(safeSlot.r),
+  }));
+
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const startSlotRef = useRef<Position>(slot);
-  const liveSlotRef = useRef<Position>(slot);
+  const startSlotRef = useRef<Position>(safeSlot);
+  const liveSlotRef = useRef<Position>(safeSlot);
   const isDraggingRef = useRef(false);
 
-  const updateTranslate = (axis: Axis, value: number) => {
+  // 외부에서 slot이 바뀌는 경우(예: reset / setInitialSlot)
+  // translate도 동기화해줌
+  useEffect(() => {
+    if (isDraggingRef.current) return;
+
+    const next = slot ?? { r: 0, c: 0 };
+    liveSlotRef.current = next;
+    startSlotRef.current = next;
+
+    setTranslate({ x: getTranslateX(next.c), y: getTranslateY(next.r) });
+  }, [slot, getTranslateX, getTranslateY]);
+
+  const getAxisRange = (axis: SwipeAxis) => {
+    const isVertical = axis === "vertical";
+    return isVertical
+      ? { min: rowMinSlot, max: rowMaxSlot }
+      : { min: colMinSlot, max: colMaxSlot };
+  };
+
+  const updateTranslate = (axis: SwipeAxis, value: number) => {
     setTranslate((prev) => ({
       x: axis === "vertical" ? prev.x : getTranslateX(value),
       y: axis === "vertical" ? getTranslateY(value) : prev.y,
     }));
   };
 
-  const buildNextSlot = (axis: Axis, next: number): Position =>
+  const buildNextSlot = (axis: SwipeAxis, next: number): Position =>
     axis === "vertical"
       ? { c: liveSlotRef.current.c, r: next }
       : { c: next, r: liveSlotRef.current.r };
@@ -54,20 +84,23 @@ const useBoardSwipe = () => {
     setTranslate({ x: getTranslateX(back.c), y: getTranslateY(back.r) });
   };
 
-  const snapTo = (axis: Axis, target: number) => {
+  const snapTo = (axis: SwipeAxis, target: number) => {
     const next = buildNextSlot(axis, target);
     liveSlotRef.current = next;
     setSlot(next);
-    updateTranslate(axis, target); // ✅ 중복 제거
+    updateTranslate(axis, target);
   };
 
-  const { bind } = useSwipe({
+  const { bind } = useSwipe<HTMLDivElement>({
     minDistancePx,
 
-    onProgress: ({ deltaX, deltaY, axis, direction }: any) => {
+    onProgress: ({ deltaX, deltaY, axis, direction }: SwipeProgressPayload) => {
       if (!isDraggingRef.current) return;
 
       setIsAnimating(false);
+
+      // 락 되기 전(axis/direction === null)에는 slot/title 계산을 하지 않음
+      if (!axis || !direction) return;
 
       const isVertical = axis === "vertical";
       const axisDelta = isVertical ? deltaY : deltaX;
@@ -75,22 +108,22 @@ const useBoardSwipe = () => {
         ? startSlotRef.current.r
         : startSlotRef.current.c;
 
-      const raw = clamp(start - axisDelta / stepPx, minSlot, maxSlot);
-      const snapped = clamp(Math.round(raw), minSlot, maxSlot);
+      const { min, max } = getAxisRange(axis);
+
+      const raw = clamp(start - axisDelta / stepPx, min, max);
+      const snapped = clamp(Math.round(raw), min, max);
 
       const next = buildNextSlot(axis, snapped);
       liveSlotRef.current = next;
-      setTitle({
-        axis: axis,
-        direction: direction,
-        slotNum: snapped,
-      });
 
+      setTitle({ axis, direction, slotNum: snapped });
       setSlot(next);
-      updateTranslate(axis, raw); // ✅ 드래그 중(소수)도 동일 함수
+
+      // 드래그 중(소수)도 자연스럽게 이동
+      updateTranslate(axis, raw);
     },
 
-    onEnd: ({ passed, axis, totalDx, totalDy }: any) => {
+    onEnd: ({ passed, axis, totalDx, totalDy }: SwipeResult) => {
       isDraggingRef.current = false;
       setIsAnimating(true);
 
@@ -105,16 +138,14 @@ const useBoardSwipe = () => {
         ? startSlotRef.current.r
         : startSlotRef.current.c;
 
-      const target = clamp(
-        Math.round(start - total / stepPx),
-        minSlot,
-        maxSlot,
-      );
+      const { min, max } = getAxisRange(axis);
+
+      const target = clamp(Math.round(start - total / stepPx), min, max);
       snapTo(axis, target);
     },
-  }) as any;
+  });
 
-  const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (e) => {
+  const onPointerDown: PointerEventHandler<HTMLDivElement> = (e) => {
     isDraggingRef.current = true;
     startSlotRef.current = liveSlotRef.current;
     bind.onPointerDown(e);
@@ -122,7 +153,14 @@ const useBoardSwipe = () => {
 
   const onTransitionEnd = () => setIsAnimating(false);
 
-  return { bind, onPointerDown, onTransitionEnd, slot, translate, isAnimating };
+  return {
+    bind,
+    onPointerDown,
+    onTransitionEnd,
+    slot: safeSlot,
+    translate,
+    isAnimating,
+  };
 };
 
 export default useBoardSwipe;

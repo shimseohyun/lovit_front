@@ -1,4 +1,4 @@
-import type { SwipeDirection } from "../swipe/type";
+import type { SwipeDirection } from "./type";
 
 // 찾기 위해서는 groupIndex +5해야함
 export const rowGroupLabel = [
@@ -33,11 +33,15 @@ export const getTitle = (
   if (!direction) return ""; // ✅ 락 전에는 빈 문자열/플레이스홀더
 
   if (groupId < 0) {
-    if (direction == "left" || direction == "right") {
-      return colGroupLabel[groupId + 5];
-    } else {
-      return rowGroupLabel[groupId + 5];
-    }
+    const labels =
+      direction === "left" || direction === "right"
+        ? colGroupLabel
+        : rowGroupLabel;
+
+    // groupId는 음수 인덱스를 사용 (예: -5 ~ -1)
+    const idx = groupId + labels.length;
+    if (idx < 0 || idx >= labels.length) return "";
+    return labels[idx] ?? "";
   }
 
   const v = groupId < 3 ? L_VALUE : R_VALUE;

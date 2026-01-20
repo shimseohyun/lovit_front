@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
+
 import type { BoardData, SeparatedBoardData } from "./type";
 
-type Parms = {
+type Params = {
   rowData: BoardData;
   colData: BoardData;
 };
@@ -75,68 +76,82 @@ const buildIdPositionMap = (
   return idPositionMap;
 };
 
-const getCount = (data: SeparatedBoardData) => {
-  let count: number[] = [];
-  data.forEach((item) => {
-    count.push(item.length);
-  });
-  return count;
-};
+const buildSlotToGroup = (data: BoardData) => {
+  const slotToGroup: BoardData = [];
+  let groupId = 0;
 
-const getGroupNumber = (data: BoardData) => {
-  let groupNumber: BoardData = [];
-  let groupID = 0;
   data.forEach((item) => {
     if (item < 0) {
-      groupNumber.push(item);
-      groupID++;
-    } else {
-      groupNumber.push(groupID);
+      slotToGroup.push(item); // separator는 음수 값 그대로 보존 (라벨 인덱싱에 사용)
+      groupId += 1;
+      return;
     }
+    slotToGroup.push(groupId);
   });
 
-  return groupNumber;
+  return slotToGroup;
 };
 
-const useBoardData = (parms: Parms) => {
-  const { rowData, colData } = parms;
+const useBoardData = (params: Params) => {
+  const { rowData, colData } = params;
 
   const rowAxis = useMemo(() => buildAxis(rowData), [rowData]);
   const colAxis = useMemo(() => buildAxis(colData), [colData]);
 
-  const rowCount = getCount(rowAxis.separatedData);
-  const colCount = getCount(colAxis.separatedData);
+  const rowSeparatedData = rowAxis.separatedData;
+  const colSeparatedData = colAxis.separatedData;
 
-  const rowSlotToGroup = getGroupNumber(rowData);
-  const colSlotToGroup = getGroupNumber(colData);
+  const rowCount = useMemo(
+    () => rowSeparatedData.map((group) => group.length),
+    [rowSeparatedData],
+  );
+
+  const colCount = useMemo(
+    () => colSeparatedData.map((group) => group.length),
+    [colSeparatedData],
+  );
+
+  const rowSlotToGroup = useMemo(() => buildSlotToGroup(rowData), [rowData]);
+  const colSlotToGroup = useMemo(() => buildSlotToGroup(colData), [colData]);
 
   const idPositionMap = useMemo(
     () => buildIdPositionMap(rowAxis.positionById, colAxis.positionById),
     [rowAxis.positionById, colAxis.positionById],
   );
 
-  const getIdPosition = (id: number) => idPositionMap.get(id) ?? null;
+  const getIdPosition = useCallback(
+    (id: number) => idPositionMap.get(id) ?? null,
+    [idPositionMap],
+  );
 
-  const getCenterSlot = (target: number, data: SeparatedBoardData) => {
-    let slot = 0;
-    for (let i = 0; i < target; i++) {
-      slot += data[i].length + 1;
-    }
-    slot += Math.floor(data[target].length / 2);
-    return slot;
-  };
+  const getCenterSlot = useCallback(
+    (target: number, data: SeparatedBoardData) => {
+      if (data.length === 0) return 0;
+
+      const t = Math.max(0, Math.min(target, data.length - 1));
+
+      let slot = 0;
+      for (let i = 0; i < t; i += 1) {
+        slot += data[i].length + 1;
+      }
+      slot += Math.floor(data[t].length / 2);
+      return slot;
+    },
+    [],
+  );
 
   return {
     rowData,
     colData,
 
-    rowSeparatedData: rowAxis.separatedData,
-    colSeparatedData: colAxis.separatedData,
+    rowSeparatedData,
+    colSeparatedData,
     rowSlotToGroup,
     colSlotToGroup,
     rowCount,
     colCount,
 
+    // 필요하면 외부에서도 맵에 접근할 수 있도록 유지
     idPositionMap,
 
     getCenterSlot,

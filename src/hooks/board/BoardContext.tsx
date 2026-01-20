@@ -24,6 +24,18 @@ export type BoardConfig = {
   minDistancePx: number;
 };
 
+const DEFAULT_BOARD_CONFIG: BoardConfig = {
+  screenWidth: 400,
+  screenHeight: 400,
+  stepPx: 100,
+  minDistancePx: 10,
+};
+
+const mergeConfig = (config?: Partial<BoardConfig>): BoardConfig => ({
+  ...DEFAULT_BOARD_CONFIG,
+  ...config,
+});
+
 // ✅ 거의 안 바뀌는 값들
 type BoardStaticValue = {
   rowData: BoardData;
@@ -34,9 +46,20 @@ type BoardStaticValue = {
   rowCount: number[];
   colCount: number[];
 
+  config: BoardConfig;
+
+  // ✅ axis별 슬롯 범위(권장)
+  rowMinSlot: number;
+  rowMaxSlot: number;
+  colMinSlot: number;
+  colMaxSlot: number;
+
+  // ✅ (호환) 예전 코드가 min/max만 쓰는 경우
   minSlot: number;
   maxSlot: number;
-  config: BoardConfig;
+
+  // ✅ 유틸
+  gridCount: number;
 };
 
 // ✅ 자주 바뀌는 값들(구독 대상)
@@ -66,57 +89,7 @@ type BoardProviderProps = PropsWithChildren<{
 export const BoardProvider = (props: BoardProviderProps) => {
   const { children, initialRow, initialCol, config } = props;
 
-  const [slot, setSlotState] = useState<Position>();
-
-  const [title, setTitleState] = useState<string>();
-
-  const setInitialSlot = useCallback((group: Position) => {
-    setSlotState({
-      r: getCenterSlot(group.r, rowSeparatedData),
-      c: getCenterSlot(group.c, colSeparatedData),
-    });
-  }, []);
-
-  const setSlot = useCallback((p: Position) => {
-    setSlotState({ ...p });
-  }, []);
-
-  const setTitle = useCallback((d: Description) => {
-    let groupID: number;
-    let slotNum = d.slotNum;
-
-    let value;
-    if (d.direction == "left" || d.direction == "up") {
-      slotNum = slotNum - 1;
-    }
-
-    if (d.axis === "vertical") {
-      groupID = colSlotToGroup[slotNum];
-      value = colData[slotNum];
-    } else {
-      groupID = rowSlotToGroup[slotNum];
-      value = rowData[slotNum];
-    }
-    const newTitle = getTitle(value, groupID, d.direction);
-    if (newTitle === "") return;
-    setTitleState(newTitle);
-  }, []);
-
-  const reset = useCallback(() => {
-    setSlotState(undefined);
-    setTitleState(undefined);
-  }, []);
-
-  const mergedConfig: BoardConfig = useMemo(
-    () => ({
-      screenWidth: 400,
-      screenHeight: 400,
-      stepPx: 100,
-      minDistancePx: 10,
-      ...config,
-    }),
-    [config],
-  );
+  const mergedConfig = useMemo(() => mergeConfig(config), [config]);
 
   const {
     rowData,
@@ -124,8 +97,8 @@ export const BoardProvider = (props: BoardProviderProps) => {
 
     rowSeparatedData,
     colSeparatedData,
-    colSlotToGroup,
     rowSlotToGroup,
+    colSlotToGroup,
     rowCount,
     colCount,
 
@@ -136,31 +109,121 @@ export const BoardProvider = (props: BoardProviderProps) => {
     colData: initialCol,
   });
 
+  const [slot, setSlotState] = useState<Position>();
+  const [title, setTitleState] = useState<string>();
+
+  const setInitialSlot = useCallback(
+    (group: Position) => {
+      if (rowSeparatedData.length === 0 || colSeparatedData.length === 0)
+        return;
+
+      // group.r / group.c 가 범위를 벗어나도 안전하게 보정
+      const rGroup = Math.max(
+        0,
+        Math.min(group.r, rowSeparatedData.length - 1),
+      );
+      const cGroup = Math.max(
+        0,
+        Math.min(group.c, colSeparatedData.length - 1),
+      );
+
+      setSlotState({
+        r: getCenterSlot(rGroup, rowSeparatedData),
+        c: getCenterSlot(cGroup, colSeparatedData),
+      });
+    },
+    [getCenterSlot, rowSeparatedData, colSeparatedData],
+  );
+
+  const setSlot = useCallback((p: Position) => {
+    setSlotState(p);
+  }, []);
+
+  const setTitle = useCallback(
+    (d: Description) => {
+      const { axis, direction } = d;
+
+      // move 방향에 따라 "기준이 되는" slot을 맞춰줌
+      let slotNum = d.slotNum;
+      if (direction === "left" || direction === "up") slotNum -= 1;
+
+      // ✅ FIX: vertical 이동은 rowData(상업/예술), horizontal 이동은 colData(팝콘/여운)
+      const isVertical = axis === "vertical";
+      const axisData = isVertical ? rowData : colData;
+      const axisSlotToGroup = isVertical ? rowSlotToGroup : colSlotToGroup;
+
+      if (slotNum < 0 || slotNum >= axisData.length) return;
+
+      const groupId = axisSlotToGroup[slotNum];
+      const value = axisData[slotNum];
+      if (typeof groupId !== "number" || typeof value !== "number") return;
+
+      const nextTitle = getTitle(value, groupId, direction);
+      if (nextTitle === "") return;
+      setTitleState(nextTitle);
+    },
+    [rowData, colData, rowSlotToGroup, colSlotToGroup],
+  );
+
+  const reset = useCallback(() => {
+    setSlotState(undefined);
+    setTitleState(undefined);
+  }, []);
+
+  const rowMinSlot = 0;
+  const colMinSlot = 0;
+  const rowMaxSlot = Math.max(0, rowData.length - 1);
+  const colMaxSlot = Math.max(0, colData.length - 1);
+
+  // (호환) 예전 코드가 min/max만 쓰는 경우, 큰 쪽 기준으로 제공
+  const minSlot = 0;
+  const maxSlot = Math.max(rowMaxSlot, colMaxSlot);
+
   const staticValue = useMemo<BoardStaticValue>(
     () => ({
-      rowData: rowData,
-      colData: colData,
-      colCount: colCount,
-      rowCount: rowCount,
-      rowSeparatedData: rowSeparatedData,
-      colSeparatedData: colSeparatedData,
+      rowData,
+      colData,
+      rowSeparatedData,
+      colSeparatedData,
       getIdPosition,
+      rowCount,
+      colCount,
       config: mergedConfig,
-      minSlot: 0,
-      maxSlot: rowData.length,
+
+      rowMinSlot,
+      rowMaxSlot,
+      colMinSlot,
+      colMaxSlot,
+
+      minSlot,
+      maxSlot,
+
+      gridCount: colData.length,
     }),
-    [initialRow, initialCol, mergedConfig],
+    [
+      rowData,
+      colData,
+      rowSeparatedData,
+      colSeparatedData,
+      getIdPosition,
+      rowCount,
+      colCount,
+      mergedConfig,
+      rowMinSlot,
+      rowMaxSlot,
+      colMinSlot,
+      colMaxSlot,
+      minSlot,
+      maxSlot,
+    ],
   );
 
   const stateValue = useMemo<BoardStateValue>(
     () => ({
-      rowData,
-      colData,
       slot,
       title,
-      gridCount: colData.length,
     }),
-    [rowData, colData, slot, title],
+    [slot, title],
   );
 
   const actionsValue = useMemo<BoardActionsValue>(
@@ -170,7 +233,7 @@ export const BoardProvider = (props: BoardProviderProps) => {
       setTitle,
       reset,
     }),
-    [setSlot, setTitle, reset],
+    [setInitialSlot, setSlot, setTitle, reset],
   );
 
   return (

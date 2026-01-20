@@ -1,5 +1,5 @@
-import { useMemo, useRef } from "react";
-import type { PointerEventHandler } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import type { PointerEvent, PointerEventHandler } from "react";
 import type { SwipeAxis, SwipeDirection } from "./type";
 
 export type SwipeResult = {
@@ -16,27 +16,50 @@ export type SwipeResult = {
   passed: boolean;
 };
 
+export type SwipeProgressPayload = {
+  deltaX: number;
+  deltaY: number;
+  axis: SwipeAxis | null;
+  direction: SwipeDirection | null;
+};
+
+export type SwipeBind<T extends HTMLElement = HTMLElement> = {
+  onPointerDown: PointerEventHandler<T>;
+  onPointerMove: PointerEventHandler<T>;
+  onPointerUp: PointerEventHandler<T>;
+  onPointerCancel: PointerEventHandler<T>;
+};
+
 type SwipeOptions = {
   minDistancePx?: number;
   lockDirectionPx?: number;
 
-  onProgress?: (payload: {
-    deltaX: number;
-    deltaY: number;
-    axis: SwipeAxis | null;
-    direction: SwipeDirection | null;
-  }) => void;
+  onProgress?: (payload: SwipeProgressPayload) => void;
 
   onEnd?: (result: SwipeResult) => void;
 };
 
-const useSwipe = (options: SwipeOptions) => {
+const useSwipe = <T extends HTMLElement = HTMLElement>(
+  options: SwipeOptions,
+) => {
   const {
     minDistancePx = 80,
     lockDirectionPx = 10,
     onProgress,
     onEnd,
   } = options;
+
+  // ✅ bind의 참조를 안정화하기 위해 콜백은 ref로 보관
+  const onProgressRef = useRef<SwipeOptions["onProgress"]>(onProgress);
+  const onEndRef = useRef<SwipeOptions["onEnd"]>(onEnd);
+
+  useEffect(() => {
+    onProgressRef.current = onProgress;
+  }, [onProgress]);
+
+  useEffect(() => {
+    onEndRef.current = onEnd;
+  }, [onEnd]);
 
   const stateRef = useRef({
     isActive: false,
@@ -47,7 +70,6 @@ const useSwipe = (options: SwipeOptions) => {
     startT: 0,
 
     axisLocked: null as SwipeAxis | null,
-    directionLocked: null as SwipeDirection | null,
   });
 
   const getDirection = (
@@ -63,8 +85,8 @@ const useSwipe = (options: SwipeOptions) => {
         ? "down"
         : "up";
 
-  const bind = useMemo(() => {
-    const onPointerDown: PointerEventHandler<HTMLElement> = (e) => {
+  const bind: SwipeBind<T> = useMemo(() => {
+    const onPointerDown: PointerEventHandler<T> = (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
 
       const now = performance.now();
@@ -78,12 +100,11 @@ const useSwipe = (options: SwipeOptions) => {
       s.startT = now;
 
       s.axisLocked = null;
-      s.directionLocked = null;
 
       (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
     };
 
-    const onPointerMove: PointerEventHandler<HTMLElement> = (e) => {
+    const onPointerMove: PointerEventHandler<T> = (e) => {
       const s = stateRef.current;
       if (!s.isActive || s.pointerId !== e.pointerId) return;
 
@@ -92,7 +113,12 @@ const useSwipe = (options: SwipeOptions) => {
 
       if (!s.axisLocked) {
         if (Math.abs(deltaX) + Math.abs(deltaY) < lockDirectionPx) {
-          onProgress?.({ deltaX, deltaY, axis: null, direction: null });
+          onProgressRef.current?.({
+            deltaX,
+            deltaY,
+            axis: null,
+            direction: null,
+          });
           return;
         }
 
@@ -102,9 +128,8 @@ const useSwipe = (options: SwipeOptions) => {
 
       // ✅ axis가 정해졌으면 direction도 계산해서 넘김
       const direction = getDirection(s.axisLocked, deltaX, deltaY);
-      s.directionLocked = direction;
 
-      onProgress?.({
+      onProgressRef.current?.({
         deltaX,
         deltaY,
         axis: s.axisLocked,
@@ -112,7 +137,7 @@ const useSwipe = (options: SwipeOptions) => {
       });
     };
 
-    const finish = (e: React.PointerEvent<HTMLElement>) => {
+    const finish = (e: PointerEvent<T>) => {
       const s = stateRef.current;
       if (!s.isActive || s.pointerId !== e.pointerId) return;
 
@@ -137,7 +162,7 @@ const useSwipe = (options: SwipeOptions) => {
 
       const direction: SwipeDirection = getDirection(axis, totalDx, totalDy);
 
-      onEnd?.({
+      onEndRef.current?.({
         direction,
         axis,
         totalDx,
@@ -151,13 +176,17 @@ const useSwipe = (options: SwipeOptions) => {
       s.isActive = false;
       s.pointerId = -1;
       s.axisLocked = null;
-      s.directionLocked = null;
 
-      onProgress?.({ deltaX: 0, deltaY: 0, axis: null, direction: null });
+      onProgressRef.current?.({
+        deltaX: 0,
+        deltaY: 0,
+        axis: null,
+        direction: null,
+      });
     };
 
-    const onPointerUp: PointerEventHandler<HTMLElement> = (e) => finish(e);
-    const onPointerCancel: PointerEventHandler<HTMLElement> = (e) => finish(e);
+    const onPointerUp: PointerEventHandler<T> = (e) => finish(e);
+    const onPointerCancel: PointerEventHandler<T> = (e) => finish(e);
 
     return {
       onPointerDown,
@@ -165,7 +194,7 @@ const useSwipe = (options: SwipeOptions) => {
       onPointerUp,
       onPointerCancel,
     };
-  }, [lockDirectionPx, minDistancePx, onProgress, onEnd]);
+  }, [lockDirectionPx, minDistancePx]);
 
   return { bind };
 };
