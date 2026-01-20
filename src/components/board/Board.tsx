@@ -3,14 +3,37 @@ import TouchBoard from "./TouchBoard";
 import SwipeBoard from "./SwipeBoard";
 import {
   BoardProvider,
+  useBoardActions,
   useBoardState,
+  useBoardStatic,
 } from "../../hooks/board/context/BoardContext";
 
-import { dummyData, initialCol, initialRow, newData } from "../../dummy/data";
+import { dummyData } from "../../dummy/data";
+import useBoardTotalData from "../../hooks/board/useBoardTotalData";
+import type { Summary } from "../../type/type";
 
-const BoardLayout = () => {
+type Parms = {
+  confirmNext: (r: number, col: number) => void;
+  newDataID: number;
+  fin: boolean;
+};
+
+const BoardLayout = ({ confirmNext, newDataID, fin }: Parms) => {
   const { slot, title } = useBoardState();
+  const { summaryData } = useBoardStatic();
+  const { reset } = useBoardActions();
 
+  const newData: Summary = summaryData[newDataID];
+
+  if (fin) {
+    return (
+      <>
+        <S.BoardContainer>
+          <TouchBoard />
+        </S.BoardContainer>
+      </>
+    );
+  }
   return (
     <>
       <S.MainPageTitleContainer>
@@ -28,19 +51,28 @@ const BoardLayout = () => {
 
         {slot === undefined ? <TouchBoard /> : <SwipeBoard />}
       </S.BoardContainer>
-      {slot !== undefined && <S.Button>확인</S.Button>}
+      {slot !== undefined && (
+        <S.Button
+          onClick={() => {
+            confirmNext(slot.r, slot.c);
+            reset();
+          }}
+        >
+          확인
+        </S.Button>
+      )}
     </>
   );
 };
 
 const Board = () => {
+  const { row, col, confirmNext, currentIDX, fin } = useBoardTotalData({
+    newData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+  });
+
   return (
-    <BoardProvider
-      initialRow={initialRow}
-      initialCol={initialCol}
-      summaryData={dummyData}
-    >
-      <BoardLayout />
+    <BoardProvider initialRow={row} initialCol={col} summaryData={dummyData}>
+      <BoardLayout confirmNext={confirmNext} newDataID={currentIDX} fin={fin} />
     </BoardProvider>
   );
 };

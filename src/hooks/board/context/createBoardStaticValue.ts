@@ -15,15 +15,6 @@ export type BoardStaticValue = {
 
   config: BoardConfig;
 
-  rowMinSlot: number;
-  rowMaxSlot: number;
-  colMinSlot: number;
-  colMaxSlot: number;
-
-  // (호환)
-  minSlot: number;
-  maxSlot: number;
-
   gridCount: number;
   summaryData: Record<number, Summary>;
 };
@@ -47,14 +38,6 @@ export function createBoardStaticValue(params: Params): BoardStaticValue {
     colCount,
   } = boardData;
 
-  const rowMinSlot = 0;
-  const colMinSlot = 0;
-  const rowMaxSlot = Math.max(0, rowData.length);
-  const colMaxSlot = Math.max(0, colData.length);
-
-  const minSlot = 0;
-  const maxSlot = Math.max(rowMaxSlot, colMaxSlot);
-
   return {
     rowData,
     colData,
@@ -66,14 +49,6 @@ export function createBoardStaticValue(params: Params): BoardStaticValue {
     colCount,
 
     config: mergedConfig,
-
-    rowMinSlot,
-    rowMaxSlot,
-    colMinSlot,
-    colMaxSlot,
-
-    minSlot,
-    maxSlot,
 
     gridCount: Math.max(rowData.length, colData.length),
     summaryData,

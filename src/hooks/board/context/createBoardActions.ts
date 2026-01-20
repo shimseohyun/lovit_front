@@ -33,14 +33,8 @@ export function createBoardActions(params: Params): BoardActionsValue {
       if (rowSeparatedData.length === 0 || colSeparatedData.length === 0)
         return;
 
-      const rGroup = Math.max(
-        0,
-        Math.min(group.r, rowSeparatedData.length - 1),
-      );
-      const cGroup = Math.max(
-        0,
-        Math.min(group.c, colSeparatedData.length - 1),
-      );
+      const rGroup = Math.max(0, Math.min(group.r, 5));
+      const cGroup = Math.max(0, Math.min(group.c, 5));
 
       dispatch({
         type: "SET_SLOT",

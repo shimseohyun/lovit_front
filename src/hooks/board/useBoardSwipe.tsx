@@ -19,8 +19,7 @@ const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
 const useBoardSwipe = () => {
-  const { config, rowMinSlot, rowMaxSlot, colMinSlot, colMaxSlot } =
-    useBoardStatic();
+  const { config, rowData, rowCount } = useBoardStatic();
 
   const { setSlot, setTitle } = useBoardActions();
 
@@ -65,8 +64,8 @@ const useBoardSwipe = () => {
   const getAxisRange = (axis: SwipeAxis) => {
     const isVertical = axis === "vertical";
     return isVertical
-      ? { min: rowMinSlot, max: rowMaxSlot }
-      : { min: colMinSlot, max: colMaxSlot };
+      ? { min: 0, max: rowData.length }
+      : { min: 0, max: rowData.length };
   };
 
   const updateTranslate = (axis: SwipeAxis, value: number) => {

@@ -12,6 +12,7 @@ import SwipeBoardMarkerVertical from "./marker/SwipeBoardMarkerVertical";
 
 const SwipeBoard = () => {
   const { config, rowData, colData, summaryData } = useBoardStatic();
+
   const { screenWidth, screenHeight, stepPx } = config;
 
   const { bind, onPointerDown, onTransitionEnd, translate, isAnimating } =

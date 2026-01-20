@@ -251,19 +251,12 @@ export const Cell = styled.div`
   flex-direction: column;
 `;
 
-export const PiecesGrid = styled.div<{ $rows: number; $cols: number }>`
+export const PiecesGrid = styled.div`
   background: #fff;
   width: 100%;
   height: 100%;
   overflow: visible;
-
-  display: grid;
-  grid-template-columns: repeat(${(p) => p.$cols}, minmax(0, 1fr));
-  grid-template-rows: repeat(${(p) => p.$rows}, minmax(0, 1fr));
-
-  min-width: 0;
-  min-height: 0;
-  place-items: center;
+  position: relative;
 `;
 
 export const MicroCell = styled.div`
@@ -294,4 +287,10 @@ export const MainPageTitleImg = styled.img`
   border-radius: 50%;
   object-fit: cover;
   margin: 12px;
+`;
+
+export const MarkerContainer = styled.div`
+  z-index: 10;
+  position: absolute;
+  transform: translate(-50%, -50%);
 `;
