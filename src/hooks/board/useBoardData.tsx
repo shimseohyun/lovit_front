@@ -1,31 +1,36 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import type { BoardData } from "./type";
-import { buildAxisModel, type AxisPosition } from "./utils/buildAxisModel";
 
-export type IdPosition = {
-  id: number;
-  row: AxisPosition;
-  col: AxisPosition;
+export type AxisModel = {
+  slotToGroup: BoardData; // slotIndex -> groupIndex (separator는 음수 그대로)
+};
+
+const buildAxisModel = (data: BoardData): AxisModel => {
+  const slotToGroup: BoardData = [];
+
+  // separator 기준 그룹 id (빈 그룹 포함)
+  let groupId = 0;
+
+  for (let slotIndex = 0; slotIndex < data.length; slotIndex += 1) {
+    const value = data[slotIndex];
+
+    // separator: 음수는 그대로 넣고, 다음 그룹으로 이동
+    if (value < 0) {
+      slotToGroup.push(value);
+      groupId += 1;
+      continue;
+    }
+
+    // item: 현재 groupId 매핑
+    slotToGroup.push(groupId);
+  }
+
+  return { slotToGroup };
 };
 
 type Params = {
   rowData: BoardData;
   colData: BoardData;
-};
-
-const build_id_position_map = (
-  rowPosById: Map<number, AxisPosition>,
-  colPosById: Map<number, AxisPosition>,
-) => {
-  const idPositionMap = new Map<number, IdPosition>();
-
-  for (const [id, row] of rowPosById.entries()) {
-    const col = colPosById.get(id);
-    if (!col) continue;
-    idPositionMap.set(id, { id, row, col });
-  }
-
-  return idPositionMap;
 };
 
 const useBoardData = ({ rowData, colData }: Params) => {
@@ -36,57 +41,15 @@ const useBoardData = ({ rowData, colData }: Params) => {
     return {
       row,
       col,
-      idPositionMap: build_id_position_map(row.positionById, col.positionById),
     };
   }, [rowData, colData]);
-
-  const getIdPosition = useCallback(
-    (id: number) => model.idPositionMap.get(id) ?? null,
-    [model.idPositionMap],
-  );
-
-  // ✅ center slot도 미리 계산해놨으니 O(1)
-  const getRowCenterSlot = useCallback(
-    (target: number) => {
-      const t = Math.max(
-        0,
-        Math.min(target, model.row.centerSlotByGroup.length - 1),
-      );
-      return model.row.centerSlotByGroup[t] ?? 0;
-    },
-    [model.row.centerSlotByGroup],
-  );
-
-  const getColCenterSlot = useCallback(
-    (target: number) => {
-      const t = Math.max(
-        0,
-        Math.min(target, model.col.centerSlotByGroup.length - 1),
-      );
-      return model.col.centerSlotByGroup[t] ?? 0;
-    },
-    [model.col.centerSlotByGroup],
-  );
 
   return {
     rowData,
     colData,
 
-    rowSeparatedData: model.row.separatedData,
-    colSeparatedData: model.col.separatedData,
-
     rowSlotToGroup: model.row.slotToGroup,
     colSlotToGroup: model.col.slotToGroup,
-
-    rowCount: model.row.count,
-    colCount: model.col.count,
-
-    idPositionMap: model.idPositionMap,
-
-    getIdPosition,
-    getRowCenterSlot,
-
-    getColCenterSlot,
   };
 };
 

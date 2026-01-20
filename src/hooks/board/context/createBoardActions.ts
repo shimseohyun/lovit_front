@@ -7,7 +7,6 @@ import type { BoardAction } from "./boardState";
 type Dispatch = (action: BoardAction) => void;
 
 export type BoardActionsValue = {
-  setInitialSlot: (p: Position) => void;
   setSlot: (p: Position) => void;
   setTitle: (d: Description) => void;
   reset: () => void;
@@ -22,26 +21,6 @@ export function createBoardActions(params: Params): BoardActionsValue {
   const { boardData, dispatch } = params;
 
   return {
-    setInitialSlot: (group: Position) => {
-      const {
-        rowSeparatedData,
-        colSeparatedData,
-        getRowCenterSlot,
-        getColCenterSlot,
-      } = boardData;
-
-      if (rowSeparatedData.length === 0 || colSeparatedData.length === 0)
-        return;
-
-      const rGroup = Math.max(0, Math.min(group.r, 5));
-      const cGroup = Math.max(0, Math.min(group.c, 5));
-
-      dispatch({
-        type: "SET_SLOT",
-        payload: { r: getRowCenterSlot(rGroup), c: getColCenterSlot(cGroup) },
-      });
-    },
-
     setSlot: (p: Position) => {
       dispatch({ type: "SET_SLOT", payload: p });
     },
@@ -67,40 +46,6 @@ export function createBoardActions(params: Params): BoardActionsValue {
 // ✅ Provider를 짧게 만들기 위한 hook 래퍼 (콜백 안정화)
 export function useBoardActionsValue(params: Params): BoardActionsValue {
   const { boardData, dispatch } = params;
-
-  const setInitialSlot = useCallback(
-    (group: Position) => {
-      if (
-        boardData.rowSeparatedData.length === 0 ||
-        boardData.colSeparatedData.length === 0
-      )
-        return;
-
-      const rGroup = Math.max(
-        0,
-        Math.min(group.r, boardData.rowSeparatedData.length - 1),
-      );
-      const cGroup = Math.max(
-        0,
-        Math.min(group.c, boardData.colSeparatedData.length - 1),
-      );
-
-      dispatch({
-        type: "SET_SLOT",
-        payload: {
-          r: boardData.getRowCenterSlot(rGroup),
-          c: boardData.getColCenterSlot(cGroup),
-        },
-      });
-    },
-    [
-      boardData.rowSeparatedData.length,
-      boardData.colSeparatedData.length,
-      boardData.getRowCenterSlot,
-      boardData.getColCenterSlot,
-      dispatch,
-    ],
-  );
 
   const setSlot = useCallback(
     (p: Position) => dispatch({ type: "SET_SLOT", payload: p }),
@@ -131,7 +76,7 @@ export function useBoardActionsValue(params: Params): BoardActionsValue {
   const reset = useCallback(() => dispatch({ type: "RESET" }), [dispatch]);
 
   return useMemo(
-    () => ({ setInitialSlot, setSlot, setTitle, reset }),
-    [setInitialSlot, setSlot, setTitle, reset],
+    () => ({ setSlot, setTitle, reset }),
+    [setSlot, setTitle, reset],
   );
 }

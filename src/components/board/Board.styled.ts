@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import type { AxisPosition } from "../../hooks/board/utils/buildAxisModel";
 import { css } from "@emotion/react";
 import type { SwipeDirection } from "../../hooks/board/type";
 

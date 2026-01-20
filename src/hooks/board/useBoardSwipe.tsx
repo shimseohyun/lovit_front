@@ -19,7 +19,7 @@ const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
 const useBoardSwipe = () => {
-  const { config, rowData, rowCount } = useBoardStatic();
+  const { config, rowData } = useBoardStatic();
 
   const { setSlot, setTitle } = useBoardActions();
 
