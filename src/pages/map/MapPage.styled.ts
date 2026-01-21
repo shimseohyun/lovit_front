@@ -11,14 +11,6 @@ export const MainPageContainer = styled.div`
 `;
 
 export const MapBoard = styled.div`
-  /* display: grid;
-  width: 400px;
-  height: 400px;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-
-  color: grey; */
-
   width: 400px;
   height: 400px;
   display: flex;

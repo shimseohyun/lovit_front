@@ -8,6 +8,9 @@ export type SwipeDirection = "left" | "right" | "up" | "down";
 export type BoardData = number[];
 export type SeparatedBoardData = number[][];
 
+type BoardPosition = { group: number; idx: number };
+export type BoardPositionData = Record<number, BoardPosition>;
+
 export type PositionMode = "group" | "slot";
 
 export type Position = {
@@ -16,8 +19,7 @@ export type Position = {
   mode?: PositionMode; // default: "group"
 };
 
-// ✅ 기존 typo(soltNum)도 같이 지원하려면 외부에서 별도 변환해 주세요.
-export type Description = {
+export type SwipeData = {
   axis: SwipeAxis;
   direction: SwipeDirection;
   slotNum: number;

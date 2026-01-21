@@ -8,18 +8,20 @@ import SwipeBoardMarkerHorizontal from "./marker/SwipeBoardMarkerHorizontal";
 import SwipeBoardMarkerVertical from "./marker/SwipeBoardMarkerVertical";
 import SelectedSwipeBoardMarkerHorizontal from "./marker/SelectedSwipeBoardMarkerHorizontal";
 import SelectedSwipeBoardMarkerVertical from "./marker/SelectedSwipeBoardMarkerVertical copy";
-import { dummyData } from "../../dummy/data";
-import type { BoardData, SeparatedBoardData } from "../../hooks/board/type";
+
 import {
   colGroupLabel,
-  colGroupLabel2,
-  rowGroupLabel2,
+  rowGroupLabel,
 } from "../../hooks/board/useBoardDescription";
+import type { Summary } from "../../type/type";
 
-type BoardPosition = { group: number; idx: number };
-
-const SwipeBoard = () => {
-  const { config, rowData, colData, summaryData } = useBoardStatic();
+type Parms = {
+  currentItem: Summary;
+};
+const SwipeBoard = (parms: Parms) => {
+  const { currentItem } = parms;
+  const { config, rowData, colData, colCount, rowCount, summaryData } =
+    useBoardStatic();
 
   const { screenWidth, screenHeight, stepPx } = config;
 
@@ -33,51 +35,6 @@ const SwipeBoard = () => {
     dragAxis,
   } = useBoardSwipe();
 
-  const rowCount = rowData.length;
-  const colCount = colData.length;
-
-  const rowPos: Record<number, BoardPosition> = {};
-  const colPos: Record<number, BoardPosition> = {};
-
-  const getSeparatedData = (
-    data: BoardData,
-    pos: Record<number, BoardPosition>,
-  ) => {
-    let newData: SeparatedBoardData = [];
-    let dataCount: number[] = [];
-    let temp: number[] = [];
-
-    data.forEach((item, idx) => {
-      if (item < 0) {
-        newData.push(temp);
-        dataCount.push(temp.length);
-        temp = [];
-      } else {
-        pos[item] = {
-          idx: temp.length + 1,
-          group: newData.length,
-        };
-        temp.push(item);
-      }
-      if (idx === data.length - 1) {
-        newData.push(temp);
-        dataCount.push(temp.length);
-        temp = [];
-      }
-    });
-
-    return { newData, dataCount };
-  };
-
-  const { newData: rowSeparated, dataCount: rowCountList } = getSeparatedData(
-    rowData,
-    rowPos,
-  );
-  const { newData: colSeparated, dataCount: colCountList } = getSeparatedData(
-    colData,
-    colPos,
-  );
-
   return (
     <>
       <S.Wrapper
@@ -90,7 +47,7 @@ const SwipeBoard = () => {
 
         <S.AxisRow
           onTransitionEnd={onTransitionEnd}
-          count={colCount} // ✅ colData 길이
+          count={colData.length} // ✅ colData 길이
           stepPx={stepPx}
           x={translate.x}
           isAnimating={isAnimating}
@@ -99,11 +56,12 @@ const SwipeBoard = () => {
             {[0, 1, 2, 3, 4, 5].map((r, i) => {
               return (
                 <S.HorizontalArea
-                  $height={60 * (colCountList[r] + 1)}
+                  key={i}
+                  $height={60 * (colCount[r] + 1)}
                   $opacity={(r / 6) * 100}
                 >
                   <S.HorizontalAreaChip $direction={dragAxis}>
-                    {colGroupLabel2[r]}
+                    {colGroupLabel[r]}
                   </S.HorizontalAreaChip>
                 </S.HorizontalArea>
               );
@@ -126,7 +84,7 @@ const SwipeBoard = () => {
         </S.AxisRow>
 
         <S.AxisCol
-          count={rowCount}
+          count={rowData.length}
           stepPx={stepPx}
           y={translate.y}
           isAnimating={isAnimating}
@@ -135,11 +93,12 @@ const SwipeBoard = () => {
             {[0, 1, 2, 3, 4, 5].map((c, i) => {
               return (
                 <S.VerticalArea
+                  key={i}
                   $opacity={(c / 6) * 100}
-                  $height={60 * (rowCountList[c] + 1)}
+                  $height={60 * (rowCount[c] + 1)}
                 >
                   <S.VerticalAreaChip $direction={dragAxis}>
-                    {rowGroupLabel2[c]}
+                    {rowGroupLabel[c]}
                   </S.VerticalAreaChip>
                 </S.VerticalArea>
               );
@@ -165,9 +124,9 @@ const SwipeBoard = () => {
       </S.Wrapper>
       {isDragging && dragAxis !== null ? (
         dragAxis === "horizontal" ? (
-          <SelectedSwipeBoardMarkerHorizontal info={dummyData[0]} />
+          <SelectedSwipeBoardMarkerHorizontal info={currentItem} />
         ) : (
-          <SelectedSwipeBoardMarkerVertical info={dummyData[0]} />
+          <SelectedSwipeBoardMarkerVertical info={currentItem} />
         )
       ) : (
         <S.Cursor />

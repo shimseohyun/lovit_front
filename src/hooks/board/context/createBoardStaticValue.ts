@@ -5,7 +5,15 @@ import type { Summary } from "../../../type/type";
 
 export type BoardStaticValue = {
   rowData: ReturnType<typeof useBoardData>["rowData"];
+  rowCount: ReturnType<typeof useBoardData>["rowCount"];
+  rowSeparatedData: ReturnType<typeof useBoardData>["rowSeparatedData"];
+  rowPositionData: ReturnType<typeof useBoardData>["rowPositionData"];
+
   colData: ReturnType<typeof useBoardData>["colData"];
+  colCount: ReturnType<typeof useBoardData>["colCount"];
+  colSeparatedData: ReturnType<typeof useBoardData>["rowSeparatedData"];
+  colPositionData: ReturnType<typeof useBoardData>["colPositionData"];
+
   config: BoardConfig;
   summaryData: Record<number, Summary>;
 };
@@ -18,11 +26,26 @@ type Params = {
 
 export function createBoardStaticValue(params: Params): BoardStaticValue {
   const { boardData, mergedConfig, summaryData } = params;
-  const { rowData, colData } = boardData;
+  const {
+    rowData,
+    colData,
+    rowCount,
+    rowPositionData,
+    rowSeparatedData,
+    colCount,
+    colPositionData,
+    colSeparatedData,
+  } = boardData;
 
   return {
     rowData,
     colData,
+    rowCount,
+    rowPositionData,
+    rowSeparatedData,
+    colCount,
+    colPositionData,
+    colSeparatedData,
     config: mergedConfig,
     summaryData,
   };
@@ -34,6 +57,18 @@ export function useBoardStaticValue(params: Params) {
 
   return useMemo(
     () => createBoardStaticValue({ boardData, summaryData, mergedConfig }),
-    [boardData.rowData, boardData.colData, mergedConfig],
+    [
+      boardData.rowData,
+      boardData.rowCount,
+      boardData.rowSeparatedData,
+      boardData.rowPositionData,
+
+      boardData.colData,
+      boardData.colCount,
+      boardData.colSeparatedData,
+      boardData.colPositionData,
+
+      mergedConfig,
+    ],
   );
 }

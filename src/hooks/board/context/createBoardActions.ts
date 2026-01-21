@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import type useBoardData from "../useBoardData";
-import type { Description, Position } from "../type";
+import type { SwipeData, Position } from "../type";
 import { deriveTitle } from "./boardDomain";
 import type { BoardAction } from "./boardState";
 
@@ -8,7 +8,7 @@ type Dispatch = (action: BoardAction) => void;
 
 export type BoardActionsValue = {
   setSlot: (p: Position) => void;
-  setTitle: (d: Description) => void;
+  setTitle: (d: SwipeData) => void;
   reset: () => void;
 };
 
@@ -25,12 +25,12 @@ export function createBoardActions(params: Params): BoardActionsValue {
       dispatch({ type: "SET_SLOT", payload: p });
     },
 
-    setTitle: (d: Description) => {
+    setTitle: (d: SwipeData) => {
       const nextTitle = deriveTitle(d, {
         rowData: boardData.rowData,
         colData: boardData.colData,
-        rowSlotToGroup: boardData.rowSlotToGroup,
-        colSlotToGroup: boardData.colSlotToGroup,
+        rowPosition: boardData.rowPositionData,
+        colPosition: boardData.colPositionData,
       });
 
       if (!nextTitle) return;
@@ -53,12 +53,12 @@ export function useBoardActionsValue(params: Params): BoardActionsValue {
   );
 
   const setTitle = useCallback(
-    (d: Description) => {
+    (d: SwipeData) => {
       const nextTitle = deriveTitle(d, {
         rowData: boardData.rowData,
         colData: boardData.colData,
-        rowSlotToGroup: boardData.rowSlotToGroup,
-        colSlotToGroup: boardData.colSlotToGroup,
+        rowPosition: boardData.rowPositionData,
+        colPosition: boardData.rowPositionData,
       });
 
       if (!nextTitle) return;
@@ -67,8 +67,9 @@ export function useBoardActionsValue(params: Params): BoardActionsValue {
     [
       boardData.rowData,
       boardData.colData,
-      boardData.rowSlotToGroup,
-      boardData.colSlotToGroup,
+
+      boardData.colPositionData,
+      boardData.rowPositionData,
       dispatch,
     ],
   );

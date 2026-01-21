@@ -1,40 +1,59 @@
-import type { BoardData, Description } from "../type";
-import { getTitle } from "../useBoardDescription";
+import { dummyData } from "../../../dummy/data";
+import type { BoardData, BoardPositionData, SwipeData } from "../type";
+import {
+  colGroupLabel,
+  directionDictionary,
+  rowGroupLabel,
+} from "../useBoardDescription";
 
 type DeriveTitleDeps = {
   rowData: BoardData;
   colData: BoardData;
-  rowSlotToGroup: Array<number | undefined>;
-  colSlotToGroup: Array<number | undefined>;
+  rowPosition: BoardPositionData;
+  colPosition: BoardPositionData;
 };
 
 export function deriveTitle(
-  d: Description,
+  d: SwipeData,
   deps: DeriveTitleDeps,
 ): string | undefined {
-  const { axis, direction } = d;
+  const { axis, direction, slotNum } = d;
 
-  // 기준 slot 보정
-  let slotNum = d.slotNum;
-  if (direction === "left" || direction === "up") slotNum -= 1;
+  let data = axis === "horizontal" ? deps.colData : deps.rowData;
+  let label = axis === "horizontal" ? colGroupLabel : rowGroupLabel;
+  let position = axis === "horizontal" ? deps.colPosition : deps.rowPosition;
 
-  const isVertical = axis === "vertical";
-  const axisData = isVertical ? deps.rowData : deps.colData;
-  const axisSlotToGroup = isVertical
-    ? deps.rowSlotToGroup
-    : deps.colSlotToGroup;
+  let comparisonSlot = 0;
+  let isGroup: boolean = false;
+  let comparisonSlotID = 0;
+  let groupAdd = 0;
 
-  if (slotNum < 0 || slotNum >= axisData.length) return;
+  if (direction === "up" || direction === "left") {
+    // 커지는거 비교대상 앞에있는거
+    comparisonSlot = slotNum - 1;
+    groupAdd = 6;
+  } else {
+    // 작아지는거 비교대상 뒤에있는거
+    comparisonSlot = slotNum;
+    groupAdd = 5;
+  }
 
-  const groupId = axisSlotToGroup[slotNum];
+  let currentData = data[comparisonSlot];
 
-  const value = axisData[slotNum];
+  isGroup = currentData < 0;
+  comparisonSlotID = isGroup ? currentData + groupAdd : currentData;
 
-  if (typeof groupId !== "number" || typeof value !== "number") return;
+  if (isGroup) {
+    return label[comparisonSlotID];
+  } else {
+    const newData = dummyData[comparisonSlotID];
+    if (!newData) return;
 
-  const nextTitle = getTitle(value, groupId, direction);
-  if (Array.isArray(nextTitle)) return;
-  if (nextTitle === "") return;
-
-  return nextTitle;
+    return (
+      dummyData[comparisonSlotID].name +
+      directionDictionary[direction][
+        position[comparisonSlotID].group < 3 ? 0 : 1
+      ]
+    );
+  }
 }
