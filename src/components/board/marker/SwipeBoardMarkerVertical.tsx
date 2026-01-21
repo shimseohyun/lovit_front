@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import type { Summary } from "../../../type/type";
 
 type Parms = {
+  isSelected: boolean;
   info: Summary;
 };
 
@@ -17,7 +18,21 @@ const Marker = styled.img`
 
   transform: translateY(-50%);
   top: 50%;
-  right: 3px;
+  right: 18px;
+`;
+
+const CenterImg = styled.img`
+  position: absolute;
+
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+
+  border-radius: 50%;
+  object-fit: cover;
+  opacity: 60%;
 `;
 
 const Img = styled.img`
@@ -25,7 +40,7 @@ const Img = styled.img`
 
   transform: translateY(-50%);
   top: 50%;
-  right: 9px;
+  right: 24px;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -33,11 +48,19 @@ const Img = styled.img`
 `;
 
 const SwipeBoardMarkerVertical = (parms: Parms) => {
-  const { info } = parms;
+  const { isSelected, info } = parms;
   return (
     <Container>
-      <Marker src={`/assets/marker/SwipeBoard_Vertical.svg`} />
-      <Img src={info.thumbnaeilURL} />
+      {isSelected ? (
+        <>
+          <Marker src={`/assets/marker/SwipeBoard_Vertical.svg`} />
+          <Img src={info.thumbnaeilURL} />
+        </>
+      ) : (
+        <>
+          <CenterImg src={info.thumbnaeilURL} />
+        </>
+      )}
     </Container>
   );
 };

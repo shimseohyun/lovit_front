@@ -44,10 +44,10 @@ const BoardLayout = ({ confirmNext, newDataID, fin }: Parms) => {
       <S.BoardContainer>
         <S.VerticalAxis />
         <S.HorizontalAxis />
-        <S.Chip position="up">두부</S.Chip>
+        {/* <S.Chip position="up">두부</S.Chip>
         <S.Chip position="down">버터</S.Chip>
         <S.Chip position="left">고양이</S.Chip>
-        <S.Chip position="right">강아지</S.Chip>
+        <S.Chip position="right">강아지</S.Chip> */}
 
         {slot === undefined ? <TouchBoard /> : <SwipeBoard />}
       </S.BoardContainer>

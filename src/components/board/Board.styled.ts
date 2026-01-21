@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
-import type { SwipeDirection } from "../../hooks/board/type";
+import type { SwipeAxis, SwipeDirection } from "../../hooks/board/type";
 
 export const Wrapper = styled.div<{ width: number; height: number }>`
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+
   position: relative;
   overflow: hidden;
   touch-action: none;
@@ -114,16 +114,16 @@ export const HorizontalAxis = styled.div`
   left: 50%;
 `;
 export const VerticalSeparator = styled.div`
-  width: 4px;
+  width: 100%;
   height: 1px;
-  background: #e6e8eb;
+  background: #f2f4f6;
   position: relative;
 `;
 
 export const HorizontalSeparator = styled.div`
   width: 1px;
-  height: 4px;
-  background: #e6e8eb;
+  height: 100%;
+  background: #f2f4f6;
   position: relative;
 `;
 
@@ -165,6 +165,7 @@ export const AxisRow = styled.div<{
   isAnimating: boolean;
 }>`
   position: absolute;
+  background-color: transparent;
   left: 0;
   top: 50%;
   transform: translate3d(${({ x }) => x}px, -50%, 0);
@@ -173,7 +174,7 @@ export const AxisRow = styled.div<{
   will-change: transform;
 
   width: ${({ count, stepPx }) => count * stepPx}px;
-  height: ${({ stepPx }) => stepPx}px;
+  height: 100%;
   display: flex;
 `;
 
@@ -184,6 +185,7 @@ export const AxisCol = styled.div<{
   isAnimating: boolean;
 }>`
   position: absolute;
+  background-color: transparent;
   left: 50%;
   top: 0;
   transform: translate3d(-50%, ${({ y }) => y}px, 0);
@@ -191,14 +193,21 @@ export const AxisCol = styled.div<{
     isAnimating ? "transform 220ms ease" : "none"};
   will-change: transform;
 
-  width: ${({ stepPx }) => stepPx}px;
+  width: 100%;
   height: ${({ count, stepPx }) => count * stepPx}px;
   display: flex;
   flex-direction: column;
 `;
 
-export const AxisCell = styled.div`
+export const HorizontalCell = styled.div`
   width: 60px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+`;
+
+export const VerticalCell = styled.div`
+  width: 100%;
   height: 60px;
   display: grid;
   place-items: center;
@@ -216,7 +225,7 @@ export const Button = styled.button`
 export const BoardContainer = styled.div`
   width: 400px;
   height: 400px;
-  border: 1px solid gray;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); /* blur=0, spread=2px */
   overflow: hidden;
   position: relative;
 `;
@@ -292,4 +301,120 @@ export const MarkerContainer = styled.div`
   z-index: 10;
   position: absolute;
   transform: translate(-50%, -50%);
+`;
+
+export const VerticalAreaList = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+
+  transform: translateX(-50%);
+  left: 50%;
+  top: -30px;
+`;
+export const HorizontalAreaList = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+
+  transform: translateY(-50%);
+  top: 50%;
+  left: -30px;
+`;
+
+export const VerticalArea = styled.div<{
+  $height: number;
+  $opacity: number;
+}>`
+  box-sizing: border-box;
+  width: 100%;
+  height: ${(p) => p.$height}px;
+
+  position: relative;
+`;
+
+export const HorizontalArea = styled.div<{
+  $height: number;
+  $opacity: number;
+}>`
+  box-sizing: border-box;
+  height: 100%;
+  width: ${(p) => p.$height}px;
+
+  position: relative;
+`;
+
+export const VerticalAreaChip = styled.div<{
+  $direction: SwipeAxis | null;
+}>`
+  box-sizing: border-box;
+  padding: 8px;
+  width: 20px;
+  height: 100%;
+
+  background-color: #f9fafb;
+  font-size: 8px;
+
+  position: absolute;
+  transform: translateX(-50%);
+  opacity: 50%;
+  top: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${({ $direction }) => {
+    if ($direction === null) {
+      return css`
+        left: calc(50% - 10px);
+      `;
+    } else if ($direction !== "vertical") {
+      return css`
+        display: none;
+      `;
+    } else {
+      return css`
+        left: calc(50% - 10px);
+        opacity: 70%;
+      `;
+    }
+  }}
+`;
+
+export const HorizontalAreaChip = styled.div<{ $direction: SwipeAxis | null }>`
+  width: 100%;
+  height: 20px;
+
+  background-color: #f9fafb;
+  font-size: 8px;
+
+  position: absolute;
+
+  transform: translateY(-50%);
+  opacity: 50%;
+  left: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${({ $direction }) => {
+    if ($direction === null) {
+      return css`
+        top: calc(50% + 10px);
+      `;
+    } else if ($direction !== "horizontal") {
+      return css`
+        display: none;
+      `;
+    } else {
+      return css`
+        top: calc(50% + 10px);
+        opacity: 70%;
+      `;
+    }
+  }}
 `;

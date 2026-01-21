@@ -15,14 +15,20 @@ import type { Position, SwipeAxis } from "./type";
 
 type Translate = { x: number; y: number };
 
+// ✅ 추가: 드래그 정보 타입
+type SwipeDirection = SwipeProgressPayload["direction"];
+type DragInfo = {
+  isDragging: boolean;
+  axis: SwipeAxis | null;
+  direction: SwipeDirection | null;
+};
+
 const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
 const useBoardSwipe = () => {
-  const { config, rowData } = useBoardStatic();
-
+  const { config, rowData /*, colData */ } = useBoardStatic();
   const { setSlot, setTitle } = useBoardActions();
-
   const { stepPx, minDistancePx, screenHeight, screenWidth } = config;
 
   const { slot } = useBoardState();
@@ -49,8 +55,28 @@ const useBoardSwipe = () => {
   const liveSlotRef = useRef<Position>(safeSlot);
   const isDraggingRef = useRef(false);
 
-  // 외부에서 slot이 바뀌는 경우(예: reset / setInitialSlot)
-  // translate도 동기화해줌
+  // ✅ 추가: 드래그 상태를 리턴하기 위한 state
+  const [dragInfo, setDragInfo] = useState<DragInfo>({
+    isDragging: false,
+    axis: null,
+    direction: null,
+  });
+
+  // ✅ 추가: 값이 바뀔 때만 setState
+  const setDragInfoSafe = useCallback((patch: Partial<DragInfo>) => {
+    setDragInfo((prev) => {
+      const next = { ...prev, ...patch };
+      if (
+        next.isDragging === prev.isDragging &&
+        next.axis === prev.axis &&
+        next.direction === prev.direction
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, []);
+
   useEffect(() => {
     if (isDraggingRef.current) return;
 
@@ -65,7 +91,7 @@ const useBoardSwipe = () => {
     const isVertical = axis === "vertical";
     return isVertical
       ? { min: 0, max: rowData.length }
-      : { min: 0, max: rowData.length };
+      : { min: 0, max: rowData.length }; // ⚠️ 가로면 colData.length여야 할 가능성 큼
   };
 
   const updateTranslate = (axis: SwipeAxis, value: number) => {
@@ -102,8 +128,12 @@ const useBoardSwipe = () => {
 
       setIsAnimating(false);
 
-      // 락 되기 전(axis/direction === null)에는 slot/title 계산을 하지 않음
-      if (!axis || !direction) return;
+      // ✅ 축/방향이 정해졌을 때만 dragInfo 업데이트 (그리고 변경시에만 리렌더)
+      if (axis && direction) {
+        setDragInfoSafe({ axis, direction });
+      } else {
+        return;
+      }
 
       const isVertical = axis === "vertical";
       const axisDelta = isVertical ? deltaY : deltaX;
@@ -122,7 +152,6 @@ const useBoardSwipe = () => {
       setTitle({ axis, direction, slotNum: snapped });
       setSlot(next);
 
-      // 드래그 중(소수)도 자연스럽게 이동
       updateTranslate(axis, raw);
     },
 
@@ -130,7 +159,10 @@ const useBoardSwipe = () => {
       isDraggingRef.current = false;
       setIsAnimating(true);
 
-      if (!passed) {
+      // ✅ 종료 시 dragInfo 초기화
+      setDragInfoSafe({ isDragging: false, axis: null, direction: null });
+
+      if (!passed || !axis) {
         revertToStart();
         return;
       }
@@ -151,6 +183,10 @@ const useBoardSwipe = () => {
   const onPointerDown: PointerEventHandler<HTMLDivElement> = (e) => {
     isDraggingRef.current = true;
     startSlotRef.current = liveSlotRef.current;
+
+    // ✅ 시작 시 dragInfo 세팅 (축/방향은 아직 모름)
+    setDragInfoSafe({ isDragging: true, axis: null, direction: null });
+
     bind.onPointerDown(e);
   };
 
@@ -163,6 +199,11 @@ const useBoardSwipe = () => {
     slot: safeSlot,
     translate,
     isAnimating,
+
+    // ✅ 원하는 값 리턴
+    isDragging: dragInfo.isDragging,
+    dragAxis: dragInfo.axis,
+    dragDirection: dragInfo.direction,
   };
 };
 
