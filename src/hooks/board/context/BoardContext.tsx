@@ -13,7 +13,7 @@ import {
   useBoardActionsValue,
   type BoardActionsValue,
 } from "./createBoardActions";
-import type { Summary } from "../../../type/type";
+import type { Summary } from "@interfaces/type";
 
 export type BoardConfig = {
   screenWidth: number;

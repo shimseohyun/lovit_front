@@ -1,7 +1,7 @@
 import {
   useBoardActions,
   useBoardStatic,
-} from "../../hooks/board/context/BoardContext";
+} from "@hooks/board/context/BoardContext";
 
 import * as S from "./Board.styled";
 import TouchBoardMarker from "./marker/TouchBoardMarker";

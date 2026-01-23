@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type useBoardData from "../useBoardData";
 import type { BoardConfig } from "./BoardContext";
-import type { Summary } from "../../../type/type";
+import type { Summary } from "@interfaces/type";
 
 export type BoardStaticValue = {
   rowData: ReturnType<typeof useBoardData>["rowData"];

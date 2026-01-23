@@ -1,10 +1,15 @@
-import { dummyData } from "../../../dummy/data";
-import type { BoardData, BoardPositionData, SwipeData, Title } from "../type";
+import { dummyData } from "@data/data";
+import type {
+  BoardData,
+  BoardPositionData,
+  SwipeData,
+  Title,
+} from "@hooks/board/type";
 import {
   colGroupLabel,
   directionDictionary,
   rowGroupLabel,
-} from "../useBoardDescription";
+} from "@hooks/board/useBoardDescription";
 
 type DeriveTitleDeps = {
   rowData: BoardData;
@@ -49,13 +54,6 @@ export const deriveTitle = (
     const newData = dummyData[comparisonSlotID];
     if (!newData) return;
 
-    // console.log(
-    //   axis,
-    //   direction,
-    //   position,
-    //   comparisonSlotID,
-    //   position[comparisonSlotID].group,
-    // );
     return {
       comparisonID: comparisonSlotID,
       comparisonLabel:

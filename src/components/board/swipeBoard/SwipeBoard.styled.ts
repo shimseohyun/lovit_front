@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { SwipeAxis } from "../../../hooks/board/type";
+import type { SwipeAxis } from "@hooks/board/type";
 import { css } from "@emotion/react";
 
 export const Wrapper = styled.div<{ width: number; height: number }>`

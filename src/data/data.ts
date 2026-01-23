@@ -1,7 +1,4 @@
-import type { Summary } from "../type/type";
-
-export const initialRow = [0, 1, -5, 2, 3, -4, 5, -3, 6, -2, 7, 8, -1, 9, 4];
-export const initialCol = [0, 1, -5, 2, 3, -4, 5, -3, 6, -2, 7, 8, -1, 9, 4];
+import type { Summary } from "@interfaces/type";
 
 export const dummyData: Record<number, Summary> = {
   0: {

@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
-import type useBoardData from "../useBoardData";
-import type { SwipeData, Position } from "../type";
+import type useBoardData from "@hooks/board/useBoardData";
+import type { SwipeData, Position } from "@hooks/board/type";
+
 import { deriveTitle } from "./boardDomain";
 import type { BoardAction } from "./boardState";
 

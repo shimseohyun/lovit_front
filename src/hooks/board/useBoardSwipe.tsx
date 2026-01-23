@@ -1,17 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEventHandler } from "react";
 
-import useSwipe, {
-  type SwipeProgressPayload,
-  type SwipeResult,
-} from "../swipe/useSwipe";
-
 import {
   useBoardActions,
   useBoardState,
   useBoardStatic,
 } from "./context/BoardContext";
 import type { Position, SwipeAxis } from "./type";
+import type { SwipeProgressPayload, SwipeResult } from "@hooks/swipe/useSwipe";
+import useSwipe from "@hooks/swipe/useSwipe";
 
 type Translate = { x: number; y: number };
 

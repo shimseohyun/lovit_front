@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
-import type { SwipeDirection } from "../../hooks/board/type";
+import type { SwipeDirection } from "@hooks/board/type";
 
 export const Wrapper = styled.div<{ width: number; height: number }>`
   width: ${({ width }) => width}px;
@@ -123,40 +123,6 @@ export const PiecesGrid = styled.div`
   height: 100%;
   overflow: visible;
   position: relative;
-`;
-
-export const MainPageTitleContainer = styled.div`
-  padding-top: 10px;
-
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  font-size: 18px;
-  line-height: 24px;
-  margin-bottom: 20px;
-`;
-
-export const MainPageTitleImg = styled.img`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 12px;
-`;
-
-export const MainPageTitle = styled.div`
-  height: 32px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`;
-
-export const MainPageTitleChip = styled.div`
-  padding: 4px 10px;
-  border-radius: 80px;
-  background: #f9fafb;
 `;
 
 export const MarkerContainer = styled.div`

@@ -1,20 +1,17 @@
 import * as S from "./SwipeBoard.styled";
 
-import useBoardSwipe from "../../../hooks/board/useBoardSwipe";
+import useBoardSwipe from "@hooks/board/useBoardSwipe";
 
-import { useBoardStatic } from "../../../hooks/board/context/BoardContext";
+import { useBoardStatic } from "@hooks/board/context/BoardContext";
 
 import SwipeBoardMarkerHorizontal from "./markers/SwipeBoardMarkerHorizontal";
 import SwipeBoardMarkerVertical from "./markers/SwipeBoardMarkerVertical";
 import SelectedSwipeBoardMarkerHorizontal from "./markers/SelectedSwipeBoardMarkerHorizontal";
 import SelectedSwipeBoardMarkerVertical from "./markers/SelectedSwipeBoardMarkerVertical";
 
-import {
-  colGroupLabel,
-  rowGroupLabel,
-} from "../../../hooks/board/useBoardDescription";
-import type { Summary } from "../../../type/type";
-import type { BoardData, SwipeAxis } from "../../../hooks/board/type";
+import { colGroupLabel, rowGroupLabel } from "@hooks/board/useBoardDescription";
+import type { Summary } from "@interfaces/type";
+import type { BoardData, SwipeAxis } from "@hooks/board/type";
 
 type Parms = {
   currentItem: Summary;

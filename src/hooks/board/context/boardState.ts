@@ -1,4 +1,4 @@
-import type { Position, Title } from "../type";
+import type { Position, Title } from "@hooks/board/type";
 
 export type BoardState = {
   slot?: Position;
