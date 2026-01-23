@@ -60,5 +60,3 @@ export const fonts = {
   element2: fontGenerator(15, 20, "element", 1),
   element3: fontGenerator(13, 15, "element", 1),
 } as const;
-
-export const FontList = Object.keys(fonts) as FontStyleKey[];

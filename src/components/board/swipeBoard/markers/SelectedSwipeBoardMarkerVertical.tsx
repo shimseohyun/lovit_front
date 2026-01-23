@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { Summary } from "../../../type/type";
+import type { Summary } from "../../../../type/type";
 
 type Parms = {
   info: Summary;

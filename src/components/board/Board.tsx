@@ -1,6 +1,6 @@
 import * as S from "./Board.styled";
 import TouchBoard from "./TouchBoard";
-import SwipeBoard from "./SwipeBoard";
+
 import {
   BoardProvider,
   useBoardActions,
@@ -11,6 +11,7 @@ import {
 import { dummyData } from "../../dummy/data";
 import useBoardTotalData from "../../hooks/board/useBoardTotalData";
 import type { Summary } from "../../type/type";
+import SwipeBoard from "./swipeBoard/SwipeBoard";
 
 type Parms = {
   confirmNext: (r: number, col: number) => void;
