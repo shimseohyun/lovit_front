@@ -1,9 +1,19 @@
+import { Global, ThemeProvider } from "@emotion/react";
 import MainPage from "./pages/map/MapPage";
+import { theme } from "./styles/theme";
+import { global } from "./styles/global";
+import Navigation from "./components/navigation/Navigation";
 
 const App = () => {
+  const maxWidth = "500px";
+
   return (
     <>
-      <MainPage />
+      <ThemeProvider theme={theme(maxWidth)}>
+        <Global styles={global(maxWidth)} />
+        <Navigation />
+        <MainPage />
+      </ThemeProvider>
     </>
   );
 };

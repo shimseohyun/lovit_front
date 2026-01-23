@@ -142,6 +142,7 @@ export const VerticalSeparatorChip = styled.div`
   left: 8px;
   overflow: visible;
 `;
+
 export const HorizontalSeparatorChip = styled.div`
   width: auto;
   white-space: nowrap;
