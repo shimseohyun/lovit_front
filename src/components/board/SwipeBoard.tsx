@@ -1,68 +1,137 @@
 import * as S from "./Board.styled";
 
-import { useBoardStatic } from "../../hooks/board/BoardContext";
 import useBoardSwipe from "../../hooks/board/useBoardSwipe";
+
+import { useBoardStatic } from "../../hooks/board/context/BoardContext";
+
+import SwipeBoardMarkerHorizontal from "./marker/SwipeBoardMarkerHorizontal";
+import SwipeBoardMarkerVertical from "./marker/SwipeBoardMarkerVertical";
+import SelectedSwipeBoardMarkerHorizontal from "./marker/SelectedSwipeBoardMarkerHorizontal";
+import SelectedSwipeBoardMarkerVertical from "./marker/SelectedSwipeBoardMarkerVertical copy";
+
 import {
   colGroupLabel,
   rowGroupLabel,
 } from "../../hooks/board/useBoardDescription";
+import type { Summary } from "../../type/type";
 
-const SwipeBoard = () => {
-  const { config, rowData, colData } = useBoardStatic();
+type Parms = {
+  currentItem: Summary;
+};
+const SwipeBoard = (parms: Parms) => {
+  const { currentItem } = parms;
+  const { config, rowData, colData, colCount, rowCount, summaryData } =
+    useBoardStatic();
+
   const { screenWidth, screenHeight, stepPx } = config;
 
-  const { bind, onPointerDown, onTransitionEnd, translate, isAnimating } =
-    useBoardSwipe();
-
-  const rowCount = rowData.length;
-  const colCount = colData.length;
+  const {
+    bind,
+    onPointerDown,
+    onTransitionEnd,
+    translate,
+    isAnimating,
+    isDragging,
+    dragAxis,
+  } = useBoardSwipe();
 
   return (
-    <S.Wrapper
-      {...bind}
-      onPointerDown={onPointerDown}
-      width={screenWidth}
-      height={screenHeight}
-    >
-      <S.Cursor />
-
-      <S.AxisRow
-        onTransitionEnd={onTransitionEnd}
-        count={colCount} // ✅ colData 길이
-        stepPx={stepPx}
-        x={translate.x}
-        isAnimating={isAnimating}
+    <>
+      <S.Wrapper
+        {...bind}
+        onPointerDown={onPointerDown}
+        width={screenWidth}
+        height={screenHeight}
       >
-        {colData.map((c, colIndex) => (
-          <S.AxisCell key={colIndex}>
-            {c < 0 ? (
-              <S.HorizontalSeparator>
-                {colGroupLabel[c + 5]}
-              </S.HorizontalSeparator>
-            ) : (
-              <S.Chip>{c}</S.Chip>
-            )}
-          </S.AxisCell>
-        ))}
-      </S.AxisRow>
+        {/* horizontal */}
 
-      <S.AxisCol
-        count={rowCount} // ✅ rowData 길이
-        stepPx={stepPx}
-        y={translate.y}
-        isAnimating={isAnimating}
-      >
-        {rowData.map((r, rowIndex) => (
-          <S.AxisCell key={rowIndex}>
-            {r < 0 ? (
-              <S.VerticalSeparator> {rowGroupLabel[r + 5]}</S.VerticalSeparator>
-            ) : (
-              <S.Chip>{r}</S.Chip>
-            )}
-          </S.AxisCell>
-        ))}
-      </S.AxisCol>
-    </S.Wrapper>
+        <S.AxisRow
+          onTransitionEnd={onTransitionEnd}
+          count={colData.length} // ✅ colData 길이
+          stepPx={stepPx}
+          x={translate.x}
+          isAnimating={isAnimating}
+        >
+          <S.HorizontalAreaList>
+            {[0, 1, 2, 3, 4, 5].map((r, i) => {
+              return (
+                <S.HorizontalArea
+                  key={i}
+                  $height={stepPx * (colCount[r] + 1)}
+                  $opacity={(r / 6) * 100}
+                >
+                  <S.HorizontalAreaChip $direction={dragAxis}>
+                    {colGroupLabel[r]}
+                  </S.HorizontalAreaChip>
+                </S.HorizontalArea>
+              );
+            })}
+          </S.HorizontalAreaList>
+
+          {colData.map((c, colIndex) => (
+            <S.HorizontalCell $size={stepPx} key={colIndex}>
+              {c < 0 ? (
+                <S.HorizontalSeparator />
+              ) : (
+                <SwipeBoardMarkerHorizontal
+                  key={c}
+                  info={summaryData[c]}
+                  isSelected={isDragging && dragAxis === "horizontal"}
+                />
+              )}
+            </S.HorizontalCell>
+          ))}
+        </S.AxisRow>
+
+        <S.AxisCol
+          count={rowData.length}
+          stepPx={stepPx}
+          y={translate.y}
+          isAnimating={isAnimating}
+        >
+          <S.VerticalAreaList>
+            {[0, 1, 2, 3, 4, 5].map((c, i) => {
+              return (
+                <S.VerticalArea
+                  key={i}
+                  $opacity={(c / 6) * 100}
+                  $height={stepPx * (rowCount[c] + 1)}
+                >
+                  <S.VerticalAreaChip $direction={dragAxis}>
+                    {rowGroupLabel[c]}
+                  </S.VerticalAreaChip>
+                </S.VerticalArea>
+              );
+            })}
+          </S.VerticalAreaList>
+
+          {rowData.map((r, rowIndex) => (
+            <S.VerticalCell $size={stepPx} key={rowIndex}>
+              {r < 0 ? (
+                <>
+                  <S.VerticalSeparator />
+                </>
+              ) : (
+                <SwipeBoardMarkerVertical
+                  key={r}
+                  info={summaryData[r]}
+                  isSelected={isDragging && dragAxis === "vertical"}
+                />
+              )}
+            </S.VerticalCell>
+          ))}
+        </S.AxisCol>
+      </S.Wrapper>
+      {isDragging && dragAxis !== null ? (
+        dragAxis === "horizontal" ? (
+          <SelectedSwipeBoardMarkerHorizontal info={currentItem} />
+        ) : (
+          <SelectedSwipeBoardMarkerVertical info={currentItem} />
+        )
+      ) : (
+        <S.Cursor />
+      )}
+    </>
   );
 };
 

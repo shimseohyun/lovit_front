@@ -10,17 +10,9 @@ export const MainPageContainer = styled.div`
   align-items: center;
 `;
 
-export const MapBoard = styled.div`
-  /* display: grid;
-  width: 400px;
-  height: 400px;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-
-  color: grey; */
-
-  width: 400px;
-  height: 400px;
+export const MapBoard = styled.div<{ $size: number }>`
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
   display: flex;
   justify-content: center;
   align-items: center;
