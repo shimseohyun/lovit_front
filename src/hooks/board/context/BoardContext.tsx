@@ -1,6 +1,6 @@
 import { useMemo, useReducer, type PropsWithChildren } from "react";
 
-import type { BoardData, Position } from "../type";
+import type { BoardData, Position, Title } from "../type";
 import useBoardData from "../useBoardData";
 
 import { createStrictContext } from "./createStrictContext";
@@ -36,7 +36,7 @@ const mergeConfig = (config?: Partial<BoardConfig>): BoardConfig => ({
 
 export type BoardStateValue = {
   slot: Position | undefined;
-  title: string | undefined;
+  title: Title | undefined;
 };
 
 const [boardStaticContext, useBoardStatic] =

@@ -199,16 +199,16 @@ export const AxisCol = styled.div<{
   flex-direction: column;
 `;
 
-export const HorizontalCell = styled.div`
-  width: 60px;
+export const HorizontalCell = styled.div<{ $size: number }>`
+  width: ${({ $size }) => $size}px;
   height: 100%;
   display: grid;
   place-items: center;
 `;
 
-export const VerticalCell = styled.div`
+export const VerticalCell = styled.div<{ $size: number }>`
   width: 100%;
-  height: 60px;
+  height: ${({ $size }) => $size}px;
   display: grid;
   place-items: center;
 `;
@@ -222,9 +222,9 @@ export const Button = styled.button`
   color: white;
 `;
 
-export const BoardContainer = styled.div`
-  width: 400px;
-  height: 400px;
+export const BoardContainer = styled.div<{ $size: number }>`
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); /* blur=0, spread=2px */
   overflow: hidden;
   position: relative;
@@ -279,22 +279,37 @@ export const MicroCell = styled.div`
 `;
 
 export const MainPageTitleContainer = styled.div`
-  padding-top: 24px;
-  padding-bottom: 40px;
+  padding-top: 10px;
+
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  font-size: 16px;
+  font-size: 18px;
+  line-height: 24px;
+  margin-bottom: 20px;
 `;
 
 export const MainPageTitleImg = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  margin: 12px;
+  margin-bottom: 12px;
+`;
+
+export const MainPageTitle = styled.div`
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+export const MainPageTitleChip = styled.div`
+  padding: 4px 10px;
+  border-radius: 80px;
+  background: #f9fafb;
 `;
 
 export const MarkerContainer = styled.div`

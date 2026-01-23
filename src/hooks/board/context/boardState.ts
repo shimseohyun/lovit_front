@@ -1,13 +1,13 @@
-import type { Position } from "../type";
+import type { Position, Title } from "../type";
 
 export type BoardState = {
   slot?: Position;
-  title?: string;
+  title?: Title;
 };
 
 export type BoardAction =
   | { type: "SET_SLOT"; payload: Position }
-  | { type: "SET_TITLE"; payload: string }
+  | { type: "SET_TITLE"; payload: Title }
   | { type: "RESET" };
 
 export const initialBoardState: BoardState = {};

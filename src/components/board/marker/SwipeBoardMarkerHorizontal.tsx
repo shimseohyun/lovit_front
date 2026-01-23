@@ -39,8 +39,8 @@ const CenterImg = styled.img`
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 
   border-radius: 50%;
   object-fit: cover;

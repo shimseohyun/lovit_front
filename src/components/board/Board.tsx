@@ -20,7 +20,7 @@ type Parms = {
 
 const BoardLayout = ({ confirmNext, newDataID, fin }: Parms) => {
   const { slot, title } = useBoardState();
-  const { summaryData } = useBoardStatic();
+  const { summaryData, config } = useBoardStatic();
   const { reset } = useBoardActions();
 
   const newData: Summary = summaryData[newDataID];
@@ -28,20 +28,46 @@ const BoardLayout = ({ confirmNext, newDataID, fin }: Parms) => {
   if (fin) {
     return (
       <>
-        <S.BoardContainer>
+        <S.BoardContainer $size={config.screenWidth}>
           <TouchBoard />
         </S.BoardContainer>
       </>
     );
   }
+
+  const getTitle = () => {
+    if (title === undefined) {
+      return <S.MainPageTitle>어디에 속하나요?</S.MainPageTitle>;
+    }
+
+    if (title.groupName !== undefined) {
+      return (
+        <S.MainPageTitle>
+          <S.MainPageTitleChip>{title.groupName}</S.MainPageTitleChip>예요
+        </S.MainPageTitle>
+      );
+    } else if (title.comparisonID !== undefined) {
+      return (
+        <S.MainPageTitle>
+          <S.MainPageTitleChip>
+            {summaryData[title.comparisonID].name}
+          </S.MainPageTitleChip>
+          보다{" "}
+          <S.MainPageTitleChip>{title.comparisonLabel}</S.MainPageTitleChip>
+          예요
+        </S.MainPageTitle>
+      );
+    }
+  };
+
   return (
     <>
       <S.MainPageTitleContainer>
         <S.MainPageTitleImg src={newData.thumbnaeilURL} />
         <span>{newData.name}</span>
-        <span>{title === "" || !title ? "어디에 속하나요?" : title}</span>
+        <span>{getTitle()}</span>
       </S.MainPageTitleContainer>
-      <S.BoardContainer>
+      <S.BoardContainer $size={config.screenWidth}>
         <S.VerticalAxis />
         <S.HorizontalAxis />
 

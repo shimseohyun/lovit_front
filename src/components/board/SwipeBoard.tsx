@@ -57,7 +57,7 @@ const SwipeBoard = (parms: Parms) => {
               return (
                 <S.HorizontalArea
                   key={i}
-                  $height={60 * (colCount[r] + 1)}
+                  $height={stepPx * (colCount[r] + 1)}
                   $opacity={(r / 6) * 100}
                 >
                   <S.HorizontalAreaChip $direction={dragAxis}>
@@ -69,7 +69,7 @@ const SwipeBoard = (parms: Parms) => {
           </S.HorizontalAreaList>
 
           {colData.map((c, colIndex) => (
-            <S.HorizontalCell key={colIndex}>
+            <S.HorizontalCell $size={stepPx} key={colIndex}>
               {c < 0 ? (
                 <S.HorizontalSeparator />
               ) : (
@@ -95,7 +95,7 @@ const SwipeBoard = (parms: Parms) => {
                 <S.VerticalArea
                   key={i}
                   $opacity={(c / 6) * 100}
-                  $height={60 * (rowCount[c] + 1)}
+                  $height={stepPx * (rowCount[c] + 1)}
                 >
                   <S.VerticalAreaChip $direction={dragAxis}>
                     {rowGroupLabel[c]}
@@ -106,7 +106,7 @@ const SwipeBoard = (parms: Parms) => {
           </S.VerticalAreaList>
 
           {rowData.map((r, rowIndex) => (
-            <S.VerticalCell key={rowIndex}>
+            <S.VerticalCell $size={stepPx} key={rowIndex}>
               {r < 0 ? (
                 <>
                   <S.VerticalSeparator />

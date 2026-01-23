@@ -17,32 +17,6 @@ type Params = {
   dispatch: Dispatch;
 };
 
-export function createBoardActions(params: Params): BoardActionsValue {
-  const { boardData, dispatch } = params;
-
-  return {
-    setSlot: (p: Position) => {
-      dispatch({ type: "SET_SLOT", payload: p });
-    },
-
-    setTitle: (d: SwipeData) => {
-      const nextTitle = deriveTitle(d, {
-        rowData: boardData.rowData,
-        colData: boardData.colData,
-        rowPosition: boardData.rowPositionData,
-        colPosition: boardData.colPositionData,
-      });
-
-      if (!nextTitle) return;
-      dispatch({ type: "SET_TITLE", payload: nextTitle });
-    },
-
-    reset: () => {
-      dispatch({ type: "RESET" });
-    },
-  };
-}
-
 // ✅ Provider를 짧게 만들기 위한 hook 래퍼 (콜백 안정화)
 export function useBoardActionsValue(params: Params): BoardActionsValue {
   const { boardData, dispatch } = params;
@@ -58,7 +32,7 @@ export function useBoardActionsValue(params: Params): BoardActionsValue {
         rowData: boardData.rowData,
         colData: boardData.colData,
         rowPosition: boardData.rowPositionData,
-        colPosition: boardData.rowPositionData,
+        colPosition: boardData.colPositionData,
       });
 
       if (!nextTitle) return;

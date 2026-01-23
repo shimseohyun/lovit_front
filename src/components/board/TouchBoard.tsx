@@ -35,8 +35,6 @@ const TouchBoard = () => {
     setSlot({ r: rSlot, c: cSlot });
   };
 
-  console.log("row", rowCount, rowPositionData, rowSeparatedData);
-  console.log("col", colCount, colPositionData, colSeparatedData);
   return (
     <S.BoardGrid $rows={6} $cols={6}>
       {rowCount.map((rCount, r) =>

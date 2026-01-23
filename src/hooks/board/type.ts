@@ -24,3 +24,9 @@ export type SwipeData = {
   direction: SwipeDirection;
   slotNum: number;
 };
+
+export type Title = {
+  comparisonID?: number;
+  comparisonLabel?: string;
+  groupName?: string;
+};

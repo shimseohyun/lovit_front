@@ -1,5 +1,5 @@
 import { dummyData } from "../../../dummy/data";
-import type { BoardData, BoardPositionData, SwipeData } from "../type";
+import type { BoardData, BoardPositionData, SwipeData, Title } from "../type";
 import {
   colGroupLabel,
   directionDictionary,
@@ -13,16 +13,16 @@ type DeriveTitleDeps = {
   colPosition: BoardPositionData;
 };
 
-export function deriveTitle(
+export const deriveTitle = (
   d: SwipeData,
   deps: DeriveTitleDeps,
-): string | undefined {
+): Title | undefined => {
   const { axis, direction, slotNum } = d;
 
   let data = axis === "horizontal" ? deps.colData : deps.rowData;
   let label = axis === "horizontal" ? colGroupLabel : rowGroupLabel;
   let position = axis === "horizontal" ? deps.colPosition : deps.rowPosition;
-
+  // console.log(deps.colPosition, deps.rowPosition);
   let comparisonSlot = 0;
   let isGroup: boolean = false;
   let comparisonSlotID = 0;
@@ -44,16 +44,24 @@ export function deriveTitle(
   comparisonSlotID = isGroup ? currentData + groupAdd : currentData;
 
   if (isGroup) {
-    return label[comparisonSlotID];
+    return { groupName: label[comparisonSlotID] };
   } else {
     const newData = dummyData[comparisonSlotID];
     if (!newData) return;
 
-    return (
-      dummyData[comparisonSlotID].name +
-      directionDictionary[direction][
-        position[comparisonSlotID].group < 3 ? 0 : 1
-      ]
-    );
+    // console.log(
+    //   axis,
+    //   direction,
+    //   position,
+    //   comparisonSlotID,
+    //   position[comparisonSlotID].group,
+    // );
+    return {
+      comparisonID: comparisonSlotID,
+      comparisonLabel:
+        directionDictionary[direction][
+          position[comparisonSlotID].group < 3 ? 0 : 1
+        ],
+    };
   }
-}
+};
