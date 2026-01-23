@@ -70,6 +70,7 @@ const SwipeBoard = (parms: Parms) => {
 
           return (
             <S.SwipeAxisContainer
+              key={axis}
               $axis={axis}
               onTransitionEnd={onTransitionEnd}
               count={countList.length}

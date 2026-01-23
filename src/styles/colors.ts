@@ -26,12 +26,15 @@ export const fontColors = {
   textStrongest: colors.mono800,
 
   textDisable: colors.mono300,
+  textInverseLight: colors.monoWhite,
 } as const;
 
 export const strokeColors = {
   strokeLight: colors.mono300,
   strokeLighter: colors.mono200,
   strokeLightest: colors.mono100,
+
+  strokeStorngest: colors.mono900,
 } as const;
 
 export const foregroundColors = {

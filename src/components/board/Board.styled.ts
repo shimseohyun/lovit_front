@@ -78,19 +78,10 @@ export const VerticalAxis = styled.div`
   left: 50%;
 `;
 
-export const Button = styled.button`
-  width: 360px;
-  height: 44px;
-  margin-top: 30px;
-
-  background-color: black;
-  color: white;
-`;
-
 export const BoardContainer = styled.div<{ $size: number }>`
   width: ${({ $size }) => $size}px;
   height: ${({ $size }) => $size}px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2); /* blur=0, spread=2px */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   position: relative;
 `;

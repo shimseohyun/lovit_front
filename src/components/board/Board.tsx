@@ -13,6 +13,11 @@ import useBoardTotalData from "@hooks/board/useBoardTotalData";
 
 import SwipeBoard from "./swipeBoard/SwipeBoard";
 import BoardTitle from "./title/BoardTitle";
+import uesViewport from "@hooks/viewport/useViewport";
+import Selector from "@components/selector/Selector";
+import BottomButton from "@components/button/BottomButton";
+import OutlineButton from "@components/button/OutlineButton";
+import FillButton from "@components/button/FillButton";
 
 type Parms = {
   confirmNext: (r: number, col: number) => void;
@@ -25,12 +30,17 @@ const BoardLayout = ({ confirmNext, newDataID, fin }: Parms) => {
   const { config } = useBoardStatic();
   const { reset } = useBoardActions();
 
-  if (fin) {
+  const onClickNextButton = () => {
+    if (slot !== undefined) {
+      confirmNext(slot.r, slot.c);
+      reset();
+    }
+  };
+
+  if (!fin) {
     return (
       <>
-        <S.BoardContainer $size={config.screenWidth}>
-          <TouchBoard />
-        </S.BoardContainer>
+        <Selector />
       </>
     );
   }
@@ -49,27 +59,35 @@ const BoardLayout = ({ confirmNext, newDataID, fin }: Parms) => {
           <SwipeBoard currentItem={dummyData[newDataID]} />
         )}
       </S.BoardContainer>
-      {slot !== undefined && (
-        <S.Button
-          onClick={() => {
-            confirmNext(slot.r, slot.c);
-            reset();
-          }}
-        >
+
+      <BottomButton>
+        <OutlineButton>좋아요</OutlineButton>
+        <FillButton disabled={slot === undefined} onClick={onClickNextButton}>
           확인
-        </S.Button>
-      )}
+        </FillButton>
+      </BottomButton>
     </>
   );
 };
 
 const Board = () => {
+  const size = uesViewport();
   const { row, col, confirmNext, currentIDX, fin } = useBoardTotalData({
     newData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
   });
 
   return (
-    <BoardProvider initialRow={row} initialCol={col} summaryData={dummyData}>
+    <BoardProvider
+      initialRow={row}
+      initialCol={col}
+      summaryData={dummyData}
+      config={{
+        stepPx: 70,
+        screenHeight: size.width - 32,
+        screenWidth: size.width - 32,
+        minDistancePx: 10,
+      }}
+    >
       <BoardLayout confirmNext={confirmNext} newDataID={currentIDX} fin={fin} />
     </BoardProvider>
   );

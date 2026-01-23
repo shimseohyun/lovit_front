@@ -53,7 +53,6 @@ type BoardProviderProps = PropsWithChildren<{
   config?: Partial<BoardConfig>;
 }>;
 
-// ✅ 20줄대: wiring-only
 export const BoardProvider = ({
   children,
   initialRow,
