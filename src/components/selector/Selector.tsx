@@ -1,10 +1,17 @@
-import { useBoardStatic } from "@hooks/board/context/BoardContext";
+import {
+  useBoardState,
+  useBoardStatic,
+} from "@hooks/board/context/BoardContext";
 import * as S from "./Selector.styled";
 import SelectorItem from "./components/SelectorItem";
 import BottomButton from "@components/button/BottomButton";
 import FillButton from "@components/button/FillButton";
+
 const Selector = () => {
   const { summaryData } = useBoardStatic();
+  const { likeList } = useBoardState();
+  const likeCount = likeList.length;
+  const isNextAble = likeCount > 0 && likeCount < 3;
   return (
     <>
       <S.TitleContainer>
@@ -25,7 +32,7 @@ const Selector = () => {
       </S.ScollContainer>
 
       <BottomButton>
-        <FillButton>확인</FillButton>
+        <FillButton disabled={!isNextAble}> {likeCount}/3 확인</FillButton>
       </BottomButton>
     </>
   );

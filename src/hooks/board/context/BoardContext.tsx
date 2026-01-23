@@ -37,6 +37,8 @@ const mergeConfig = (config?: Partial<BoardConfig>): BoardConfig => ({
 export type BoardStateValue = {
   slot: Position | undefined;
   title: Title | undefined;
+  likeList: number[];
+  likeDic: Record<number, boolean>;
 };
 
 const [boardStaticContext, useBoardStatic] =
@@ -69,10 +71,19 @@ export const BoardProvider = ({
     summaryData,
     mergedConfig,
   });
-  const actionsValue = useBoardActionsValue({ boardData, dispatch });
+  const actionsValue = useBoardActionsValue({
+    boardData,
+    dispatch,
+  });
+
   const stateValue = useMemo(
-    () => ({ slot: state.slot, title: state.title }),
-    [state.slot, state.title],
+    () => ({
+      slot: state.slot,
+      title: state.title,
+      likeList: state.likeList,
+      likeDic: state.likeDic,
+    }),
+    [state.slot, state.title, state.likeDic, state.likeList],
   );
 
   return (

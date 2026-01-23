@@ -1,12 +1,17 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+import {
+  useBoardActions,
+  useBoardState,
+} from "@hooks/board/context/BoardContext";
 import type { Summary } from "@interfaces/type";
 
 type Parms = {
   info: Summary;
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ isSelected: boolean }>`
+  cursor: pointer;
   width: 100%;
   height: 120px;
 
@@ -15,9 +20,14 @@ const Wrapper = styled.div`
   border-radius: 8px;
   overflow: hidden;
 
-  /* ${(p) => css`
-    box-shadow: 0 0 0 2px ${p.theme.strokeColors.strokeStorngest};
-  `} */
+  ${(p) => {
+    if (p.isSelected) {
+      return css`
+        box-shadow: 0 0 0 3px ${p.theme.strokeColors.strokeStorngest};
+        transform: scale(0.9);
+      `;
+    }
+  }}
 `;
 const Img = styled.img`
   position: absolute;
@@ -53,15 +63,30 @@ const Label = styled.div`
     color: ${p.theme.fontColors.textInverseLight};
   `}
 `;
+
+const Checked = styled.img`
+  position: absolute;
+  right: 0px;
+  top: 0px;
+`;
 const SelectorItem = (parms: Parms) => {
+  const { likeDic } = useBoardState();
+  const { setLike } = useBoardActions();
   const { info } = parms;
+  const id = info.id;
+  const liked = likeDic[id];
+
+  const onClick = () => {
+    setLike(id, !liked);
+  };
 
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick} isSelected={liked}>
       <Img src={info.thumbnaeilURL} />
       {info.name}
       <Gradient />
       <Label>{info.name}</Label>
+      {liked && <Checked src={`/assets/marker/Checked.svg`} />}
     </Wrapper>
   );
 };

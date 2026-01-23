@@ -10,6 +10,7 @@ type Dispatch = (action: BoardAction) => void;
 export type BoardActionsValue = {
   setSlot: (p: Position) => void;
   setTitle: (d: SwipeData) => void;
+  setLike: (id: number, like: boolean) => void;
   reset: () => void;
 };
 
@@ -49,10 +50,16 @@ export function useBoardActionsValue(params: Params): BoardActionsValue {
     ],
   );
 
+  const setLike = useCallback(
+    (id: number, liked: boolean) =>
+      dispatch({ type: "SET_LIKE", payload: { id, liked } }),
+    [dispatch],
+  );
+
   const reset = useCallback(() => dispatch({ type: "RESET" }), [dispatch]);
 
   return useMemo(
-    () => ({ setSlot, setTitle, reset }),
-    [setSlot, setTitle, reset],
+    () => ({ setSlot, setTitle, reset, setLike }),
+    [setSlot, setTitle, reset, setLike],
   );
 }

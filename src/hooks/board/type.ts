@@ -1,4 +1,5 @@
 // Board domain types
+export type Step = "BOARD" | "LIKED" | "RESULT";
 
 // NOTE: 보드 도메인은 "스와이프 훅" 구현(폴더 구조/import 경로)에 종속되지 않도록
 // axis / direction 을 문자열 리터럴 유니온으로 로컬 정의합니다.

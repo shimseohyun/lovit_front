@@ -18,26 +18,36 @@ import Selector from "@components/selector/Selector";
 import BottomButton from "@components/button/BottomButton";
 import OutlineButton from "@components/button/OutlineButton";
 import FillButton from "@components/button/FillButton";
+import type { Step } from "@hooks/board/type";
 
 type Parms = {
   confirmNext: (r: number, col: number) => void;
   newDataID: number;
-  fin: boolean;
+  step: Step;
 };
 
-const BoardLayout = ({ confirmNext, newDataID, fin }: Parms) => {
-  const { slot } = useBoardState();
+const BoardLayout = ({ confirmNext, newDataID, step }: Parms) => {
+  const { slot, likeDic, likeList } = useBoardState();
   const { config } = useBoardStatic();
-  const { reset } = useBoardActions();
+  const { reset, setLike } = useBoardActions();
 
   const onClickNextButton = () => {
+    console.log(newDataID, likeDic, likeList);
+    const liked = likeDic[newDataID] === undefined ? false : likeDic[newDataID];
+    setLike(newDataID, liked);
+
     if (slot !== undefined) {
       confirmNext(slot.r, slot.c);
       reset();
     }
   };
 
-  if (!fin) {
+  const onClickLikeButton = () => {
+    const liked = likeDic[newDataID] === undefined ? true : !likeDic[newDataID];
+    setLike(newDataID, liked);
+  };
+
+  if (step === "LIKED") {
     return (
       <>
         <Selector />
@@ -45,34 +55,41 @@ const BoardLayout = ({ confirmNext, newDataID, fin }: Parms) => {
     );
   }
 
-  return (
-    <>
-      <BoardTitle newDataID={newDataID} />
+  if (step === "RESULT") {
+    return <></>;
+  }
 
-      <S.BoardContainer $size={config.screenWidth}>
-        <S.VerticalAxis />
-        <S.HorizontalAxis />
+  if (step === "BOARD")
+    return (
+      <>
+        <BoardTitle newDataID={newDataID} />
 
-        {slot === undefined ? (
-          <TouchBoard />
-        ) : (
-          <SwipeBoard currentItem={dummyData[newDataID]} />
-        )}
-      </S.BoardContainer>
+        <S.BoardContainer $size={config.screenWidth}>
+          <S.VerticalAxis />
+          <S.HorizontalAxis />
 
-      <BottomButton>
-        <OutlineButton>좋아요</OutlineButton>
-        <FillButton disabled={slot === undefined} onClick={onClickNextButton}>
-          확인
-        </FillButton>
-      </BottomButton>
-    </>
-  );
+          {slot === undefined ? (
+            <TouchBoard />
+          ) : (
+            <SwipeBoard currentItem={dummyData[newDataID]} />
+          )}
+        </S.BoardContainer>
+
+        <BottomButton>
+          <OutlineButton onClick={onClickLikeButton}>
+            {!likeDic[newDataID] ? "" : "안 "} 좋아요
+          </OutlineButton>
+          <FillButton disabled={slot === undefined} onClick={onClickNextButton}>
+            확인
+          </FillButton>
+        </BottomButton>
+      </>
+    );
 };
 
 const Board = () => {
   const size = uesViewport();
-  const { row, col, confirmNext, currentIDX, fin } = useBoardTotalData({
+  const { row, col, confirmNext, currentIDX, step } = useBoardTotalData({
     newData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
   });
 
@@ -88,7 +105,11 @@ const Board = () => {
         minDistancePx: 10,
       }}
     >
-      <BoardLayout confirmNext={confirmNext} newDataID={currentIDX} fin={fin} />
+      <BoardLayout
+        confirmNext={confirmNext}
+        newDataID={currentIDX}
+        step={step}
+      />
     </BoardProvider>
   );
 };
