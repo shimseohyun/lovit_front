@@ -31,21 +31,21 @@ export function useBoardActionsValue(params: Params): BoardActionsValue {
   const setTitle = useCallback(
     (d: SwipeData) => {
       const nextTitle = deriveTitle(d, {
-        rowData: boardData.rowData,
-        colData: boardData.colData,
-        rowPosition: boardData.rowPositionData,
-        colPosition: boardData.colPositionData,
+        verticalData: boardData.verticalData,
+        horizontalData: boardData.horizontalData,
+        verticalPositionData: boardData.verticalPositionData,
+        horizontalPositionData: boardData.horizontalPositionData,
       });
 
       if (!nextTitle) return;
       dispatch({ type: "SET_TITLE", payload: nextTitle });
     },
     [
-      boardData.rowData,
-      boardData.colData,
+      boardData.verticalData,
+      boardData.horizontalData,
 
-      boardData.colPositionData,
-      boardData.rowPositionData,
+      boardData.horizontalPositionData,
+      boardData.verticalPositionData,
       dispatch,
     ],
   );

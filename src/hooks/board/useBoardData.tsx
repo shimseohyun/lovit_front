@@ -5,8 +5,8 @@ export type AxisModel = {
 };
 
 type Params = {
-  rowData: BoardData;
-  colData: BoardData;
+  verticalData: BoardData;
+  horizontalData: BoardData;
 };
 
 const getPosition = (data: BoardData) => {
@@ -39,29 +39,29 @@ const getPosition = (data: BoardData) => {
   return { dataCount, separatedData, position };
 };
 
-const useBoardData = ({ rowData, colData }: Params) => {
+const useBoardData = ({ verticalData, horizontalData }: Params) => {
   const {
-    dataCount: rowCount,
-    separatedData: rowSeparatedData,
-    position: rowPositionData,
-  } = getPosition(rowData);
+    dataCount: verticalCount,
+    separatedData: verticalSeparatedData,
+    position: verticalPositionData,
+  } = getPosition(verticalData);
 
   const {
-    dataCount: colCount,
-    separatedData: colSeparatedData,
-    position: colPositionData,
-  } = getPosition(colData);
+    dataCount: horizontalCount,
+    separatedData: horizontalSeparatedData,
+    position: horizontalPositionData,
+  } = getPosition(horizontalData);
 
   return {
-    rowData,
-    rowCount,
-    rowSeparatedData,
-    rowPositionData,
+    verticalData,
+    verticalCount,
+    verticalSeparatedData,
+    verticalPositionData,
 
-    colData,
-    colCount,
-    colPositionData,
-    colSeparatedData,
+    horizontalData,
+    horizontalCount,
+    horizontalPositionData,
+    horizontalSeparatedData,
   };
 };
 

@@ -24,7 +24,7 @@ const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
 const useBoardSwipe = () => {
-  const { config, rowData /*, colData */ } = useBoardStatic();
+  const { config, verticalData /*, horizontalData */ } = useBoardStatic();
   const { setSlot, setTitle } = useBoardActions();
   const { stepPx, minDistancePx, screenHeight, screenWidth } = config;
 
@@ -87,8 +87,8 @@ const useBoardSwipe = () => {
   const getAxisRange = (axis: SwipeAxis) => {
     const isVertical = axis === "vertical";
     return isVertical
-      ? { min: 0, max: rowData.length }
-      : { min: 0, max: rowData.length }; // ⚠️ 가로면 colData.length여야 할 가능성 큼
+      ? { min: 0, max: verticalData.length }
+      : { min: 0, max: verticalData.length }; // ⚠️ 가로면 horizontalData.length여야 할 가능성 큼
   };
 
   const updateTranslate = (axis: SwipeAxis, value: number) => {

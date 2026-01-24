@@ -26,7 +26,6 @@ export function boardReducer(
     case "SET_TITLE":
       return { ...state, title: action.payload };
     case "SET_LIKE": {
-      console.log(state);
       const { id, liked } = action.payload;
 
       const nextLikeDic = { ...state.likeDic, [id]: liked };
@@ -38,7 +37,6 @@ export function boardReducer(
           : [...state.likeList, id]
         : state.likeList.filter((x) => x !== id);
 
-      console.log("action", nextLikeDic, nextLikeList);
       return { ...state, likeList: nextLikeList, likeDic: nextLikeDic };
     }
 

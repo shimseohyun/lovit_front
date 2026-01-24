@@ -31,11 +31,12 @@ export const Cursor = styled.div`
 
 export const SwipeAxisDescriptionList = styled.div<{
   $axis: SwipeAxis;
+  $stepPx: number;
 }>`
   display: flex;
   position: absolute;
 
-  ${({ $axis }) => {
+  ${({ $axis, $stepPx }) => {
     if ($axis == "horizontal") {
       return css`
         height: 100%;
@@ -44,7 +45,7 @@ export const SwipeAxisDescriptionList = styled.div<{
 
         transform: translateY(-50%);
         top: 50%;
-        left: -30px;
+        left: -${$stepPx / 2}px;
       `;
     }
     if ($axis == "vertical") {
@@ -55,7 +56,7 @@ export const SwipeAxisDescriptionList = styled.div<{
 
         transform: translateX(-50%);
         left: 50%;
-        top: -30px;
+        top: -${$stepPx / 2}px;
       `;
     }
   }}
@@ -208,6 +209,7 @@ export const SwipeAxisMarkerContainer = styled.div<{
 }>`
   display: grid;
   place-items: center;
+  flex-shrink: 0;
 
   ${({ $axis, $size }) => {
     if ($axis == "horizontal") {

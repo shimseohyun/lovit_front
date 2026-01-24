@@ -9,7 +9,10 @@ import SwipeBoardMarkerVertical from "./markers/SwipeBoardMarkerVertical";
 import SelectedSwipeBoardMarkerHorizontal from "./markers/SelectedSwipeBoardMarkerHorizontal";
 import SelectedSwipeBoardMarkerVertical from "./markers/SelectedSwipeBoardMarkerVertical";
 
-import { colGroupLabel, rowGroupLabel } from "@hooks/board/useBoardDescription";
+import {
+  horizontalGroupLabel,
+  verticalGroupLabel,
+} from "@hooks/board/useBoardDescription";
 import type { Summary } from "@interfaces/type";
 import type { BoardData, SwipeAxis } from "@hooks/board/type";
 
@@ -18,8 +21,14 @@ type Parms = {
 };
 const SwipeBoard = (parms: Parms) => {
   const { currentItem } = parms;
-  const { config, rowData, colData, colCount, rowCount, summaryData } =
-    useBoardStatic();
+  const {
+    config,
+    verticalData,
+    horizontalData,
+    horizontalCount,
+    verticalCount,
+    summaryData,
+  } = useBoardStatic();
 
   const { screenWidth, screenHeight, stepPx } = config;
 
@@ -41,15 +50,15 @@ const SwipeBoard = (parms: Parms) => {
   };
   const axisData: Record<SwipeAxis, AxisData> = {
     vertical: {
-      data: colData,
-      groupLabel: colGroupLabel,
-      count: colCount,
+      data: verticalData,
+      groupLabel: verticalGroupLabel,
+      count: verticalCount,
       translate: "y",
     },
     horizontal: {
-      data: rowData,
-      groupLabel: rowGroupLabel,
-      count: rowCount,
+      data: horizontalData,
+      groupLabel: horizontalGroupLabel,
+      count: horizontalCount,
       translate: "x",
     },
   };
@@ -78,7 +87,7 @@ const SwipeBoard = (parms: Parms) => {
               size={translate[data["translate"]]}
               isAnimating={isAnimating}
             >
-              <S.SwipeAxisDescriptionList $axis={axis}>
+              <S.SwipeAxisDescriptionList $stepPx={stepPx} $axis={axis}>
                 {countList.map((count, i) => {
                   return (
                     <S.SwipeAxisDescription
@@ -97,7 +106,7 @@ const SwipeBoard = (parms: Parms) => {
                 })}
               </S.SwipeAxisDescriptionList>
 
-              {colData.map((id) => (
+              {axisData[axis].data.map((id) => (
                 <S.SwipeAxisMarkerContainer
                   $axis={axis}
                   $size={stepPx}

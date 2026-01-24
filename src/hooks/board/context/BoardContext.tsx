@@ -25,7 +25,7 @@ export type BoardConfig = {
 const DEFAULT_BOARD_CONFIG: BoardConfig = {
   screenWidth: 400,
   screenHeight: 400,
-  stepPx: 60,
+  stepPx: 70,
   minDistancePx: 10,
 };
 
@@ -63,7 +63,10 @@ export const BoardProvider = ({
   config,
 }: BoardProviderProps) => {
   const mergedConfig = useMemo(() => mergeConfig(config), [config]);
-  const boardData = useBoardData({ rowData: initialRow, colData: initialCol });
+  const boardData = useBoardData({
+    verticalData: initialRow,
+    horizontalData: initialCol,
+  });
   const [state, dispatch] = useReducer(boardReducer, initialBoardState);
 
   const staticValue = useBoardStaticValue({

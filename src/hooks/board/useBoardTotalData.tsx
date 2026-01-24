@@ -18,8 +18,8 @@ const useBoardTotalData = (parms: Parms) => {
   const [col, setCol] = useState<BoardData>(initRow);
 
   const [step, setStep] = useState<Step>("BOARD");
+
   const getStep = (s: Step) => {
-    console.log(s);
     setStep(s);
   };
   const [currentIDX, setCurrentIDX] = useState<number>(0);

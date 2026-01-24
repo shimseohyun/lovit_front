@@ -23,22 +23,28 @@ const toPolygonPoints = (pts: Point[]) =>
     .join(" ");
 
 const Result = () => {
-  const { config, rowPositionData, colPositionData, rowCount, colCount } =
-    useBoardStatic();
+  const {
+    config,
+    verticalPositionData,
+    horizontalPositionData,
+    verticalCount,
+    horizontalCount,
+  } = useBoardStatic();
   const { likeList } = useBoardState();
 
   const points: Point[] = [];
 
   likeList.map((id, i) => {
-    console.log(likeList, rowPositionData);
     const rowPos =
-      rowPositionData[id].group / 6 +
-      ((rowPositionData[id].idx / (rowCount[rowPositionData[id].group] + 1)) *
+      verticalPositionData[id].group / 6 +
+      ((verticalPositionData[id].idx /
+        (verticalCount[verticalPositionData[id].group] + 1)) *
         1) /
         6;
     const colPos =
-      colPositionData[id].group / 6 +
-      ((colPositionData[id].idx / (colCount[colPositionData[id].group] + 1)) *
+      horizontalPositionData[id].group / 6 +
+      ((horizontalPositionData[id].idx /
+        (horizontalCount[horizontalPositionData[id].group] + 1)) *
         1) /
         6;
     points.push({ id: id, x: colPos, y: rowPos });
@@ -49,7 +55,6 @@ const Result = () => {
     return toPolygonPoints(orderClockwise(points));
   }, []);
 
-  console.log(points);
   return (
     <>
       <TouchBoard />

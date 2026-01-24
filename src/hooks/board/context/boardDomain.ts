@@ -6,16 +6,16 @@ import type {
   Title,
 } from "@hooks/board/type";
 import {
-  colGroupLabel,
+  horizontalGroupLabel,
   directionDictionary,
-  rowGroupLabel,
+  verticalGroupLabel,
 } from "@hooks/board/useBoardDescription";
 
 type DeriveTitleDeps = {
-  rowData: BoardData;
-  colData: BoardData;
-  rowPosition: BoardPositionData;
-  colPosition: BoardPositionData;
+  verticalData: BoardData;
+  horizontalData: BoardData;
+  verticalPositionData: BoardPositionData;
+  horizontalPositionData: BoardPositionData;
 };
 
 export const deriveTitle = (
@@ -24,10 +24,13 @@ export const deriveTitle = (
 ): Title | undefined => {
   const { axis, direction, slotNum } = d;
 
-  let data = axis === "horizontal" ? deps.colData : deps.rowData;
-  let label = axis === "horizontal" ? colGroupLabel : rowGroupLabel;
-  let position = axis === "horizontal" ? deps.colPosition : deps.rowPosition;
-  // console.log(deps.colPosition, deps.rowPosition);
+  let data = axis === "horizontal" ? deps.horizontalData : deps.verticalData;
+  let label = axis === "horizontal" ? horizontalGroupLabel : verticalGroupLabel;
+  let position =
+    axis === "horizontal"
+      ? deps.horizontalPositionData
+      : deps.verticalPositionData;
+
   let comparisonSlot = 0;
   let isGroup: boolean = false;
   let comparisonSlotID = 0;

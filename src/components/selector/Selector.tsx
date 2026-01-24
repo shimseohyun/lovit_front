@@ -41,7 +41,6 @@ const Selector = (parms: Parms) => {
         <FillButton
           disabled={!isNextAble}
           onClick={() => {
-            console.log("ckicked");
             getStep("RESULT");
           }}
         >
