@@ -6,12 +6,18 @@ import * as S from "./Selector.styled";
 import SelectorItem from "./components/SelectorItem";
 import BottomButton from "@components/button/BottomButton";
 import FillButton from "@components/button/FillButton";
+import type { Step } from "@hooks/board/type";
 
-const Selector = () => {
+type Parms = {
+  getStep: (s: Step) => void;
+};
+
+const Selector = (parms: Parms) => {
+  const { getStep } = parms;
   const { summaryData } = useBoardStatic();
   const { likeList } = useBoardState();
   const likeCount = likeList.length;
-  const isNextAble = likeCount > 0 && likeCount < 3;
+  const isNextAble = likeCount > 0 && likeCount <= 3;
   return (
     <>
       <S.TitleContainer>
@@ -32,7 +38,16 @@ const Selector = () => {
       </S.ScollContainer>
 
       <BottomButton>
-        <FillButton disabled={!isNextAble}> {likeCount}/3 확인</FillButton>
+        <FillButton
+          disabled={!isNextAble}
+          onClick={() => {
+            console.log("ckicked");
+            getStep("RESULT");
+          }}
+        >
+          {" "}
+          {likeCount}/3 확인
+        </FillButton>
       </BottomButton>
     </>
   );

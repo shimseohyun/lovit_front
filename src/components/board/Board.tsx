@@ -19,20 +19,21 @@ import BottomButton from "@components/button/BottomButton";
 import OutlineButton from "@components/button/OutlineButton";
 import FillButton from "@components/button/FillButton";
 import type { Step } from "@hooks/board/type";
+import Result from "@components/result/Result";
 
 type Parms = {
   confirmNext: (r: number, col: number) => void;
   newDataID: number;
   step: Step;
+  getStep: (s: Step) => void;
 };
 
-const BoardLayout = ({ confirmNext, newDataID, step }: Parms) => {
-  const { slot, likeDic, likeList } = useBoardState();
+const BoardLayout = ({ confirmNext, newDataID, step, getStep }: Parms) => {
+  const { slot, likeDic } = useBoardState();
   const { config } = useBoardStatic();
   const { reset, setLike } = useBoardActions();
 
   const onClickNextButton = () => {
-    console.log(newDataID, likeDic, likeList);
     const liked = likeDic[newDataID] === undefined ? false : likeDic[newDataID];
     setLike(newDataID, liked);
 
@@ -50,13 +51,19 @@ const BoardLayout = ({ confirmNext, newDataID, step }: Parms) => {
   if (step === "LIKED") {
     return (
       <>
-        <Selector />
+        <Selector getStep={getStep} />
       </>
     );
   }
-
   if (step === "RESULT") {
-    return <></>;
+    return (
+      <>
+        <BoardTitle newDataID={newDataID} />
+        <S.BoardContainer $size={config.screenWidth}>
+          <Result />
+        </S.BoardContainer>
+      </>
+    );
   }
 
   if (step === "BOARD")
@@ -89,9 +96,10 @@ const BoardLayout = ({ confirmNext, newDataID, step }: Parms) => {
 
 const Board = () => {
   const size = uesViewport();
-  const { row, col, confirmNext, currentIDX, step } = useBoardTotalData({
-    newData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-  });
+  const { row, col, confirmNext, currentIDX, step, getStep } =
+    useBoardTotalData({
+      newData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    });
 
   return (
     <BoardProvider
@@ -109,6 +117,7 @@ const Board = () => {
         confirmNext={confirmNext}
         newDataID={currentIDX}
         step={step}
+        getStep={getStep}
       />
     </BoardProvider>
   );

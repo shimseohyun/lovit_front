@@ -42,6 +42,16 @@ const BoardTitle = (parms: Parms) => {
   };
 
   const {} = parms;
+  if (newData === undefined)
+    return (
+      <>
+        <S.BoardTitleContainer>
+          <S.BoardTitleImg />
+          <S.BoardTitle>0000 컬렉터</S.BoardTitle>
+        </S.BoardTitleContainer>
+        <S.BoardSubTitle>사분면을 토대로 취향을 찾았어요!</S.BoardSubTitle>
+      </>
+    );
   return (
     <>
       <S.BoardTitleContainer>
