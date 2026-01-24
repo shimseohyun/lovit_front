@@ -7,7 +7,6 @@ type Parms = {
 };
 
 const Container = styled.div`
-  z-index: 11;
   position: relative;
   width: 1px;
   height: 1px;
@@ -37,7 +36,7 @@ const CenterImg = styled.img`
   position: absolute;
 
   transform: translate(-50%, -50%);
-  top: 50%;
+  top: calc(50% + 24px);
   left: 50%;
   width: 20px;
   height: 20px;

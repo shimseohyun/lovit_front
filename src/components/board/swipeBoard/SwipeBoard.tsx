@@ -48,6 +48,7 @@ const SwipeBoard = (parms: Parms) => {
     groupLabel: string[];
     translate: "x" | "y";
   };
+
   const axisData: Record<SwipeAxis, AxisData> = {
     vertical: {
       data: verticalData,
@@ -111,6 +112,9 @@ const SwipeBoard = (parms: Parms) => {
                   $axis={axis}
                   $size={stepPx}
                   key={`marker-${axis}-${id}`}
+                  style={{
+                    display: `${dragAxis === null || dragAxis === axis ? "grid" : "none"}`,
+                  }}
                 >
                   {id < 0 ? (
                     <S.SwipeAxisSeparator $axis={axis} />
@@ -136,12 +140,23 @@ const SwipeBoard = (parms: Parms) => {
 
       {isDragging && dragAxis !== null ? (
         dragAxis === "horizontal" ? (
-          <SelectedSwipeBoardMarkerHorizontal info={currentItem} />
+          <>
+            <S.VerticalAxis />
+
+            <SelectedSwipeBoardMarkerHorizontal info={currentItem} />
+          </>
         ) : (
-          <SelectedSwipeBoardMarkerVertical info={currentItem} />
+          <>
+            <S.HorizontalAxis />
+            <SelectedSwipeBoardMarkerVertical info={currentItem} />
+          </>
         )
       ) : (
-        <S.Cursor />
+        <>
+          <S.VerticalAxis />
+          <S.HorizontalAxis />
+          <S.Cursor />
+        </>
       )}
     </>
   );

@@ -15,7 +15,6 @@ export const Wrapper = styled.div<{ width: number; height: number }>`
 export const Cursor = styled.div`
   pointer-events: none;
 
-  z-index: 10;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -130,7 +129,7 @@ export const SwipeAxisDescriptionLabel = styled.div<{
     if ($axis === "vertical") {
       if ($currentAxis === null) {
         return css`
-          /* left: calc(50% - 10px); */
+          left: calc(50% - 10px);
         `;
       } else if ($currentAxis !== "vertical") {
         return css`
@@ -138,7 +137,7 @@ export const SwipeAxisDescriptionLabel = styled.div<{
         `;
       } else {
         return css`
-          /* left: calc(50% - 10px); */
+          left: calc(50% - 10px);
           opacity: 70%;
         `;
       }
@@ -146,7 +145,7 @@ export const SwipeAxisDescriptionLabel = styled.div<{
     if ($axis === "horizontal") {
       if ($currentAxis === null) {
         return css`
-          /* top: calc(50% + 10px); */
+          top: calc(50% + 10px);
         `;
       } else if ($currentAxis !== "horizontal") {
         return css`
@@ -154,7 +153,7 @@ export const SwipeAxisDescriptionLabel = styled.div<{
         `;
       } else {
         return css`
-          /* top: calc(50% + 10px); */
+          top: calc(50% + 10px);
           opacity: 70%;
         `;
       }
@@ -250,4 +249,25 @@ export const SwipeAxisSeparator = styled.div<{
   ${({ theme }) => css`
     background-color: ${theme.strokeColors.strokeLightest};
   `}
+`;
+
+export const HorizontalAxis = styled.div`
+  width: 1px;
+  height: 100%;
+  background: #e6e8eb;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+`;
+
+export const VerticalAxis = styled.div`
+  height: 1px;
+  width: 100%;
+  background: #e6e8eb;
+
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
 `;

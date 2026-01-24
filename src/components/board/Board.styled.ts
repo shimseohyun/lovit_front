@@ -1,16 +1,6 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
-import type { SwipeDirection } from "@hooks/board/type";
-
-export const Wrapper = styled.div<{ width: number; height: number }>`
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}px;
-
-  position: relative;
-  overflow: hidden;
-  touch-action: none;
-  user-select: none;
-`;
+import type { SwipeAxis, SwipeDirection } from "@hooks/board/type";
 
 const getPosition = (position: SwipeDirection) => {
   switch (position) {
@@ -46,7 +36,6 @@ const getPosition = (position: SwipeDirection) => {
 export const Chip = styled.div<{
   position: SwipeDirection;
 }>`
-  z-index: 10;
   position: absolute;
   padding: 6px 8px;
   border-radius: 20px;
@@ -55,39 +44,32 @@ export const Chip = styled.div<{
   ${(p) => getPosition(p.position)}
 `;
 
-export const HorizontalAxis = styled.div`
-  z-index: 10;
-  width: 1px;
-  height: 100%;
-  background: #e6e8eb;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-`;
-
-export const VerticalAxis = styled.div`
-  z-index: 10;
-  height: 1px;
-  width: 100%;
-  background: #e6e8eb;
-
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-`;
-
 export const BoardContainer = styled.div<{ $size: number }>`
   width: ${({ $size }) => $size}px;
   height: ${({ $size }) => $size}px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+
   overflow: hidden;
   position: relative;
+
+  ${(p) => css`
+    box-shadow: 0 0 0 1px ${p.theme.strokeColors.strokeLight};
+  `}
 `;
+const withCenterHole = (count: number, holePx: number) => {
+  // count는 기존 row/col 개수
+  // 결과는 count+1개 트랙 (가운데만 holePx)
+  const total = count + 1;
+  const mid = Math.floor(total / 2);
+
+  return Array.from({ length: total }, (_, i) =>
+    i === mid ? `${holePx}px` : "1fr",
+  ).join(" ");
+};
+
 export const BoardGrid = styled.div<{
   $rows: number;
   $cols: number;
+  $holePx?: number;
 }>`
   position: absolute;
 
@@ -101,23 +83,113 @@ export const BoardGrid = styled.div<{
 
   display: grid;
   grid-auto-flow: row;
-  grid-template-columns: repeat(${(p) => p.$cols}, 1fr);
-  grid-template-rows: repeat(${(p) => p.$rows}, 1fr);
 
-  background: #f2f4f6;
-  gap: 1px;
+  grid-template-columns: ${(p) => withCenterHole(p.$cols, p.$holePx ?? 20)};
+  grid-template-rows: ${(p) => withCenterHole(p.$rows, p.$holePx ?? 20)};
 `;
 
 export const PiecesGrid = styled.div`
-  background: #fff;
   width: 100%;
   height: 100%;
   overflow: visible;
-  position: relative;
 `;
 
 export const MarkerContainer = styled.div`
-  z-index: 10;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
   position: absolute;
   transform: translate(-50%, -50%);
+`;
+
+// axis description
+export const SwipeAxisDescriptionList = styled.div<{
+  $axis: SwipeAxis;
+}>`
+  pointer-events: none;
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  ${({ $axis }) => {
+    if ($axis == "horizontal") {
+      return css`
+        flex-direction: row;
+      `;
+    }
+    if ($axis == "vertical") {
+      return css`
+        flex-direction: column;
+      `;
+    }
+  }}
+`;
+
+export const SwipeAxisCenter = styled.div`
+  width: 20px;
+  height: 20px;
+`;
+
+// axis description
+export const SwipeAxisLine = styled.div<{
+  $axis: SwipeAxis;
+}>`
+  pointer-events: none;
+
+  ${(p) => css`
+    background-color: ${p.theme.strokeColors.strokeLightest};
+  `}
+
+  ${({ $axis }) => {
+    if ($axis == "horizontal") {
+      return css`
+        width: 1px;
+        height: 100%;
+      `;
+    }
+    if ($axis == "vertical") {
+      return css`
+        height: 1px;
+        width: 100%;
+      `;
+    }
+  }}
+`;
+
+export const SwipeAxisDescriptionLabel = styled.div<{
+  $axis: SwipeAxis;
+}>`
+  pointer-events: none;
+  flex-grow: 1;
+
+  ${({ $axis, ...p }) => {
+    if ($axis === "vertical") {
+      return css`
+        width: 20px;
+        writing-mode: vertical-lr;
+      `;
+    } else if ($axis === "horizontal") {
+      return css`
+        height: 20px;
+
+        border-right: 0.5px solid ${p.theme.strokeColors.strokeLightest};
+      `;
+    }
+  }}
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${({ theme }) => css`
+    background-color: ${theme.foregroundColors.foregroundLighter};
+    color: ${theme.fontColors.textLighter};
+    ${theme.fonts.body4B}
+  `}
 `;

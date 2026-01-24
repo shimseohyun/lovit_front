@@ -19,7 +19,6 @@ import BottomButton from "@components/button/BottomButton";
 import OutlineButton from "@components/button/OutlineButton";
 import FillButton from "@components/button/FillButton";
 import type { Step } from "@hooks/board/type";
-import Result from "@components/result/Result";
 
 type Parms = {
   confirmNext: (r: number, col: number) => void;
@@ -55,12 +54,13 @@ const BoardLayout = ({ confirmNext, newDataID, step, getStep }: Parms) => {
       </>
     );
   }
+
   if (step === "RESULT") {
     return (
       <>
         <BoardTitle newDataID={newDataID} />
         <S.BoardContainer $size={config.screenWidth}>
-          <Result />
+          <TouchBoard step={"RESULT"} />
         </S.BoardContainer>
       </>
     );
@@ -72,11 +72,8 @@ const BoardLayout = ({ confirmNext, newDataID, step, getStep }: Parms) => {
         <BoardTitle newDataID={newDataID} />
 
         <S.BoardContainer $size={config.screenWidth}>
-          <S.VerticalAxis />
-          <S.HorizontalAxis />
-
           {slot === undefined ? (
-            <TouchBoard />
+            <TouchBoard step={"BOARD"} />
           ) : (
             <SwipeBoard currentItem={dummyData[newDataID]} />
           )}
@@ -108,8 +105,8 @@ const Board = () => {
       summaryData={dummyData}
       config={{
         stepPx: 70,
-        screenHeight: size.width - 32,
-        screenWidth: size.width - 32,
+        screenHeight: size.width - 24,
+        screenWidth: size.width - 24,
         minDistancePx: 10,
       }}
     >

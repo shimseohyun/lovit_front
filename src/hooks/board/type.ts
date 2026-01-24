@@ -1,3 +1,8 @@
+export type Point = {
+  id: number;
+  x: number;
+  y: number;
+};
 // Board domain types
 export type Step = "BOARD" | "LIKED" | "RESULT";
 

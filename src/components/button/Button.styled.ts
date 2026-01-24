@@ -12,7 +12,7 @@ export const BottomButtonContainer = styled.div`
   justify-content: end;
 
   width: 100%;
-  padding: 16px;
+  padding: 16px 12px;
 `;
 export const LikeButton = styled.button`
   cursor: pointer;

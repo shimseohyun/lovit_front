@@ -6,7 +6,6 @@ type Parms = {
 };
 
 const Container = styled.div`
-  z-index: 11;
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;

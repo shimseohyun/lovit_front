@@ -3,9 +3,7 @@ import styled from "@emotion/styled";
 
 export const Cotnaienr = styled.div<{ size: number }>`
   position: absolute;
-  z-index: 20;
 
-  /* ✅ 내부 점/도형 absolute 기준 */
   position: relative;
   overflow: hidden;
 
@@ -22,7 +20,6 @@ export const Shape = styled.svg`
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 1;
 `;
 
 /* ✅ 도형 */
@@ -38,5 +35,4 @@ export const Dot = styled.div`
   position: absolute;
 
   transform: translate(-50%, -50%);
-  z-index: 2;
 `;

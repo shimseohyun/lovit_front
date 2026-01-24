@@ -1,12 +1,7 @@
 import { useMemo } from "react";
-import {
-  useBoardState,
-  useBoardStatic,
-} from "@hooks/board/context/BoardContext";
+import { useBoardStatic } from "@hooks/board/context/BoardContext";
 import * as S from "./Result.styled";
-import TouchBoard from "@components/board/TouchBoard";
-
-type Point = { id: number; x: number; y: number };
+import type { Point } from "@hooks/board/type";
 
 const orderClockwise = (pts: Point[]) => {
   const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
@@ -17,38 +12,21 @@ const orderClockwise = (pts: Point[]) => {
   );
 };
 
-const toPolygonPoints = (pts: Point[]) =>
-  pts
-    .map((p) => `${(p.x * 100).toFixed(2)},${(p.y * 100).toFixed(2)}`)
-    .join(" ");
+type Parms = {
+  points: Point[];
+};
 
-const Result = () => {
-  const {
-    config,
-    verticalPositionData,
-    horizontalPositionData,
-    verticalCount,
-    horizontalCount,
-  } = useBoardStatic();
-  const { likeList } = useBoardState();
+const Result = (parms: Parms) => {
+  const { points } = parms;
+  const { config } = useBoardStatic();
 
-  const points: Point[] = [];
-
-  likeList.map((id, i) => {
-    const rowPos =
-      verticalPositionData[id].group / 6 +
-      ((verticalPositionData[id].idx /
-        (verticalCount[verticalPositionData[id].group] + 1)) *
-        1) /
-        6;
-    const colPos =
-      horizontalPositionData[id].group / 6 +
-      ((horizontalPositionData[id].idx /
-        (horizontalCount[horizontalPositionData[id].group] + 1)) *
-        1) /
-        6;
-    points.push({ id: id, x: colPos, y: rowPos });
-  });
+  const toPolygonPoints = (pts: Point[]) =>
+    pts
+      .map(
+        (p) =>
+          `${(p.x / config.screenWidth) * 100},${(p.y / config.screenWidth) * 100}`,
+      )
+      .join(" ");
 
   const polygonPoints = useMemo(() => {
     if (points.length < 1) return "";
@@ -57,7 +35,6 @@ const Result = () => {
 
   return (
     <>
-      <TouchBoard />
       <S.Cotnaienr size={config.screenWidth}>
         <S.Shape viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
           {polygonPoints !== "" && <S.Poly points={polygonPoints} />}
@@ -67,8 +44,8 @@ const Result = () => {
           <S.Dot
             key={p.id}
             style={{
-              left: `${(p.x * 100).toFixed(2)}%`,
-              top: `${(p.y * 100).toFixed(2)}%`,
+              left: `${p.x.toFixed(2)}px`,
+              top: `${p.y.toFixed(2)}px`,
             }}
           />
         ))}
