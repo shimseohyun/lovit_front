@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useBoardStatic } from "@hooks/board/context/BoardContext";
 import * as S from "./Result.styled";
 import type { Point } from "@hooks/board/type";
+import useGetResult from "@hooks/result/useGetResult";
 
 const orderClockwise = (pts: Point[]) => {
   const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
@@ -19,6 +20,11 @@ type Parms = {
 const Result = (parms: Parms) => {
   const { points } = parms;
   const { config } = useBoardStatic();
+
+  const { label } = useGetResult({
+    points: points,
+    screenSize: config.screenWidth,
+  });
 
   const toPolygonPoints = (pts: Point[]) =>
     pts
