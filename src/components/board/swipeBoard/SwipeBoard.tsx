@@ -15,6 +15,7 @@ import {
 } from "@hooks/board/useBoardDescription";
 import type { Summary } from "@interfaces/type";
 import type { BoardData, SwipeAxis } from "@hooks/board/type";
+import React from "react";
 
 type Parms = {
   currentItem: Summary;
@@ -107,31 +108,49 @@ const SwipeBoard = (parms: Parms) => {
                 })}
               </S.SwipeAxisDescriptionList>
 
-              {axisData[axis].data.map((id) => (
-                <S.SwipeAxisMarkerContainer
-                  $axis={axis}
-                  $size={stepPx}
-                  key={`marker-${axis}-${id}`}
-                  style={{
-                    display: `${dragAxis === null || dragAxis === axis ? "grid" : "none"}`,
-                  }}
-                >
-                  {id < 0 ? (
-                    <S.SwipeAxisSeparator $axis={axis} />
-                  ) : axis === "horizontal" ? (
-                    <SwipeBoardMarkerHorizontal
-                      key={id}
-                      info={summaryData[id]}
-                      isSelected={isDragging && dragAxis === axis}
-                    />
-                  ) : (
-                    <SwipeBoardMarkerVertical
-                      key={id}
-                      info={summaryData[id]}
-                      isSelected={isDragging && dragAxis === axis}
+              {axisData[axis].data.map((id, i) => (
+                <React.Fragment key={i}>
+                  <S.SwipeAxisDot
+                    $axis={axis}
+                    $size={i * stepPx}
+                    style={{
+                      display: `${dragAxis === null || dragAxis === axis ? "grid" : "none"}`,
+                    }}
+                  />
+                  {i === axisData[axis].data.length - 1 && (
+                    <S.SwipeAxisDot
+                      style={{
+                        display: `${dragAxis === null || dragAxis === axis ? "grid" : "none"}`,
+                      }}
+                      $axis={axis}
+                      $size={(i + 1) * stepPx}
                     />
                   )}
-                </S.SwipeAxisMarkerContainer>
+                  <S.SwipeAxisMarkerContainer
+                    $axis={axis}
+                    $size={stepPx}
+                    key={`marker-${axis}-${id}`}
+                    style={{
+                      display: `${dragAxis === null || dragAxis === axis ? "grid" : "none"}`,
+                    }}
+                  >
+                    {id < 0 ? (
+                      <S.SwipeAxisSeparator $axis={axis} />
+                    ) : axis === "horizontal" ? (
+                      <SwipeBoardMarkerHorizontal
+                        key={id}
+                        info={summaryData[id]}
+                        isSelected={isDragging && dragAxis === axis}
+                      />
+                    ) : (
+                      <SwipeBoardMarkerVertical
+                        key={id}
+                        info={summaryData[id]}
+                        isSelected={isDragging && dragAxis === axis}
+                      />
+                    )}
+                  </S.SwipeAxisMarkerContainer>
+                </React.Fragment>
               ))}
             </S.SwipeAxisContainer>
           );

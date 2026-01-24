@@ -18,8 +18,8 @@ export const Cursor = styled.div`
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 10px;
   transform: translate(-50%, -50%);
 
@@ -78,6 +78,36 @@ export const SwipeAxisDescription = styled.div<{
       return css`
         width: 100%;
         height: ${$size}px;
+      `;
+    }
+  }}
+`;
+
+export const SwipeAxisDot = styled.div<{
+  $axis: SwipeAxis;
+  $size: number;
+}>`
+  ${(p) => css`
+    background-color: ${p.theme.strokeColors.strokeLighter};
+  `}
+
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  border-radius: 6px;
+  transform: translate(-50%, -50%);
+
+  ${({ $axis, $size }) => {
+    if ($axis == "horizontal") {
+      return css`
+        left: ${$size}px;
+        top: 50%;
+      `;
+    }
+    if ($axis == "vertical") {
+      return css`
+        top: ${$size}px;
+        left: 50%;
       `;
     }
   }}
@@ -254,7 +284,9 @@ export const SwipeAxisSeparator = styled.div<{
 export const HorizontalAxis = styled.div`
   width: 1px;
   height: 100%;
-  background: #e6e8eb;
+  ${(p) => css`
+    background-color: ${p.theme.strokeColors.strokeLighter};
+  `}
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
@@ -264,7 +296,9 @@ export const HorizontalAxis = styled.div`
 export const VerticalAxis = styled.div`
   height: 1px;
   width: 100%;
-  background: #e6e8eb;
+  ${(p) => css`
+    background-color: ${p.theme.strokeColors.strokeLighter};
+  `}
 
   position: absolute;
   transform: translate(-50%, -50%);

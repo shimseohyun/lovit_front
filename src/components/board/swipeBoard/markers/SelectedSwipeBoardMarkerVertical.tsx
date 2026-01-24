@@ -19,7 +19,7 @@ const Marker = styled.img`
 
   transform: translateY(-50%);
   top: 50%;
-  left: 4px;
+  left: 6px;
 `;
 
 const Img = styled.img`
@@ -27,7 +27,7 @@ const Img = styled.img`
 
   transform: translateY(-50%);
   top: 50%;
-  left: 10px;
+  left: 12px;
   width: 40px;
   height: 40px;
   border-radius: 50%;

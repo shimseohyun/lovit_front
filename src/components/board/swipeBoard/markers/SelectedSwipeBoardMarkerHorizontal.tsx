@@ -18,7 +18,7 @@ const Marker = styled.img`
   position: absolute;
 
   transform: translateX(-50%);
-  bottom: 4px;
+  bottom: 6px;
   left: 50%;
 `;
 
@@ -26,7 +26,7 @@ const Img = styled.img`
   position: absolute;
 
   transform: translateX(-50%);
-  bottom: 10px;
+  bottom: 12px;
   left: 50%;
   width: 40px;
   height: 40px;
