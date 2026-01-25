@@ -21,10 +21,10 @@ export const BoardTitleImg = styled.img`
 
   border-radius: 50%;
   object-fit: cover;
-
+  /* 
   ${(p) => css`
     border: 1px solid ${p.theme.strokeColors.strokeLighter};
-  `}
+  `} */
 `;
 
 export const BoardTitle = styled.div`

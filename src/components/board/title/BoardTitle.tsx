@@ -23,7 +23,7 @@ const BoardTitle = (parms: Parms) => {
   const { config } = useBoardStatic();
   const points = getPoints(likeList, config.screenWidth);
 
-  const { label } = useGetResult({
+  const { label, img } = useGetResult({
     points: points,
     screenSize: config.screenWidth,
   });
@@ -33,8 +33,8 @@ const BoardTitle = (parms: Parms) => {
     return (
       <>
         <S.BoardTitleContainer>
-          <S.BoardTitleImg />
-          <S.BoardTitle>{label} 컬렉터</S.BoardTitle>
+          <S.BoardTitleImg src={img} />
+          <S.BoardTitle>{label}</S.BoardTitle>
         </S.BoardTitleContainer>
         <S.BoardSubTitle>사분면을 토대로 취향을 찾았어요!</S.BoardSubTitle>
       </>

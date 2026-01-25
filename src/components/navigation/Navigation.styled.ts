@@ -13,7 +13,7 @@ export const Container = styled.div`
   transform: translateX(-50%);
   left: 50%;
   ${(p) => css`
-    max-width: ${p.theme.maxWidth}px;
+    max-width: ${p.theme.maxWidth};
   `}
 
   padding: 0px 12px;
