@@ -49,7 +49,6 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
     onEnd,
   } = options;
 
-  // ✅ bind의 참조를 안정화하기 위해 콜백은 ref로 보관
   const onProgressRef = useRef<SwipeOptions["onProgress"]>(onProgress);
   const onEndRef = useRef<SwipeOptions["onEnd"]>(onEnd);
 

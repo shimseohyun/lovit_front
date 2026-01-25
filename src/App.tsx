@@ -1,9 +1,19 @@
-import MainPage from "./pages/map/MapPage";
+import { Global, ThemeProvider } from "@emotion/react";
+
+import { theme } from "./styles/theme";
+import { global } from "./styles/global";
+import Board from "@components/board/Board";
 
 const App = () => {
+  const maxWidth = "500px";
+
   return (
     <>
-      <MainPage />
+      <ThemeProvider theme={theme(maxWidth)}>
+        <Global styles={global(maxWidth)} />
+
+        <Board />
+      </ThemeProvider>
     </>
   );
 };

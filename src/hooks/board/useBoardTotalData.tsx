@@ -1,5 +1,5 @@
-import { useState } from "react";
-import type { BoardData } from "./type";
+import { useEffect, useState } from "react";
+import type { BoardData, Step } from "./type";
 
 type Parms = {
   initRow?: BoardData;
@@ -17,9 +17,18 @@ const useBoardTotalData = (parms: Parms) => {
   const [row, setRow] = useState<BoardData>(initCol);
   const [col, setCol] = useState<BoardData>(initRow);
 
+  const [step, setStep] = useState<Step>("BOARD");
+
+  const getStep = (s: Step) => {
+    setStep(s);
+  };
   const [currentIDX, setCurrentIDX] = useState<number>(0);
 
-  const fin = newData.length === currentIDX;
+  useEffect(() => {
+    if (currentIDX === newData.length) {
+      setStep("LIKED");
+    }
+  }, [currentIDX]);
 
   const confirmNext = (slotR: number, slotC: number) => {
     let currentRow = row;
@@ -31,7 +40,7 @@ const useBoardTotalData = (parms: Parms) => {
     setCol(currentCol);
     setCurrentIDX(currentIDX + 1);
   };
-  return { row, col, confirmNext, fin, currentIDX };
+  return { row, col, confirmNext, step, getStep, currentIDX };
 };
 
 export default useBoardTotalData;

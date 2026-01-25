@@ -13,7 +13,7 @@ import {
   useBoardActionsValue,
   type BoardActionsValue,
 } from "./createBoardActions";
-import type { Summary } from "../../../type/type";
+import type { Summary } from "@interfaces/type";
 
 export type BoardConfig = {
   screenWidth: number;
@@ -25,7 +25,7 @@ export type BoardConfig = {
 const DEFAULT_BOARD_CONFIG: BoardConfig = {
   screenWidth: 400,
   screenHeight: 400,
-  stepPx: 60,
+  stepPx: 70,
   minDistancePx: 10,
 };
 
@@ -37,6 +37,8 @@ const mergeConfig = (config?: Partial<BoardConfig>): BoardConfig => ({
 export type BoardStateValue = {
   slot: Position | undefined;
   title: Title | undefined;
+  likeList: number[];
+  likeDic: Record<number, boolean>;
 };
 
 const [boardStaticContext, useBoardStatic] =
@@ -53,7 +55,6 @@ type BoardProviderProps = PropsWithChildren<{
   config?: Partial<BoardConfig>;
 }>;
 
-// ✅ 20줄대: wiring-only
 export const BoardProvider = ({
   children,
   initialRow,
@@ -62,7 +63,11 @@ export const BoardProvider = ({
   config,
 }: BoardProviderProps) => {
   const mergedConfig = useMemo(() => mergeConfig(config), [config]);
-  const boardData = useBoardData({ rowData: initialRow, colData: initialCol });
+  const boardData = useBoardData({
+    verticalData: initialRow,
+    horizontalData: initialCol,
+    boardSize: config?.screenWidth ?? 400,
+  });
   const [state, dispatch] = useReducer(boardReducer, initialBoardState);
 
   const staticValue = useBoardStaticValue({
@@ -70,10 +75,19 @@ export const BoardProvider = ({
     summaryData,
     mergedConfig,
   });
-  const actionsValue = useBoardActionsValue({ boardData, dispatch });
+  const actionsValue = useBoardActionsValue({
+    boardData,
+    dispatch,
+  });
+
   const stateValue = useMemo(
-    () => ({ slot: state.slot, title: state.title }),
-    [state.slot, state.title],
+    () => ({
+      slot: state.slot,
+      title: state.title,
+      likeList: state.likeList,
+      likeDic: state.likeDic,
+    }),
+    [state.slot, state.title, state.likeDic, state.likeList],
   );
 
   return (

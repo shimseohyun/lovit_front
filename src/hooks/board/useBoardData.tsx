@@ -1,12 +1,18 @@
-import type { BoardData, BoardPositionData, SeparatedBoardData } from "./type";
+import type {
+  BoardData,
+  BoardPositionData,
+  Point,
+  SeparatedBoardData,
+} from "./type";
 
 export type AxisModel = {
   slotToGroup: BoardData; // slotIndex -> groupIndex (separator는 음수 그대로)
 };
 
 type Params = {
-  rowData: BoardData;
-  colData: BoardData;
+  verticalData: BoardData;
+  horizontalData: BoardData;
+  boardSize: number;
 };
 
 const getPosition = (data: BoardData) => {
@@ -39,29 +45,62 @@ const getPosition = (data: BoardData) => {
   return { dataCount, separatedData, position };
 };
 
-const useBoardData = ({ rowData, colData }: Params) => {
+const useBoardData = ({ verticalData, horizontalData, boardSize }: Params) => {
   const {
-    dataCount: rowCount,
-    separatedData: rowSeparatedData,
-    position: rowPositionData,
-  } = getPosition(rowData);
+    dataCount: verticalCount,
+    separatedData: verticalSeparatedData,
+    position: verticalPositionData,
+  } = getPosition(verticalData);
 
   const {
-    dataCount: colCount,
-    separatedData: colSeparatedData,
-    position: colPositionData,
-  } = getPosition(colData);
+    dataCount: horizontalCount,
+    separatedData: horizontalSeparatedData,
+    position: horizontalPositionData,
+  } = getPosition(horizontalData);
+
+  const currentData = verticalData.filter((x) => x >= 0);
+  const getPoints = (data: number[], boardSize: number) => {
+    const points: Point[] = [];
+
+    data.map((id) => {
+      const vertical = verticalPositionData[id];
+      const horizontal = horizontalPositionData[id];
+
+      const padding = 20;
+      const gap = (boardSize - padding) / 6;
+
+      if (vertical === undefined || horizontal === undefined) return;
+      let verticalPos =
+        (vertical.group > 2 ? padding : 0) +
+        gap * vertical.group +
+        (vertical.idx / (verticalCount[vertical.group] + 1)) * gap;
+
+      let horizontalPos =
+        (horizontal.group > 2 ? padding : 0) +
+        gap * horizontal.group +
+        (horizontal.idx / (horizontalCount[horizontal.group] + 1)) * gap;
+
+      points.push({
+        id: id,
+        y: verticalPos,
+        x: horizontalPos,
+      });
+    });
+    return points;
+  };
 
   return {
-    rowData,
-    rowCount,
-    rowSeparatedData,
-    rowPositionData,
+    verticalData,
+    verticalCount,
+    verticalSeparatedData,
+    verticalPositionData,
 
-    colData,
-    colCount,
-    colPositionData,
-    colSeparatedData,
+    horizontalData,
+    horizontalCount,
+    horizontalPositionData,
+    horizontalSeparatedData,
+    getPoints,
+    points: getPoints(currentData, boardSize),
   };
 };
 

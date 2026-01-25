@@ -1,12 +1,11 @@
 import styled from "@emotion/styled";
-import type { Summary } from "../../../type/type";
+import type { Summary } from "@interfaces/type";
 
 type Parms = {
   info: Summary;
 };
 
 const Container = styled.div`
-  z-index: 11;
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
@@ -18,31 +17,31 @@ const Container = styled.div`
 const Marker = styled.img`
   position: absolute;
 
-  transform: translateX(-50%);
-  bottom: 4px;
-  left: 50%;
+  transform: translateY(-50%);
+  top: 50%;
+  left: 0px;
 `;
 
 const Img = styled.img`
   position: absolute;
 
-  transform: translateX(-50%);
-  bottom: 10px;
-  left: 50%;
+  transform: translateY(-50%);
+  top: 50%;
+  left: 16px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
 `;
 
-const SelectedSwipeBoardMarkerHorizontal = (parms: Parms) => {
+const SelectedSwipeBoardMarkerVertical = (parms: Parms) => {
   const { info } = parms;
   return (
     <Container>
-      <Marker src={`/assets/marker/Selected_SwipeBoard_Horizontal.svg`} />
+      <Marker src={`/assets/marker/Selected_SwipeBoard_Vertical.svg`} />
       <Img src={info.thumbnaeilURL} />
     </Container>
   );
 };
 
-export default SelectedSwipeBoardMarkerHorizontal;
+export default SelectedSwipeBoardMarkerVertical;

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { Summary } from "../../../type/type";
+import type { Summary } from "@interfaces/type";
 
 type Parms = {
   isSelected: boolean;
@@ -7,7 +7,6 @@ type Parms = {
 };
 
 const Container = styled.div`
-  z-index: 11;
   position: relative;
   width: 1px;
   height: 1px;
@@ -16,44 +15,45 @@ const Container = styled.div`
 const Marker = styled.img`
   position: absolute;
 
-  transform: translateY(-50%);
-  top: 50%;
-  right: 18px;
-`;
-
-const CenterImg = styled.img`
-  position: absolute;
-
-  transform: translate(-50%, -50%);
-  top: 50%;
+  transform: translateX(-50%);
+  top: 20px;
   left: 50%;
-  width: 20px;
-  height: 20px;
-
-  border-radius: 50%;
-  object-fit: cover;
-  opacity: 60%;
 `;
 
 const Img = styled.img`
   position: absolute;
 
-  transform: translateY(-50%);
-  top: 50%;
-  right: 24px;
+  transform: translateX(-50%);
+  top: 28px;
+  left: 50%;
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
 `;
 
-const SwipeBoardMarkerVertical = (parms: Parms) => {
-  const { isSelected, info } = parms;
+const CenterImg = styled.img`
+  position: absolute;
+
+  transform: translate(-50%, -50%);
+  top: calc(50% + 24px);
+  left: 50%;
+  width: 28px;
+  height: 28px;
+
+  border-radius: 50%;
+  object-fit: cover;
+
+  opacity: 90%;
+`;
+
+const SwipeBoardMarkerHorizontal = (parms: Parms) => {
+  const { info, isSelected } = parms;
   return (
     <Container>
       {isSelected ? (
         <>
-          <Marker src={`/assets/marker/SwipeBoard_Vertical.svg`} />
+          <Marker src={`/assets/marker/SwipeBoard_Horizontal.svg`} />
           <Img src={info.thumbnaeilURL} />
         </>
       ) : (
@@ -65,4 +65,4 @@ const SwipeBoardMarkerVertical = (parms: Parms) => {
   );
 };
 
-export default SwipeBoardMarkerVertical;
+export default SwipeBoardMarkerHorizontal;

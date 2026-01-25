@@ -1,7 +1,7 @@
 import type { SwipeDirection } from "./type";
 
-export const rowGroupLabel = [
-  "🍚완전 두부",
+export const verticalGroupLabel = [
+  "🍚 완전 두부",
   "🍚 제법 두부",
   "🍚 약간 두부",
   "🥞 약간 버터",
@@ -9,7 +9,7 @@ export const rowGroupLabel = [
   "🥞 완전 버터",
 ];
 
-export const colGroupLabel = [
+export const horizontalGroupLabel = [
   "🐱 완전 고양이",
   "🐱 제법 고양이",
   "🐱 약간 고양이",
