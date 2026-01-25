@@ -5,7 +5,6 @@ import {
 } from "@hooks/board/context/BoardContext";
 import * as S from "./Result.styled";
 import type { Point } from "@hooks/board/type";
-import useGetResult from "@hooks/result/useGetResult";
 
 const orderClockwise = (pts: Point[]) => {
   const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
@@ -22,11 +21,6 @@ const Result = () => {
 
   const { config } = useBoardStatic();
   const points = getPoints(likeList, config.screenWidth);
-
-  const { label } = useGetResult({
-    points: points,
-    screenSize: config.screenWidth,
-  });
 
   const toPolygonPoints = (pts: Point[]) =>
     pts

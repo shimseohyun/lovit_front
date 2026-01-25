@@ -6,7 +6,7 @@ import {
 
 import * as S from "./Board.styled";
 import TouchBoardMarker from "./marker/TouchBoardMarker";
-import type { Point, Step } from "@hooks/board/type";
+import type { Step } from "@hooks/board/type";
 import Result from "@components/result/Result";
 
 import {
@@ -21,7 +21,7 @@ type Parms = {
 const TouchBoard = (parms: Parms) => {
   const { step } = parms;
 
-  const { likeList, likeDic } = useBoardState();
+  const { likeDic } = useBoardState();
   const {
     summaryData,
 

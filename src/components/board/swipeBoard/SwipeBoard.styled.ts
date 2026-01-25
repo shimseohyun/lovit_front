@@ -312,3 +312,22 @@ export const VerticalAxis = styled.div`
   top: 50%;
   left: 50%;
 `;
+
+export const SwipeInfo = styled.div`
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  margin: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  ${(p) => css`
+    color: ${p.theme.fontColors.textLighter};
+    background-color: #ffffff;
+    ${p.theme.fonts.body3}
+    border: 1px solid ${p.theme.strokeColors.strokeLighter};
+  `};
+`;

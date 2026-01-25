@@ -192,7 +192,7 @@ export const SwipeAxisDescriptionLabel = styled.div<{
   pointer-events: none;
   flex-grow: 1;
 
-  ${({ $axis, ...p }) => {
+  ${({ $axis }) => {
     if ($axis === "vertical") {
       return css`
         width: 20px;

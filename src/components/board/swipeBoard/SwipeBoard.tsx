@@ -2,7 +2,10 @@ import * as S from "./SwipeBoard.styled";
 
 import useBoardSwipe from "@hooks/board/useBoardSwipe";
 
-import { useBoardStatic } from "@hooks/board/context/BoardContext";
+import {
+  useBoardState,
+  useBoardStatic,
+} from "@hooks/board/context/BoardContext";
 
 import SwipeBoardMarkerHorizontal from "./markers/SwipeBoardMarkerHorizontal";
 import SwipeBoardMarkerVertical from "./markers/SwipeBoardMarkerVertical";
@@ -28,9 +31,13 @@ const SwipeBoard = (parms: Parms) => {
     horizontalData,
     horizontalCount,
     verticalCount,
+
+    verticalPositionData,
+    horizontalPositionData,
     summaryData,
   } = useBoardStatic();
 
+  const { slot } = useBoardState();
   const { screenWidth, screenHeight, stepPx } = config;
 
   const {
@@ -66,6 +73,39 @@ const SwipeBoard = (parms: Parms) => {
   };
 
   const axisList: SwipeAxis[] = ["horizontal", "vertical"];
+
+  const currentHorizontalGroup = () => {
+    if (slot === undefined) return;
+
+    const slotNum = horizontalData[slot.c];
+
+    let groupNum = 0;
+    if (slotNum < 0) {
+      groupNum = slotNum + 5;
+    } else if (slotNum === undefined) {
+      groupNum = horizontalGroupLabel.length - 1;
+    } else {
+      groupNum = horizontalPositionData[slotNum].group;
+    }
+    return horizontalGroupLabel[groupNum];
+  };
+
+  const currentVerticalGroup = () => {
+    if (slot === undefined) return;
+
+    const slotNum = verticalData[slot.r];
+
+    let groupNum = 0;
+    if (slotNum < 0) {
+      groupNum = slotNum + 5;
+    } else if (slotNum === undefined) {
+      groupNum = verticalGroupLabel.length - 1;
+    } else {
+      groupNum = verticalPositionData[slotNum].group;
+    }
+
+    return verticalGroupLabel[groupNum];
+  };
 
   return (
     <>
@@ -177,6 +217,11 @@ const SwipeBoard = (parms: Parms) => {
           <S.Cursor />
         </>
       )}
+
+      <S.SwipeInfo>
+        <div>{currentVerticalGroup()}</div>
+        <div>{currentHorizontalGroup()}</div>
+      </S.SwipeInfo>
     </>
   );
 };

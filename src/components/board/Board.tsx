@@ -52,7 +52,7 @@ const BoardLayout = ({ confirmNext, newDataID, step, getStep }: Parms) => {
     return (
       <S.PageContainer>
         <Navigation />
-        <BoardTitle newDataID={newDataID} />
+        <BoardTitle newDataID={newDataID} step={step} />
         <S.BoardContainer $size={config.screenWidth}>
           <TouchBoard step={"RESULT"} />
         </S.BoardContainer>
@@ -73,7 +73,7 @@ const BoardLayout = ({ confirmNext, newDataID, step, getStep }: Parms) => {
     return (
       <S.FixedPageContainer>
         <Navigation />
-        <BoardTitle newDataID={newDataID} />
+        <BoardTitle newDataID={newDataID} step={step} />
 
         <S.BoardContainer $size={config.screenWidth}>
           {slot === undefined ? (
@@ -98,7 +98,7 @@ const BoardLayout = ({ confirmNext, newDataID, step, getStep }: Parms) => {
           </OutlineButton>
           <FillButton disabled={slot === undefined} onClick={onClickNextButton}>
             <div style={{ flexGrow: 1, textAlign: "center" }}>
-              {slot === undefined ? "4분면에서 선택해주세요" : "확인"}
+              {slot === undefined ? "그룹을 선택해주세요" : "여기로 할게요"}
             </div>
           </FillButton>
         </BottomButton>
