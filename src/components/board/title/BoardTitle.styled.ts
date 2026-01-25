@@ -23,7 +23,7 @@ export const BoardTitleImg = styled.img`
   object-fit: cover;
 
   ${(p) => css`
-    border-radius: 1px solid ${p.theme.strokeColors.strokeLighter};
+    border: 1px solid ${p.theme.strokeColors.strokeLighter};
   `}
 `;
 

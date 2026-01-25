@@ -5,6 +5,9 @@ export const Container = styled.div`
   height: 32px;
   width: 100%;
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex-shrink: 0;
   position: fixed;
   transform: translateX(-50%);
@@ -12,7 +15,8 @@ export const Container = styled.div`
   ${(p) => css`
     max-width: ${p.theme.maxWidth}px;
   `}
-  background-color:teal;
+
+  padding: 0px 12px;
 `;
 
 export const Padding = styled.div`

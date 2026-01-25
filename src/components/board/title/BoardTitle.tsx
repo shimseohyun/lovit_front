@@ -69,7 +69,9 @@ const BoardTitle = (parms: Parms) => {
             <S.BoardTitle>{newData.name}</S.BoardTitle>
             <S.BoardTitle>드래그해서 딱 맞는 위치에 놓아주세요!</S.BoardTitle>
           </S.BoardTitleContainer>
-          <S.BoardSubTitle>상하좌우로 드래그 할 수 있어요.</S.BoardSubTitle>
+          <S.BoardSubTitle>
+            상하좌우로 드래그해서 점에 놓을 수 있어요.
+          </S.BoardSubTitle>
         </>
       );
     }
@@ -86,7 +88,9 @@ const BoardTitle = (parms: Parms) => {
               <span>예요</span>
             </S.BoardTitle>
           </S.BoardTitleContainer>
-          <S.BoardSubTitle>상하좌우로 드래그 할 수 있어요.</S.BoardSubTitle>
+          <S.BoardSubTitle>
+            상하좌우로 드래그해서 점에 놓을 수 있어요.
+          </S.BoardSubTitle>
         </>
       );
     } else if (title.comparisonID !== undefined) {
@@ -105,7 +109,9 @@ const BoardTitle = (parms: Parms) => {
               <span>예요</span>
             </S.BoardTitle>
           </S.BoardTitleContainer>
-          <S.BoardSubTitle>상하좌우로 드래그 할 수 있어요.</S.BoardSubTitle>
+          <S.BoardSubTitle>
+            상하좌우로 드래그해서 점에 놓을 수 있어요.
+          </S.BoardSubTitle>
         </>
       );
     }

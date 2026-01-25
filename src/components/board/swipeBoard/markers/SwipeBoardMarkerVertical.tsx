@@ -12,14 +12,6 @@ const Container = styled.div`
   height: 1px;
 `;
 
-const Marker = styled.img`
-  position: absolute;
-
-  transform: translateY(-50%);
-  top: 50%;
-  right: 18px;
-`;
-
 const CenterImg = styled.img`
   position: absolute;
 
@@ -34,12 +26,20 @@ const CenterImg = styled.img`
   opacity: 60%;
 `;
 
+const Marker = styled.img`
+  position: absolute;
+
+  transform: translateY(-50%);
+  top: 50%;
+  right: 20px;
+`;
+
 const Img = styled.img`
   position: absolute;
 
   transform: translateY(-50%);
   top: 50%;
-  right: 24px;
+  right: 28px;
   width: 32px;
   height: 32px;
   border-radius: 50%;
