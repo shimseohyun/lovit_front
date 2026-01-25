@@ -66,6 +66,7 @@ export const BoardProvider = ({
   const boardData = useBoardData({
     verticalData: initialRow,
     horizontalData: initialCol,
+    boardSize: config?.screenWidth ?? 400,
   });
   const [state, dispatch] = useReducer(boardReducer, initialBoardState);
 

@@ -20,6 +20,9 @@ export type BoardStaticValue = {
     typeof useBoardData
   >["horizontalPositionData"];
 
+  points: ReturnType<typeof useBoardData>["points"];
+  getPoints: ReturnType<typeof useBoardData>["getPoints"];
+
   config: BoardConfig;
   summaryData: Record<number, Summary>;
 };
@@ -41,6 +44,8 @@ export function createBoardStaticValue(params: Params): BoardStaticValue {
     horizontalCount,
     horizontalPositionData,
     horizontalSeparatedData,
+    points,
+    getPoints,
   } = boardData;
 
   return {
@@ -53,6 +58,8 @@ export function createBoardStaticValue(params: Params): BoardStaticValue {
     horizontalPositionData,
     horizontalSeparatedData,
     config: mergedConfig,
+    points,
+    getPoints,
     summaryData,
   };
 }

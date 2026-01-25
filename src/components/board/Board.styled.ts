@@ -2,6 +2,29 @@ import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import type { SwipeAxis, SwipeDirection } from "@hooks/board/type";
 
+export const PageContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const FixedPageContainer = styled.div`
+  width: 100%;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  overflow: visible;
+  transform: translateX(-50%);
+  left: 50%;
+  ${(p) => css`
+    max-width: ${p.theme.maxWidth};
+  `}
+`;
+
 const getPosition = (position: SwipeDirection) => {
   switch (position) {
     case "right":
@@ -50,6 +73,8 @@ export const BoardContainer = styled.div<{ $size: number }>`
 
   overflow: hidden;
   position: relative;
+
+  flex-shrink: 0;
 
   ${(p) => css`
     box-shadow: 0 0 0 1px ${p.theme.strokeColors.strokeLight};
@@ -132,13 +157,14 @@ export const SwipeAxisDescriptionList = styled.div<{
 export const SwipeAxisCenter = styled.div`
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
 `;
 
-// axis description
 export const SwipeAxisLine = styled.div<{
   $axis: SwipeAxis;
 }>`
   pointer-events: none;
+  flex-shrink: 0;
 
   ${(p) => css`
     background-color: ${p.theme.strokeColors.strokeLightest};
@@ -170,17 +196,23 @@ export const SwipeAxisDescriptionLabel = styled.div<{
     if ($axis === "vertical") {
       return css`
         width: 20px;
-        writing-mode: vertical-lr;
+        height: 100%;
+
+        padding: 0px 6px;
       `;
     } else if ($axis === "horizontal") {
       return css`
         height: 20px;
-
-        border-right: 0.5px solid ${p.theme.strokeColors.strokeLightest};
+        width: 100%;
+        padding: 4px 0px;
+        white-space: nowrap;
       `;
     }
   }}
 
+  text-align: center;
+  overflow: hidden;
+  word-break: break-all;
   box-sizing: border-box;
 
   display: flex;

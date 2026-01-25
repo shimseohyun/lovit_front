@@ -127,7 +127,7 @@ export const SwipeAxisDescriptionLabel = styled.div<{
         opacity: 50%;
         top: 0;
         left: 50%;
-        writing-mode: vertical-lr;
+        padding: 0px 6px;
       `;
     } else if ($axis === "horizontal") {
       return css`
@@ -138,9 +138,16 @@ export const SwipeAxisDescriptionLabel = styled.div<{
         opacity: 50%;
         top: 50%;
         left: 0;
+
+        padding: 4px 0px;
+        white-space: nowrap;
       `;
     }
   }}
+
+  text-align: center;
+  overflow: hidden;
+  word-break: break-all;
 
   box-sizing: border-box;
   position: absolute;

@@ -19,6 +19,7 @@ import BottomButton from "@components/button/BottomButton";
 import OutlineButton from "@components/button/OutlineButton";
 import FillButton from "@components/button/FillButton";
 import type { Step } from "@hooks/board/type";
+import Navigation from "@components/navigation/Navigation";
 
 type Parms = {
   confirmNext: (r: number, col: number) => void;
@@ -47,28 +48,31 @@ const BoardLayout = ({ confirmNext, newDataID, step, getStep }: Parms) => {
     setLike(newDataID, liked);
   };
 
-  if (step === "LIKED") {
-    return (
-      <>
-        <Selector getStep={getStep} />
-      </>
-    );
-  }
-
   if (step === "RESULT") {
     return (
-      <>
+      <S.PageContainer>
+        <Navigation />
         <BoardTitle newDataID={newDataID} />
         <S.BoardContainer $size={config.screenWidth}>
           <TouchBoard step={"RESULT"} />
         </S.BoardContainer>
-      </>
+      </S.PageContainer>
+    );
+  }
+
+  if (step === "LIKED") {
+    return (
+      <S.FixedPageContainer>
+        <Navigation />
+        <Selector getStep={getStep} />
+      </S.FixedPageContainer>
     );
   }
 
   if (step === "BOARD")
     return (
-      <>
+      <S.FixedPageContainer>
+        <Navigation />
         <BoardTitle newDataID={newDataID} />
 
         <S.BoardContainer $size={config.screenWidth}>
@@ -80,14 +84,25 @@ const BoardLayout = ({ confirmNext, newDataID, step, getStep }: Parms) => {
         </S.BoardContainer>
 
         <BottomButton>
-          <OutlineButton onClick={onClickLikeButton}>
-            {!likeDic[newDataID] ? "" : "안 "} 좋아요
+          <OutlineButton
+            onClick={onClickLikeButton}
+            isSelected={likeDic[newDataID]}
+          >
+            {!likeDic[newDataID] ? (
+              <img src="/assets/icons/heart_stroke.svg" />
+            ) : (
+              <img src="/assets/icons/heart_fill.svg" />
+            )}
+
+            <span>마음에 들어요</span>
           </OutlineButton>
           <FillButton disabled={slot === undefined} onClick={onClickNextButton}>
-            확인
+            <div style={{ flexGrow: 1, textAlign: "center" }}>
+              {slot === undefined ? "4분면에서 선택해주세요" : "확인"}
+            </div>
           </FillButton>
         </BottomButton>
-      </>
+      </S.FixedPageContainer>
     );
 };
 

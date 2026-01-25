@@ -14,19 +14,20 @@ const Wrapper = styled.img<{ isSelected: boolean }>`
   ${({ isSelected }) => {
     if (isSelected) {
       return css`
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
+        border: solid 2px rgba(255, 0, 0, 0.7);
       `;
     } else {
       return css`
         width: 24px;
         height: 24px;
+        border: solid 1px #ddd;
       `;
     }
   }}
 
   border-radius: 20px;
-  border: solid 1px #ddd;
   object-fit: cover;
 `;
 

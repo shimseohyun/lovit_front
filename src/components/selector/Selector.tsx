@@ -44,8 +44,14 @@ const Selector = (parms: Parms) => {
             getStep("RESULT");
           }}
         >
-          {" "}
-          {likeCount}/3 확인
+          <span>
+            {likeList.length === 0
+              ? "1명 이상 선택해주세요"
+              : likeList.length > 3
+                ? "3명까지 선택할 수 있어요"
+                : "이렇게 할게요!"}
+          </span>
+          <span>{likeCount}/3</span>
         </FillButton>
       </BottomButton>
     </>

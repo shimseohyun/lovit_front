@@ -9,6 +9,7 @@ type Parms = {
 };
 const useGetResult = (parms: Parms) => {
   const { points, screenSize } = parms;
+
   let averageHorizontal = 0;
   let averageVertical = 0;
 
@@ -25,7 +26,7 @@ const useGetResult = (parms: Parms) => {
   const resultVertical = Math.floor(averageVertical / size);
 
   return {
-    label: +verticalResult[resultVertical] + horizontalResult[resultHorizontal],
+    label: verticalResult[resultVertical] + horizontalResult[resultHorizontal],
   };
 };
 

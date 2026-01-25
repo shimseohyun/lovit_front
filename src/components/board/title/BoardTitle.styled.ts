@@ -50,7 +50,7 @@ export const BoardTitleChip = styled.div`
 export const BoardSubTitle = styled.div`
   display: flex;
   justify-content: center;
-  padding: 16px 0px 12px 0px;
+  padding: 8px 0px 8px 0px;
 
   ${(p) => css`
     ${p.theme.fonts.body3}

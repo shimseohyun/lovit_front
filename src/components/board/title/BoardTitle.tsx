@@ -1,3 +1,4 @@
+import useGetResult from "@hooks/result/useGetResult";
 import * as S from "./BoardTitle.styled";
 
 import {
@@ -10,10 +11,18 @@ type Parms = {
 };
 
 const BoardTitle = (parms: Parms) => {
-  const { title } = useBoardState();
-  const { summaryData } = useBoardStatic();
+  const { title, likeList } = useBoardState();
+  const { summaryData, getPoints } = useBoardStatic();
   const { newDataID } = parms;
   const newData = summaryData[newDataID];
+
+  const { config } = useBoardStatic();
+  const points = getPoints(likeList, config.screenWidth);
+
+  const { label } = useGetResult({
+    points: points,
+    screenSize: config.screenWidth,
+  });
 
   const getTitle = () => {
     if (title === undefined) {
@@ -41,13 +50,12 @@ const BoardTitle = (parms: Parms) => {
     }
   };
 
-  const {} = parms;
   if (newData === undefined)
     return (
       <>
         <S.BoardTitleContainer>
           <S.BoardTitleImg />
-          <S.BoardTitle>0000 컬렉터</S.BoardTitle>
+          <S.BoardTitle>{label} 컬렉터</S.BoardTitle>
         </S.BoardTitleContainer>
         <S.BoardSubTitle>사분면을 토대로 취향을 찾았어요!</S.BoardSubTitle>
       </>
@@ -56,10 +64,7 @@ const BoardTitle = (parms: Parms) => {
     <>
       <S.BoardTitleContainer>
         <S.BoardTitleImg src={newData.thumbnaeilURL} />
-        <S.BoardTitle>
-          {newData.name}
-          <span>은</span>
-        </S.BoardTitle>
+        <S.BoardTitle>{newData.name}</S.BoardTitle>
 
         {getTitle()}
       </S.BoardTitleContainer>

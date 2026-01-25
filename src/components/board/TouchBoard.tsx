@@ -24,47 +24,11 @@ const TouchBoard = (parms: Parms) => {
   const { likeList, likeDic } = useBoardState();
   const {
     summaryData,
-    verticalData,
+
     verticalSeparatedData,
     horizontalSeparatedData,
-    verticalPositionData,
-    horizontalPositionData,
-    verticalCount,
-    horizontalCount,
-    config,
+    points,
   } = useBoardStatic();
-
-  const getPoints = (data: number[]) => {
-    const points: Point[] = [];
-
-    data.map((id) => {
-      const vertical = verticalPositionData[id];
-      const horizontal = horizontalPositionData[id];
-
-      const padding = 20;
-      const gap = (config.screenWidth - padding) / 6;
-
-      let verticalPos =
-        (vertical.group > 2 ? padding : 0) +
-        gap * vertical.group +
-        (vertical.idx / (verticalCount[vertical.group] + 1)) * gap;
-
-      let horizontalPos =
-        (horizontal.group > 2 ? padding : 0) +
-        gap * horizontal.group +
-        (horizontal.idx / (horizontalCount[horizontal.group] + 1)) * gap;
-
-      points.push({
-        id: id,
-        y: verticalPos,
-        x: horizontalPos,
-      });
-    });
-    return points;
-  };
-
-  const data = verticalData.filter((x) => x >= 0);
-  const points = getPoints(data);
 
   const { setSlot } = useBoardActions();
 
@@ -135,7 +99,7 @@ const TouchBoard = (parms: Parms) => {
         ))}
       </S.SwipeAxisDescriptionList>
 
-      {step === "RESULT" && <Result points={getPoints(likeList)} />}
+      {step === "RESULT" && <Result />}
 
       {points.map((point) => {
         const id = point.id;

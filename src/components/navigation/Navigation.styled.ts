@@ -1,7 +1,23 @@
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  height: 44px;
+  height: 32px;
   width: 100%;
-  background-color: wheat;
+
+  flex-shrink: 0;
+  position: fixed;
+  transform: translateX(-50%);
+  left: 50%;
+  ${(p) => css`
+    max-width: ${p.theme.maxWidth}px;
+  `}
+  background-color:teal;
+`;
+
+export const Padding = styled.div`
+  height: 32px;
+  width: 100%;
+
+  flex-shrink: 0;
 `;

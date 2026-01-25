@@ -1,5 +1,8 @@
 import { useMemo } from "react";
-import { useBoardStatic } from "@hooks/board/context/BoardContext";
+import {
+  useBoardState,
+  useBoardStatic,
+} from "@hooks/board/context/BoardContext";
 import * as S from "./Result.styled";
 import type { Point } from "@hooks/board/type";
 import useGetResult from "@hooks/result/useGetResult";
@@ -13,13 +16,12 @@ const orderClockwise = (pts: Point[]) => {
   );
 };
 
-type Parms = {
-  points: Point[];
-};
+const Result = () => {
+  const { getPoints } = useBoardStatic();
+  const { likeList } = useBoardState();
 
-const Result = (parms: Parms) => {
-  const { points } = parms;
   const { config } = useBoardStatic();
+  const points = getPoints(likeList, config.screenWidth);
 
   const { label } = useGetResult({
     points: points,
