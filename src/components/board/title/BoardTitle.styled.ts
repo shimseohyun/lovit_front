@@ -15,8 +15,8 @@ export const BoardTitleContainer = styled.div`
 `;
 
 export const BoardTitleImg = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   margin-bottom: 4px;
 
   border-radius: 50%;

@@ -4,8 +4,8 @@ const Navigation = () => {
   return (
     <>
       <S.Container>
-        <div>LOVIT</div>
-        <img src="/assets/icons/heart_fill.svg" />
+        {/* <div>LOVIT</div>
+        <img src="/assets/icons/heart_fill.svg" /> */}
       </S.Container>
       <S.Padding />
     </>

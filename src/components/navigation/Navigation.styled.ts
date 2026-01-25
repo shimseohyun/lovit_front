@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  height: 32px;
+  height: 10px;
   width: 100%;
 
   display: flex;
@@ -20,7 +20,7 @@ export const Container = styled.div`
 `;
 
 export const Padding = styled.div`
-  height: 32px;
+  height: 10px;
   width: 100%;
 
   flex-shrink: 0;

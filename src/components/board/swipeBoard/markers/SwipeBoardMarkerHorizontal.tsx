@@ -38,13 +38,13 @@ const CenterImg = styled.img`
   transform: translate(-50%, -50%);
   top: calc(50% + 24px);
   left: 50%;
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
 
   border-radius: 50%;
   object-fit: cover;
 
-  opacity: 60%;
+  opacity: 90%;
 `;
 
 const SwipeBoardMarkerHorizontal = (parms: Parms) => {
