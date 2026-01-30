@@ -6,6 +6,7 @@ export type RoughAxisData = number[][][];
 type ItemSummaryID = PrimaryKey;
 type UserAxisGroupID = PrimaryKey;
 type UserAxisBundleID = PrimaryKey;
+type UserAxisSlotID = PrimaryKey;
 
 export interface UserAxisGroup {
   userAxisGroupID: UserAxisGroupID;
@@ -25,9 +26,23 @@ export interface UserAxisBundle {
 
 export interface UserAxisItemPosition {
   itemSummaryID: ItemSummaryID;
-  userAxisGroupID: number;
-  userAxisBundleID: number;
-  order: number;
+  userAxisGroupID: UserAxisGroupID;
+  userAxisBundleID: UserAxisBundleID;
+}
+
+export type AxisSlotType =
+  | "START_LABEL"
+  | "CENTER_LABEL"
+  | "END_LABEL"
+  | "BETWEEN"
+  | "ITEM_LIST";
+
+export interface UserAxisSlot {
+  slotID: UserAxisSlotID;
+  slotType: AxisSlotType;
+
+  userAxisGroupID: UserAxisGroupID;
+  userAxisBundleID?: UserAxisBundleID; // "ITEM_LIST" 에서만 존재
 }
 
 export type UserAxisGroupDict = Record<UserAxisGroupID, UserAxisGroup>;
@@ -36,3 +51,5 @@ export type UserAxisItemPositionDict = Record<
   ItemSummaryID,
   UserAxisItemPosition
 >;
+
+export type UserAxisSlotList = UserAxisSlot[];
