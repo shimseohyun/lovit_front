@@ -45,11 +45,17 @@ export interface UserAxisSlot {
   userAxisBundleID?: UserAxisBundleID; // "ITEM_LIST" 에서만 존재
 }
 
+export interface UserAxisPoint {
+  percentage: number;
+  groupID: number;
+}
+
 export type UserAxisGroupDict = Record<UserAxisGroupID, UserAxisGroup>;
 export type UserAxisBundleDict = Record<UserAxisBundleID, UserAxisBundle>;
 export type UserAxisItemPositionDict = Record<
   ItemSummaryID,
   UserAxisItemPosition
 >;
+export type UserAxisPointDict = Record<ItemSummaryID, UserAxisPoint>;
 
 export type UserAxisSlotList = UserAxisSlot[];

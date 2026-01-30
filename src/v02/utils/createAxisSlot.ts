@@ -18,3 +18,10 @@ const createAxisSlot = (
 };
 
 export default createAxisSlot;
+
+export const getSlotCount = (length: number) => {
+  if (length === 0) return 1;
+  else {
+    return 2 * length - 1 + 2;
+  }
+};

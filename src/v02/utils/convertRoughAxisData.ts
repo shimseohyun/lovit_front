@@ -50,7 +50,7 @@ const convertRoughAxisData = (
       let currentItemList: number[] = [];
 
       /** 3. 아이템 별로 조회 */
-      bundle.forEach((itemID, itemIDX) => {
+      bundle.forEach((itemID) => {
         userAxisItemPosition[itemID] = {
           itemSummaryID: itemID,
           userAxisGroupID: currentAxisGroupID,

@@ -2,7 +2,7 @@ import { Global, ThemeProvider } from "@emotion/react";
 
 import { theme } from "./styles/theme";
 import { global } from "./styles/global";
-import TestPage from "@pagesV02/testData/TestData";
+import EvaluationPage from "@pagesV02/evaluation/EvaluationPage";
 
 const App = () => {
   const maxWidth = "500px";
@@ -11,7 +11,7 @@ const App = () => {
     <>
       <ThemeProvider theme={theme(maxWidth)}>
         <Global styles={global(maxWidth)} />
-        <TestPage />
+        <EvaluationPage />
       </ThemeProvider>
     </>
   );
