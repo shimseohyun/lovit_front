@@ -39,7 +39,8 @@
       "@dataV02/*": ["src/v02/data/*"],
       "@hooksV02/*": ["src/v02/hooks/*"],
       "@pagesV02/*": ["src/v02/pages/*"],
-      "@interfacesV02/*": ["src/v02/interfaces/*"]
+      "@interfacesV02/*": ["src/v02/interfaces/*"],
+      "@utilsV02/*": ["src/v02/utils/*"]
     }
   },
   "include": ["src"]

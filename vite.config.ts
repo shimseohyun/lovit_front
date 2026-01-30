@@ -20,6 +20,7 @@ export default defineConfig({
       "@hooksV02": path.resolve(__dirname, "src/v02/hooks"),
       "@interfacesV02": path.resolve(__dirname, "src/v02/interfaces"),
       "@pagesV02": path.resolve(__dirname, "src/v02/pages"),
+      "@utilsV02": path.resolve(__dirname, "src/v02/utils"),
     },
   },
 });
