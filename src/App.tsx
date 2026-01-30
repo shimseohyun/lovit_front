@@ -2,8 +2,8 @@ import { Global, ThemeProvider } from "@emotion/react";
 
 import { theme } from "./styles/theme";
 import { global } from "./styles/global";
-import Board from "@components/board/Board";
-import ColorTestPage from "@pages/ColorTest";
+import Board from "@componentsV01/board/Board";
+import ColorTestPage from "@pagesV01/ColorTest";
 
 const App = () => {
   const maxWidth = "500px";

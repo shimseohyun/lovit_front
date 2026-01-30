@@ -27,12 +27,19 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@data/*": ["src/data/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@pages/*": ["src/pages/*"],
-      "@interfaces/*": ["src/interfaces/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+
+      "@componentsV01/*": ["src/v01/components/*"],
+      "@dataV01/*": ["src/v01/data/*"],
+      "@hooksV01/*": ["src/v01/hooks/*"],
+      "@pagesV01/*": ["src/v01/pages/*"],
+      "@interfacesV01/*": ["src/v01/interfaces/*"],
+
+      "@componentsV02/*": ["src/v02/components/*"],
+      "@dataV02/*": ["src/v02/data/*"],
+      "@hooksV02/*": ["src/v02/hooks/*"],
+      "@pagesV02/*": ["src/v02/pages/*"],
+      "@interfacesV02/*": ["src/v02/interfaces/*"]
     }
   },
   "include": ["src"]
