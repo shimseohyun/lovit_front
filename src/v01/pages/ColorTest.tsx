@@ -1,26 +1,12 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-const withCenterHole = (count: number, holePx: number) => {
-  // count는 기존 row/col 개수
-  // 결과는 count+1개 트랙 (가운데만 holePx)
-  const total = count + 1;
-  const mid = Math.floor(total / 2);
-
-  return Array.from({ length: total }, (_, i) =>
-    i === mid ? `${holePx}px` : "1fr",
-  ).join(" ");
-};
-
 const ColorGrid = styled.div`
   width: 400px;
   height: 400px;
 
   display: grid;
   gap: 2px;
-
-  grid-template-columns: ${(p) => withCenterHole(6, 20)};
-  grid-template-rows: ${(p) => withCenterHole(6, 20)};
 `;
 
 const ColorChip = styled.div<{ h: number; s: number; l: number }>`

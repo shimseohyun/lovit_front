@@ -1,9 +1,9 @@
+import { useBoardDataContext } from "@hooksV02/data/contextBoardData";
 import type {
   UserAxisGroupDict,
   UserAxisItemPositionDict,
   UserAxisPointDict,
 } from "@interfacesV02/data/user";
-import { useBoardDataContext } from "./contextBoardData";
 
 const useGetBoardPoint = () => {
   const TOTAL_GROUP_COUNT = 6;

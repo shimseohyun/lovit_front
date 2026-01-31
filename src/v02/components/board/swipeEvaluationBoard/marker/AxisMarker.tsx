@@ -3,20 +3,43 @@ import styled from "@emotion/styled";
 import type { AxisSlotType } from "@interfacesV02/data/user";
 import type { AxisType } from "@interfacesV02/type";
 
-const Spot = styled.div`
+const Spot = styled.div<{ $isCurrent: boolean }>`
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
   top: 50%;
 
-  width: 4px;
-  height: 4px;
   border-radius: 2px;
-  ${(p) => css`
-    background-color: ${p.theme.strokeColors.strokeLight};
-  `}
+  ${(p) => {
+    if (p.$isCurrent) {
+      return css`
+        width: 6px;
+        height: 6px;
+        background-color: ${p.theme.strokeColors.strokeStorngest};
+      `;
+    } else {
+      return css`
+        width: 4px;
+        height: 4px;
+        background-color: ${p.theme.strokeColors.strokeLight};
+      `;
+    }
+  }}
 `;
-const MarkerCotainer = styled.div<{ $isSelected: boolean; $axis: AxisType }>`
+const MarkerCotainer = styled.div<{
+  $isSelected: boolean;
+  $axis: AxisType;
+  $isVisible: boolean;
+}>`
+  opacity: 100%;
+  ${({ $isVisible }) =>
+    $isVisible ||
+    css`
+      opacity: 0%;
+    `}
+
+  transition: opacity ease-out 120ms;
+  pointer-events: none;
   position: relative;
 
   width: 2px;
@@ -24,7 +47,7 @@ const MarkerCotainer = styled.div<{ $isSelected: boolean; $axis: AxisType }>`
   display: flex;
 
   ${({ $axis }) => css`
-    flex-direction: ${$axis === "HORIAONTAL" ? "column" : "row"};
+    flex-direction: ${$axis === "HORIZONTAL" ? "column" : "row"};
   `}
 
   justify-content: center;
@@ -65,8 +88,8 @@ const Marker = styled.div<{
   ${({ $isSelected, $axis }) => {
     if ($isSelected) {
       return css`
-        margin-top: ${$axis === "HORIAONTAL" ? 24 : 0}px;
-        margin-left: ${$axis === "HORIAONTAL" ? 0 : 24}px;
+        margin-top: ${$axis === "HORIZONTAL" ? 24 : 0}px;
+        margin-left: ${$axis === "HORIZONTAL" ? 0 : 24}px;
         width: 48px;
         height: 48px;
       `;
@@ -77,6 +100,8 @@ const Marker = styled.div<{
       `;
     }
   }}
+  transition: margin ease-out 120ms;
+
   ${(p) => css`
     background-color: ${p.theme.foregroundColors.foregroundLighter};
     ${p.$isLabel
@@ -88,7 +113,7 @@ const Marker = styled.div<{
           background-image: url(${p.$imgURL});
           background-size: cover;
           background-position: center center;
-          box-shadow: 0 0 0 1px {p.theme.strokeColors.strokeLighter};
+          box-shadow: 0 0 0 1px ${p.theme.strokeColors.strokeLighter};
         `}
   `}
 `;
@@ -125,6 +150,8 @@ const MarkerLabel = styled.div<{ $isLabel: boolean }>`
 
 type Parms = {
   isSelected: boolean;
+  isVisible: boolean;
+  isCurrent: boolean;
   axis: AxisType;
   type: AxisSlotType;
   label: string;
@@ -132,28 +159,29 @@ type Parms = {
 };
 
 const AxisMarker = (parms: Parms) => {
-  const { isSelected, axis, type, label, imgURL } = parms;
+  const { isSelected, isVisible, isCurrent, axis, type, label, imgURL } = parms;
 
   const isLabel = type !== "ITEM_LIST";
   const isNone = type === "BETWEEN";
 
-  if (isNone) {
-    <MarkerCotainer $isSelected={isSelected} $axis={axis}>
-      <Spot />
-    </MarkerCotainer>;
-  }
   return (
-    <MarkerCotainer $isSelected={isSelected} $axis={axis}>
-      <Spot />
-      <Marker
-        $isSelected={isSelected}
-        $axis={axis}
-        $isLabel={isLabel}
-        $imgURL={imgURL}
-      >
-        <MarkerLabel $isLabel={isLabel}>{label}</MarkerLabel>
-        {isLabel && <>🥞</>}
-      </Marker>
+    <MarkerCotainer
+      $isVisible={isVisible}
+      $isSelected={isSelected}
+      $axis={axis}
+    >
+      <Spot $isCurrent={isCurrent} />
+      {!isNone && (
+        <Marker
+          $isSelected={isSelected}
+          $axis={axis}
+          $isLabel={isLabel}
+          $imgURL={imgURL}
+        >
+          <MarkerLabel $isLabel={isLabel}>{label}</MarkerLabel>
+          {isLabel && <>🥞</>}
+        </Marker>
+      )}
     </MarkerCotainer>
   );
 };

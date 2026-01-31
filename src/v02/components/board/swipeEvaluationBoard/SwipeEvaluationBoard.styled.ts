@@ -3,21 +3,57 @@ import styled from "@emotion/styled";
 import type { AxisType } from "@interfacesV02/type";
 
 export const BoardContaienr = styled.div<{ $size: number }>`
+  touch-action: none;
   ${({ $size }) => css`
     width: ${$size}px;
     height: ${$size}px;
   `}
   position:relative;
   overflow: hidden;
-  border: 1px solid black;
+  position: fixed;
+`;
+
+export const BoardAxisContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
+
+export const BoardAxis = styled.div<{
+  $axis: AxisType;
+}>`
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  ${({ $axis, ...p }) => {
+    if ($axis === "HORIZONTAL") {
+      return css`
+        width: 100%;
+        height: 1px;
+        background-color: ${p.theme.strokeColors.strokeLighter};
+      `;
+    } else {
+      return css`
+        height: 100%;
+        width: 1px;
+        background-color: ${p.theme.strokeColors.strokeLighter};
+      `;
+    }
+  }}
 `;
 
 export const BoardAxisWrpper = styled.div<{
   $position: number;
   $axis: AxisType;
+  $isAnimating: boolean;
 }>`
+  pointer-events: none;
+  transition: ${({ $isAnimating }) =>
+    $isAnimating ? "top 220ms ease, left 220ms ease" : "none"};
+
   ${({ $position, $axis }) => {
-    if ($axis === "HORIAONTAL") {
+    if ($axis === "HORIZONTAL") {
       return css`
         position: absolute;
         transform: translateX(-50%);
@@ -46,7 +82,7 @@ export const BoardAxisWrpper = styled.div<{
 `;
 export const BoardAxisItem = styled.div<{ $size: number; $axis: AxisType }>`
   ${({ $size, $axis }) => {
-    if ($axis === "HORIAONTAL") {
+    if ($axis === "HORIZONTAL") {
       return css`
         width: ${$size}px;
         height: 100%;

@@ -1,4 +1,4 @@
-import useGetBoardPoint from "@hooksV02/data/useGetBoardPoint";
+import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 import * as S from "./TouchEvaluationBoard.styled";
 import { useBoardDataContext } from "@hooksV02/data/contextBoardData";
 import type { UserAxisGroupDict } from "@interfacesV02/data/user";
@@ -17,12 +17,7 @@ const TouchEvaluationBoard = () => {
     for (let i = 0; i < groupID; i++) {
       slotIDX += getSlotCount(gorupDict[i].bundleList.length);
     }
-    console.log(
-      groupID,
-      gorupDict[groupID].bundleList,
-      gorupDict[groupID].bundleList.length,
-      getSlotCount(gorupDict[groupID].bundleList.length) / 2,
-    );
+
     slotIDX += Math.floor(
       getSlotCount(gorupDict[groupID].bundleList.length) / 2,
     );
@@ -51,7 +46,7 @@ const TouchEvaluationBoard = () => {
     const vSlotIDX = getSlotIDX(v, vertical.groupDict);
     const hSlotIDX = getSlotIDX(h, horizontal.groupDict);
 
-    setBoardSlot(vSlotIDX, hSlotIDX);
+    setBoardSlot({ vertical: vSlotIDX, horizontal: hSlotIDX });
   };
 
   return (
@@ -76,11 +71,7 @@ const TouchEvaluationBoard = () => {
           return (
             <S.Marker
               key={i}
-              $left={
-                horizontalPoints[item].percentage
-
-                // getPercentWithCenter(horizontalPoints[item].percentage)
-              }
+              $left={getPercentWithCenter(horizontalPoints[item].percentage)}
               $top={getPercentWithCenter(verticalPoints[item].percentage)}
             >
               {item}
