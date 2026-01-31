@@ -1,6 +1,5 @@
-import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
 import useSwipe from "@hooksV02/swipe/useSwipe";
-import type { AxisType, BoardDirection, SlotDict } from "@interfacesV02/type";
+import type { AxisType, SlotDict } from "@interfacesV02/type";
 import { useCallback, useRef, useState } from "react";
 import type { PointerEventHandler } from "react";
 
@@ -151,7 +150,7 @@ const useBoardSwipe = (params: Params) => {
 
     isDragging,
     dragAxis,
-    direction,
+    dragDirection: direction,
   };
 };
 

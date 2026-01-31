@@ -1,7 +1,8 @@
-import type {
-  AxisType,
-  BoardDirection,
-  DirectionType,
+import {
+  emptyDirection,
+  type AxisType,
+  type BoardDirection,
+  type DirectionType,
 } from "@interfacesV02/type";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { PointerEventHandler } from "react";
@@ -60,11 +61,6 @@ type SwipeOptions = {
   onEnd?: (result: SwipeResult) => void;
 };
 
-const emptyDirection: BoardDirection = {
-  HORIZONTAL: null,
-  VERTICAL: null,
-};
-
 const getAxis = (dx: number, dy: number): AxisType =>
   Math.abs(dx) >= Math.abs(dy) ? "HORIZONTAL" : "VERTICAL";
 
@@ -112,12 +108,10 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
     axisLocked: null as AxisType | null,
   });
 
-  /** ✅ 외부로 노출할 UI 상태들 */
   const [isDragging, setIsDragging] = useState(false);
   const [dragAxis, setDragAxis] = useState<AxisType | null>(null);
   const [direction, setDirection] = useState<BoardDirection>(emptyDirection);
 
-  /** ✅ state 즉시 참조용 ref (콜백에 항상 최신 값 전달) */
   const isDraggingRef = useRef(false);
   const dragAxisRef = useRef<AxisType | null>(null);
   const directionRef = useRef<BoardDirection>(emptyDirection);
@@ -138,10 +132,12 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
     const nextDir = getAxisDirection(axisDelta);
 
     const prev = directionRef.current;
+
     if (prev[axis] === nextDir) return prev;
 
     const next: BoardDirection = { ...prev, [axis]: nextDir };
     directionRef.current = next;
+
     setDirection(next);
     return next;
   };
@@ -170,7 +166,6 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
 
   const bind: SwipeBind<T> = useMemo(() => {
     const onPointerDown: PointerEventHandler<T> = (e) => {
-      // 마우스 우클릭/중클릭 방지
       if (e.pointerType === "mouse" && e.button !== 0) return;
 
       const now = performance.now();
@@ -185,9 +180,6 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
 
       g.axisLocked = null;
 
-      // ✅ 새 제스처 시작 시 UI 상태 초기화
-      directionRef.current = emptyDirection;
-      setDirection(emptyDirection);
       setDragAxisSafe(null);
 
       if (draggingMode === "down") setIsDraggingSafe(true);

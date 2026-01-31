@@ -17,6 +17,7 @@ export const BoardDataProvider = (props: ProviderProps) => {
     verticalRough,
     preferenceRough,
     itemSummaryDict = {},
+    boardInformation,
   } = props;
 
   const boardData = useBoardData({
@@ -33,7 +34,8 @@ export const BoardDataProvider = (props: ProviderProps) => {
 
   const staticValue: BoardStaticValue = useMemo(
     () => ({
-      itemSummaryDict: itemSummaryDict,
+      boardInformation,
+      itemSummaryDict,
       boardSize: defaultBoardSize,
       stepPX: defaultStepPx,
       ...boardData,

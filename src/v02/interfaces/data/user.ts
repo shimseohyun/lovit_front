@@ -1,5 +1,5 @@
+import type { DirectionType } from "@interfacesV02/type";
 import type { PrimaryKey } from ".";
-import type { AxisSide } from "./system";
 
 export type RoughAxisData = number[][][];
 
@@ -11,7 +11,7 @@ type UserAxisSlotID = PrimaryKey;
 export interface UserAxisGroup {
   userAxisGroupID: UserAxisGroupID;
 
-  axisSide: AxisSide;
+  axisSide: DirectionType;
   intensityLevel: number;
 
   bundleList: UserAxisBundleID[];

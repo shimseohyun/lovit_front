@@ -25,6 +25,14 @@ export const BoardTitleContainer = styled.div`
   padding: 10px 16px 0 16px;
 `;
 
+export const BoardTitleMain = styled.div`
+  padding-top: 4px;
+  ${(p) => css`
+    ${p.theme.fonts.head1}
+    color:${p.theme.fontColors.titleStrongest};
+  `}
+`;
+
 export const BoardTitleDescription = styled.div`
   display: flex;
   flex-direction: column;
@@ -38,6 +46,7 @@ export const BoardTitleDescription = styled.div`
     color:${p.theme.fontColors.textLightest};
   `}
 `;
+
 export const BoardTitleItemSection = styled.div`
   display: flex;
   flex-direction: column;

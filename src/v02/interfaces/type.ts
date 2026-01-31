@@ -1,6 +1,12 @@
 export type AxisType = "HORIZONTAL" | "VERTICAL";
-export type DirectionType = "END" | "START" | null;
-export type BoardDirection = Record<AxisType, DirectionType>;
+export type DirectionType = "END" | "START";
+
+export const emptyDirection: BoardDirection = {
+  HORIZONTAL: null,
+  VERTICAL: null,
+};
+
+export type BoardDirection = Record<AxisType, DirectionType | null>;
 
 export type EvaluationSlot = Record<AxisType, number>;
 

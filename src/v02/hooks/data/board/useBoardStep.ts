@@ -33,6 +33,9 @@ const useBoardStep = (parms: Parms) => {
     setEvaluationSlot();
   };
 
+  const quitAllStep = () => {
+    setIsFin(true);
+  };
   return {
     isFin,
     currentStep,
@@ -40,6 +43,7 @@ const useBoardStep = (parms: Parms) => {
     navigateEvaluationSwipe,
     navigatePreference,
     confrimCurrentStep,
+    quitAllStep,
   };
 };
 

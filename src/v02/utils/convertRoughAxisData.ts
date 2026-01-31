@@ -1,5 +1,3 @@
-import type { AxisSide } from "@interfacesV02/data/system";
-
 import type {
   AxisSlotType,
   RoughAxisData,
@@ -9,6 +7,7 @@ import type {
   UserAxisSlotList,
 } from "@interfacesV02/data/user";
 import createAxisSlot from "./createAxisSlot";
+import type { DirectionType } from "@interfacesV02/type";
 
 const getIntensity = (currentID: number, groupCountPerSide: number) => {
   return Math.abs(currentID - groupCountPerSide);
@@ -29,7 +28,8 @@ const convertRoughAxisData = (
 
   /** 1. 그룹별로 조회 */
   data.forEach((group, groupIDX) => {
-    let axisSide: AxisSide = groupIDX - groupCountPerSide < 0 ? "START" : "END";
+    let axisSide: DirectionType =
+      groupIDX - groupCountPerSide < 0 ? "START" : "END";
     let currentBundleList: number[] = [];
     let currentIntensity =
       type === "EVALUATION"

@@ -1,121 +1,130 @@
-/**
- * =========================================
- * Global / System domain
- * =========================================
- */
-
+import type { AxisType, DirectionType } from "@interfacesV02/type";
 import type { PrimaryKey } from ".";
 
-/** PK mixins (ID들은 이 인터페이스를 확장해서 정합성 유지) */
-export interface ItemSummaryID {
-  itemSummaryID: PrimaryKey;
-}
+export type EvaluationPart = {
+  label: string;
+  icon?: string;
+};
+export type EvaluationAxis = {
+  evaluationAxisID: number;
+  partDict: Record<DirectionType, EvaluationPart>;
+  intensityLabelList: string[];
+};
 
-export interface PreferenceScoreAxisID {
-  preferenceScoreAxisID: PrimaryKey;
-}
-
-export interface PreferenceScoreGroupID {
-  /** `PreferenceScoreAxisGroup`의 PK */
-  preferenceScoreGroupID: PrimaryKey;
-}
-
-export interface EvaluationAxisID {
-  evaluationAxisID: PrimaryKey;
-}
-
-export interface EvaluationAxisGroupID {
-  evaluationAxisGroupID: PrimaryKey;
-}
+export type BoardInformation = {
+  boardID: number;
+  axisDict: Record<AxisType, EvaluationAxis>;
+};
 
 export interface EvaluationBoardID {
   evaluationBoardID: PrimaryKey;
 }
 
-/**
- * itemSummary (여러 개)
- * 영화/아이돌/얼굴 등 “평가 대상”의 공통 요약 정보
- */
-export interface ItemSummary extends ItemSummaryID {
+export type ItemSummary = {
+  itemSummaryID: number;
   name: string;
   thumbnailURL: string;
 
-  /**
-   * 범주(예: 영화=감독/장르, 아이돌=그룹 등)
-   * 현재는 단일 문자열로 둠
-   */
   category: string;
-}
+};
 
-export interface ItemSummaryDict {
-  [itemSummaryID: number]: ItemSummary;
-}
+export type ItemSummaryDict = Record<number, ItemSummary>;
 
-/** 취향 점수 축 (예: 1개 수평 축) */
-export interface PreferenceScoreAxis extends PreferenceScoreAxisID {
-  axisName: string;
-}
+// /**
+//  * =========================================
+//  * Global / System domain
+//  * =========================================
+//  */
 
-/** 취향 점수 축 그룹(예: 취향 아님/평균/취향 등) */
-export interface PreferenceScoreAxisGroup
-  extends PreferenceScoreGroupID, PreferenceScoreAxisID {
-  /** 축에서의 단계 (0..n-1 or 1..n 중 택1) */
-  level: number;
+// import type { PrimaryKey } from ".";
 
-  /** 그룹 라벨 */
-  label: string;
-}
+// /** PK mixins (ID들은 이 인터페이스를 확장해서 정합성 유지) */
+// export interface ItemSummaryID {
+//   itemSummaryID: PrimaryKey;
+// }
 
-/** START(왼쪽/위) vs END(오른쪽/아래) */
-export type AxisSide = "START" | "END";
+// export interface PreferenceScoreAxisID {
+//   preferenceScoreAxisID: PrimaryKey;
+// }
 
-/** 사분면을 이루는 평가 축 (수평, 수직 각각 1개) */
-export interface EvaluationAxis extends EvaluationAxisID {
-  axisName: string;
-  axisDescription: string;
+// export interface PreferenceScoreGroupID {
+//   /** `PreferenceScoreAxisGroup`의 PK */
+//   preferenceScoreGroupID: PrimaryKey;
+// }
 
-  /** 축의 시작(왼쪽 또는 위쪽) 라벨 */
-  startLabel: string;
+// export interface EvaluationAxisID {
+//   evaluationAxisID: PrimaryKey;
+// }
 
-  /** 축의 끝(오른쪽 또는 아래쪽) 라벨 */
-  endLabel: string;
+// export interface EvaluationAxisGroupID {
+//   evaluationAxisGroupID: PrimaryKey;
+// }
 
-  /**
-   * 한쪽 방향(START 또는 END)에 존재하는 그룹 수
-   * 예: 3이면 START 3단계 + END 3단계 + (중립) 구성 가능
-   */
-  groupCountPerSide: number;
+// /** 취향 점수 축 (예: 1개 수평 축) */
+// export interface PreferenceScoreAxis extends PreferenceScoreAxisID {
+//   axisName: string;
+// }
 
-  /** 강도 라벨(약→강 순서), 예: ["약간","제법","완전"] */
-  intensityLabels: string[];
+// /** 취향 점수 축 그룹(예: 취향 아님/평균/취향 등) */
+// export interface PreferenceScoreAxisGroup
+//   extends PreferenceScoreGroupID, PreferenceScoreAxisID {
+//   /** 축에서의 단계 (0..n-1 or 1..n 중 택1) */
+//   level: number;
 
-  /** 중립 라벨, 예: "중립", "반반", "믹스" */
-  neutralLabel: string;
-}
+//   /** 그룹 라벨 */
+//   label: string;
+// }
 
-/** EvaluationAxis 상의 그룹(예: START-2단계, END-1단계 등) */
-export interface EvaluationAxisGroup
-  extends EvaluationAxisGroupID, EvaluationAxisID {
-  /** 몇 번째 강도 단계인지 (1..groupCountPerSide) */
-  intensityLevel: number;
+// /** START(왼쪽/위) vs END(오른쪽/아래) */
+// export type AxisSide = "START" | "END";
 
-  side: AxisSide;
-}
+// /** 사분면을 이루는 평가 축 (수평, 수직 각각 1개) */
+// export interface EvaluationAxis extends EvaluationAxisID {
+//   axisName: string;
+//   axisDescription: string;
 
-/**
- * EvaluationBoard
- * - 수직/수평 EvaluationAxis + (선택적으로) PreferenceScoreAxis를 엮는 보드
- */
-export interface EvaluationBoard extends EvaluationBoardID {
-  /** FK -> EvaluationAxis */
-  verticalAxisID: PrimaryKey;
+//   /** 축의 시작(왼쪽 또는 위쪽) 라벨 */
+//   startLabel: string;
 
-  /** FK -> EvaluationAxis */
-  horizontalAxisID: PrimaryKey;
+//   /** 축의 끝(오른쪽 또는 아래쪽) 라벨 */
+//   endLabel: string;
 
-  /** FK -> PreferenceScoreAxis */
-  preferenceScoreAxisID: PrimaryKey;
-}
+//   /**
+//    * 한쪽 방향(START 또는 END)에 존재하는 그룹 수
+//    * 예: 3이면 START 3단계 + END 3단계 + (중립) 구성 가능
+//    */
+//   groupCountPerSide: number;
+
+//   /** 강도 라벨(약→강 순서), 예: ["약간","제법","완전"] */
+//   intensityLabels: string[];
+
+//   /** 중립 라벨, 예: "중립", "반반", "믹스" */
+//   neutralLabel: string;
+// }
+
+// /** EvaluationAxis 상의 그룹(예: START-2단계, END-1단계 등) */
+// export interface EvaluationAxisGroup
+//   extends EvaluationAxisGroupID, EvaluationAxisID {
+//   /** 몇 번째 강도 단계인지 (1..groupCountPerSide) */
+//   intensityLevel: number;
+
+//   side: AxisSide;
+// }
+
+// /**
+//  * EvaluationBoard
+//  * - 수직/수평 EvaluationAxis + (선택적으로) PreferenceScoreAxis를 엮는 보드
+//  */
+// export interface EvaluationBoard extends EvaluationBoardID {
+//   /** FK -> EvaluationAxis */
+//   verticalAxisID: PrimaryKey;
+
+//   /** FK -> EvaluationAxis */
+//   horizontalAxisID: PrimaryKey;
+
+//   /** FK -> PreferenceScoreAxis */
+//   preferenceScoreAxisID: PrimaryKey;
+// }
 
 // export type PrimaryKey = number;
 
