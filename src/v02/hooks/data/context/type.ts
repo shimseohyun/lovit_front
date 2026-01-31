@@ -20,6 +20,7 @@ export type ProviderParams = {
 };
 
 export type BoardStaticValue = {
+  pushItem: () => void;
   boardInformation: BoardInformation;
   itemSummaryDict: ItemSummaryDict;
   boardSize: number;

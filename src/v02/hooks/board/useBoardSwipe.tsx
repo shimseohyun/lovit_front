@@ -1,17 +1,17 @@
 import useSwipe from "@hooksV02/swipe/useSwipe";
 import type { AxisType, SlotDict } from "@interfacesV02/type";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEventHandler } from "react";
 
 const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
 type Params = {
+  slot: SlotDict;
+  getSlot: (s: SlotDict) => void;
+
   slotCount: number;
   stepPX: number;
-
-  initialH?: number;
-  initialV?: number;
 
   isHorizontal?: boolean;
   isVertical?: boolean;
@@ -35,10 +35,10 @@ const axisMax = (slotCount: number) => Math.max(0, slotCount - 1);
 
 const useBoardSwipe = (params: Params) => {
   const {
+    slot,
+    getSlot,
     slotCount,
     stepPX,
-    initialH,
-    initialV,
     isHorizontal = true,
     isVertical = true,
     minDistancePx = 10,
@@ -48,11 +48,6 @@ const useBoardSwipe = (params: Params) => {
 
   const max = axisMax(slotCount);
 
-  const [slot, setSlot] = useState<SlotDict>(() => ({
-    HORIZONTAL: initialH,
-    VERTICAL: initialV,
-  }));
-
   const [isAnimating, setIsAnimating] = useState(false);
 
   const startSlotRef = useRef<SlotDict>(slot);
@@ -60,7 +55,7 @@ const useBoardSwipe = (params: Params) => {
 
   const commitSlot = useCallback((next: SlotDict) => {
     liveSlotRef.current = next;
-    setSlot(next);
+    getSlot(next);
   }, []);
 
   const isAxisEnabled = useCallback(
@@ -85,6 +80,12 @@ const useBoardSwipe = (params: Params) => {
     [commitSlot],
   );
 
+  useEffect(() => {
+    if (!isDragging) {
+      startSlotRef.current = slot;
+      liveSlotRef.current = slot;
+    }
+  }, [slot]);
   const { bind, isDragging, dragAxis, direction } = useSwipe<HTMLDivElement>({
     minDistancePx,
     lockDirectionPx,
@@ -97,8 +98,7 @@ const useBoardSwipe = (params: Params) => {
       setIsAnimating(false);
 
       const axisDelta = axis === "HORIZONTAL" ? deltaX : deltaY;
-      const start = getSlotValue(startSlotRef.current, axis);
-      if (start === undefined) return;
+      const start = getSlotValue(startSlotRef.current, axis) ?? 0;
 
       const raw = start - axisDelta / stepPX;
       const snapped = clamp(Math.round(raw), axisMin, max);
@@ -139,17 +139,22 @@ const useBoardSwipe = (params: Params) => {
     setIsAnimating(false);
   };
 
+  const getIsDragging = () => {
+    if (dragAxis === null) return false;
+    return isDragging && isAxisEnabled(dragAxis);
+  };
+  const getDragAxis = () => {
+    if (dragAxis === null) return null;
+    return isAxisEnabled(dragAxis) ? dragAxis : null;
+  };
   return {
-    slot,
-
     isAnimating,
     onTransitionEnd,
-
-    bind,
     onPointerDown,
+    bind,
 
-    isDragging,
-    dragAxis,
+    isDragging: getIsDragging(),
+    dragAxis: getDragAxis(),
     dragDirection: direction,
   };
 };

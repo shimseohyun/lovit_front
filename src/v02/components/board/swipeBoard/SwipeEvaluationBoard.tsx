@@ -1,18 +1,14 @@
 import * as S from "../Board.styled";
 import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
-import SwipeBoard from "./SwipeBoard";
-import { useCallback, useState } from "react";
-import {
-  emptyDirection,
-  type AxisType,
-  type BoardDirection,
-  type SlotDict,
-} from "@interfacesV02/type";
+
+import { type AxisType, type SlotDict } from "@interfacesV02/type";
 import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import {
   useBoardSlotContext,
   useBoardStepContext,
 } from "@hooksV02/data/context/context";
+import useSwipeBoard from "./useSwipeBoard";
+import SwipeBoard from "./SwipeBoard";
 
 const SwipeEvaluationBoard = () => {
   const { vertical, horizontal, itemSummaryDict, boardInformation } =
@@ -23,16 +19,17 @@ const SwipeEvaluationBoard = () => {
 
   if (evaluationSlot === undefined) return;
 
-  const [direction, setDirection] = useState<BoardDirection>(emptyDirection);
+  const getSlot = (s: SlotDict) => {
+    if (s.VERTICAL === undefined || s.HORIZONTAL === undefined) return;
+    setEvaluationSlot({ VERTICAL: s.VERTICAL, HORIZONTAL: s.HORIZONTAL });
+  };
 
-  const handleSlotChange = useCallback((next: SlotDict, d: BoardDirection) => {
-    if (next.HORIZONTAL === undefined || next.VERTICAL === undefined) return;
-    setDirection(d);
-    setEvaluationSlot({
-      VERTICAL: next.VERTICAL,
-      HORIZONTAL: next.HORIZONTAL,
-    });
-  }, []);
+  const { dragDirection: direction, swipeBoardProps } = useSwipeBoard({
+    slot: evaluationSlot,
+    getSlot: getSlot,
+    dataList: [vertical, horizontal],
+    axisList: ["VERTICAL", "HORIZONTAL"],
+  });
 
   const isFirst = direction.HORIZONTAL === null && direction.VERTICAL === null;
 
@@ -126,14 +123,7 @@ const SwipeEvaluationBoard = () => {
         상하좌우로 드래그해서 세부적인 분류를 할 수 있어요.
       </S.BoardTitleDescription>
 
-      <SwipeBoard
-        onSlotChange={handleSlotChange}
-        dataList={[vertical, horizontal]}
-        axisList={["VERTICAL", "HORIZONTAL"]}
-        initialH={evaluationSlot.HORIZONTAL}
-        initialV={evaluationSlot.VERTICAL}
-      />
-
+      <SwipeBoard {...swipeBoardProps} />
       <button
         onClick={() => {
           navigatePreference();

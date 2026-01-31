@@ -1,39 +1,48 @@
 import * as S from "../Board.styled";
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
-import SwipeBoard from "./SwipeBoard";
-import { useCallback, useState } from "react";
-import {
-  emptyDirection,
-  type BoardDirection,
-  type SlotDict,
-} from "@interfacesV02/type";
-import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
-import StarRate from "@componentsV02/starRate/StarRate";
+import { useEffect } from "react";
+
+import { type SlotDict } from "@interfacesV02/type";
 import {
   useBoardSlotContext,
   useBoardStepContext,
 } from "@hooksV02/data/context/context";
+
+import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
+import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
+
 import { getSlotStartIDX } from "@utilsV02/getSlotIDX";
 
+import StarRate from "@componentsV02/starRate/StarRate";
+import useSwipeBoard from "./useSwipeBoard";
+import SwipeBoard from "./SwipeBoard";
+
 const SwipePreferenceBoard = () => {
-  const { preference, itemSummaryDict } = useBoardDataContext();
-  const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
-  const { currentItemID } = useBoardStepContext();
+  const { preference, itemSummaryDict, pushItem } = useBoardDataContext();
+  const { preferenceSlot, setPreferenceSlot, resetSlot } =
+    useBoardSlotContext();
+  const { currentItemID, confrimCurrentStep } = useBoardStepContext();
 
-  const [direction, setDirection] = useState<BoardDirection>(emptyDirection);
+  const centerIDX = getSlotStartIDX(5, preference.groupDict);
+  const getSlot = (s: SlotDict) => {
+    if (s.HORIZONTAL === undefined) return;
+    setPreferenceSlot({ preference: s.HORIZONTAL });
+  };
 
-  const handleSlotChange = useCallback((next: SlotDict, d: BoardDirection) => {
-    if (next.HORIZONTAL === undefined) return;
-    setDirection(d);
-    setPreferenceSlot({ preference: next.HORIZONTAL });
+  const { dragDirection: direction, swipeBoardProps } = useSwipeBoard({
+    slot: { HORIZONTAL: preferenceSlot?.preference },
+    getSlot: getSlot,
+    dataList: [preference],
+    axisList: ["HORIZONTAL"],
+  });
+
+  useEffect(() => {
+    setPreferenceSlot({ preference: centerIDX });
   }, []);
 
   const onClickStar = (num: number) => {
     const slotIDX = getSlotStartIDX(num, preference.groupDict);
     setPreferenceSlot({ preference: slotIDX });
   };
-
-  const centerIDX = getSlotStartIDX(5, preference.groupDict);
 
   const slotID = preference.slotList[preferenceSlot?.preference ?? centerIDX];
   const slot = preference.slotDict[slotID];
@@ -114,18 +123,20 @@ const SwipePreferenceBoard = () => {
   return (
     <>
       <Title />
-      <SwipeBoard
-        dataList={[preference]}
-        axisList={["HORIZONTAL"]}
-        initialH={centerIDX}
-        onSlotChange={handleSlotChange}
-      />
-
+      <SwipeBoard {...swipeBoardProps} />
       <StarRate
         num={preferenceSlot?.preference ?? 5}
         onClickStar={onClickStar}
       />
-      <button onClick={() => {}}>확인</button>
+      <button
+        onClick={() => {
+          pushItem();
+          resetSlot();
+          confrimCurrentStep();
+        }}
+      >
+        확인
+      </button>
     </>
   );
 };

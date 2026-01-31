@@ -21,11 +21,18 @@ const useBoardSlot = () => {
     (slot?: PreferenceSlot) => setPreferenceSlotState(slot),
     [setPreferenceSlotState],
   );
+
+  const resetSlot = () => {
+    setEvaluationSlot(undefined);
+    setPreferenceSlot(undefined);
+  };
+
   return {
     evaluationSlot,
     setEvaluationSlot,
     preferenceSlot,
     setPreferenceSlot,
+    resetSlot,
   };
 };
 

@@ -1,55 +1,48 @@
-import { useEffect } from "react";
-
-import type { AxisType, BoardDirection, SlotDict } from "@interfacesV02/type";
+import type { AxisType, SlotDict } from "@interfacesV02/type";
 import AxisMarker from "./marker/AxisMarker";
 import * as S from "./SwipeBoard.styled";
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
-import useBoardSwipe from "@hooksV02/board/useBoardSwipe";
+
 import CurrentMarker from "./marker/CurrentMarker";
 import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import type { UserAxisSlot } from "@interfacesV02/data/user";
+import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
 
 type Parms = {
+  boardSize: number;
+  stepPX: number;
+  slotCount: number;
+
   dataList: AxisData[];
   axisList: AxisType[];
-  initialH?: number;
-  initialV?: number;
 
-  // ✅ slot이 바뀔 때마다 부모로 전달
-  onSlotChange?: (slot: SlotDict, direction: BoardDirection) => void;
+  slot: SlotDict;
+
+  dragAxis: AxisType | null;
+
+  bind: SwipeBind;
+  onPointerDown: any;
+  onTransitionEnd: any;
+
+  itemSummaryDict: Record<number, { name: string; thumbnailURL: string }>;
 };
 
 const SwipeBoard = (parms: Parms) => {
-  const { dataList, axisList, initialH, initialV, onSlotChange } = parms;
-
-  if (dataList.length === 0 || axisList.length === 0) return null;
-
-  const slotCount = dataList[0].slotList.length;
+  const {
+    boardSize,
+    stepPX,
+    slotCount,
+    dataList,
+    axisList,
+    slot,
+    dragAxis,
+    bind,
+    onPointerDown,
+    onTransitionEnd,
+    itemSummaryDict,
+  } = parms;
 
   const isHorizontal = axisList.includes("HORIZONTAL");
   const isVertical = axisList.includes("VERTICAL");
-
-  const { boardSize, itemSummaryDict, stepPX } = useBoardDataContext();
-
-  const {
-    bind,
-    slot,
-    onPointerDown,
-    onTransitionEnd,
-    dragAxis,
-    dragDirection,
-  } = useBoardSwipe({
-    slotCount,
-    stepPX,
-    initialH,
-    initialV,
-    isHorizontal,
-    isVertical,
-  });
-
-  useEffect(() => {
-    if (dragDirection && onSlotChange) onSlotChange(slot, dragDirection);
-  }, [slot, onSlotChange]);
 
   const getTranslate = (slotIDX: number) => {
     return boardSize / 2 + (slotCount / 2 - slotIDX) * stepPX - stepPX / 2;

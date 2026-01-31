@@ -35,6 +35,23 @@ export const BoardDataProvider = (props: ProviderProps) => {
     itemListLength: 10,
   });
 
+  const pushItem = () => {
+    if (
+      boardSlot.preferenceSlot?.preference === undefined ||
+      boardSlot.evaluationSlot === undefined
+    )
+      return;
+
+    const p = boardSlot.preferenceSlot.preference;
+    const v = boardSlot.evaluationSlot.VERTICAL;
+    const h = boardSlot.evaluationSlot.HORIZONTAL;
+
+    const itemID = boardStep.currentItemID;
+    boardData.preference.pushItem(itemID, p);
+    boardData.vertical.pushItem(itemID, v);
+    boardData.horizontal.pushItem(itemID, h);
+  };
+
   // ✅ 정적(혹은 저빈도) 값만
   const staticValue: BoardStaticValue = useMemo(
     () => ({
@@ -42,6 +59,7 @@ export const BoardDataProvider = (props: ProviderProps) => {
       itemSummaryDict,
       boardSize: defaultBoardSize,
       stepPX: defaultStepPx,
+      pushItem,
       ...boardData,
     }),
     [boardInformation, itemSummaryDict, boardData],
