@@ -53,8 +53,6 @@ const convertRoughAxisData = (
     }
 
     /** 2. 번들별로 조회 */
-    let startSlotIDX = userAxisSlotList.length - 1;
-
     group.forEach((bundle, bundleIDX) => {
       let currentItemList: number[] = [];
 
@@ -95,15 +93,12 @@ const convertRoughAxisData = (
       currentAxisBundleID++;
     });
     /** 2. 번들별로 조회 */
-    let endSlotIDX = userAxisSlotList.length - 1;
 
     userAxisGroupDict[currentAxisGroupID] = {
       userAxisGroupID: currentAxisGroupID,
       axisSide: axisSide,
       intensityLevel: currentIntensity,
       bundleList: currentBundleList,
-      slotStartIDX: startSlotIDX,
-      slotEndIDX: endSlotIDX,
     };
 
     currentAxisGroupID++;

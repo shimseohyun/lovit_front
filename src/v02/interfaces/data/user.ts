@@ -15,8 +15,6 @@ export interface UserAxisGroup {
   intensityLevel: number;
 
   bundleList: UserAxisBundleID[];
-  slotStartIDX: number;
-  slotEndIDX: number;
 }
 
 export interface UserAxisBundle {

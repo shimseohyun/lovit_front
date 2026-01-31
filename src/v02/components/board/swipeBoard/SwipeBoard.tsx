@@ -47,7 +47,6 @@ const SwipeBoard = (parms: Parms) => {
     isVertical,
   });
 
-  // ✅ slot이 바뀔 때마다 부모로 push
   useEffect(() => {
     if (dragDirection && onSlotChange) onSlotChange(slot, dragDirection);
   }, [slot, onSlotChange]);

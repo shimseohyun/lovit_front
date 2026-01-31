@@ -13,6 +13,7 @@ import {
   useBoardSlotContext,
   useBoardStepContext,
 } from "@hooksV02/data/context/context";
+import { getSlotStartIDX } from "@utilsV02/getSlotIDX";
 
 const SwipePreferenceBoard = () => {
   const { preference, itemSummaryDict } = useBoardDataContext();
@@ -21,10 +22,18 @@ const SwipePreferenceBoard = () => {
 
   const [direction, setDirection] = useState<BoardDirection>(emptyDirection);
 
-  // TODO: 가운데를 찾는 인덱스가 없음 ㅜ
-  const centerIDX = preference.groupDict[5].slotStartIDX;
+  const handleSlotChange = useCallback((next: SlotDict, d: BoardDirection) => {
+    if (next.HORIZONTAL === undefined) return;
+    setDirection(d);
+    setPreferenceSlot({ preference: next.HORIZONTAL });
+  }, []);
 
-  console.log(preference);
+  const onClickStar = (num: number) => {
+    const slotIDX = getSlotStartIDX(num, preference.groupDict);
+    setPreferenceSlot({ preference: slotIDX });
+  };
+
+  const centerIDX = getSlotStartIDX(5, preference.groupDict);
 
   const slotID = preference.slotList[preferenceSlot?.preference ?? centerIDX];
   const slot = preference.slotDict[slotID];
@@ -32,12 +41,6 @@ const SwipePreferenceBoard = () => {
   const gorupID = slot.userAxisGroupID;
   const group = preference.groupDict[gorupID];
   const intensity = group.userAxisGroupID;
-
-  const handleSlotChange = useCallback((next: SlotDict, d: BoardDirection) => {
-    if (next.HORIZONTAL === undefined) return;
-    setDirection(d);
-    setPreferenceSlot({ preference: next.HORIZONTAL });
-  }, []);
 
   const isFirst = direction.HORIZONTAL === null && direction.VERTICAL === null;
 
@@ -92,10 +95,6 @@ const SwipePreferenceBoard = () => {
     }
   };
 
-  const onClickStar = (num: number) => {
-    console.log(num);
-  };
-
   const item = itemSummaryDict[currentItemID];
   const Title = () => {
     return (
@@ -122,7 +121,10 @@ const SwipePreferenceBoard = () => {
         onSlotChange={handleSlotChange}
       />
 
-      <StarRate num={5} onClickStar={onClickStar} />
+      <StarRate
+        num={preferenceSlot?.preference ?? 5}
+        onClickStar={onClickStar}
+      />
       <button onClick={() => {}}>확인</button>
     </>
   );

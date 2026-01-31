@@ -1,9 +1,8 @@
 import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 import * as S from "./EvaluationBoard.styled";
 import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
-import type { UserAxisGroupDict } from "@interfacesV02/data/user";
-import { getSlotCount } from "@utilsV02/createAxisSlot";
 import { useBoardStepContext } from "@hooksV02/data/context/context";
+import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 
 const EvaluationBoard = () => {
   const { itemList, boardSize, vertical, horizontal } = useBoardDataContext();
@@ -13,19 +12,6 @@ const EvaluationBoard = () => {
 
   const CENTER_SIZE = 20;
   const BOARD_SIZE = boardSize - 32;
-
-  const getSlotIDX = (groupID: number, gorupDict: UserAxisGroupDict) => {
-    let slotIDX = 0;
-    for (let i = 0; i < groupID; i++) {
-      slotIDX += getSlotCount(gorupDict[i].bundleList.length);
-    }
-
-    slotIDX += Math.floor(
-      getSlotCount(gorupDict[groupID].bundleList.length) / 2,
-    );
-
-    return slotIDX;
-  };
 
   const getPercentWithCenter = (originalPercent: number) => {
     const clampedPercent = Math.max(0, Math.min(100, originalPercent)); // 0~100
@@ -45,8 +31,8 @@ const EvaluationBoard = () => {
   };
 
   const onClickBoardGrid = (v: number, h: number) => {
-    const vSlotIDX = getSlotIDX(v, vertical.groupDict);
-    const hSlotIDX = getSlotIDX(h, horizontal.groupDict);
+    const vSlotIDX = getSlotCenterIDX(v, vertical.groupDict);
+    const hSlotIDX = getSlotCenterIDX(h, horizontal.groupDict);
 
     navigateEvaluationSwipe({ VERTICAL: vSlotIDX, HORIZONTAL: hSlotIDX });
   };

@@ -8,12 +8,17 @@ const StarRate = (parms: Parms) => {
   const { num, onClickStar } = parms;
 
   return (
-    <S.Container
-      onClick={() => {
-        onClickStar(num);
-      }}
-    >
-      별점
+    <S.Container>
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+        <div
+          onClick={() => {
+            onClickStar(i);
+          }}
+          key={i}
+        >
+          {i}
+        </div>
+      ))}
     </S.Container>
   );
 };
