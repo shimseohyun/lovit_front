@@ -1,139 +1,115 @@
+import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
+import useSwipe from "@hooksV02/swipe/useSwipe";
+import type { AxisType, BoardDirection, SlotDict } from "@interfacesV02/type";
 import { useCallback, useRef, useState } from "react";
 import type { PointerEventHandler } from "react";
-import type { AxisType } from "@interfacesV02/type";
-import useSwipe, { type SwipeProgressPayload } from "@hooksV02/swipe/useSwipe";
-
-type SwipeDirection = SwipeProgressPayload["direction"];
-type DragInfo = {
-  isDragging: boolean;
-  axis: AxisType | null;
-  direction: SwipeDirection;
-};
 
 const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
-type SlotDict = Partial<Record<AxisType, number>>;
-
-type Parms = {
+type Params = {
   slotCount: number;
   stepPX: number;
-  initialV?: number;
+
   initialH?: number;
+  initialV?: number;
+
   isHorizontal?: boolean;
   isVertical?: boolean;
+
+  minDistancePx?: number;
+  lockDirectionPx?: number;
+
+  draggingMode?: "down" | "lock";
 };
 
-const useBoardSwipe = (parms: Parms) => {
+const getSlotValue = (slot: SlotDict, axis: AxisType) => slot[axis];
+
+const setSlotValue = (
+  slot: SlotDict,
+  axis: AxisType,
+  value: number,
+): SlotDict => ({ ...slot, [axis]: value });
+
+const axisMin = 0;
+const axisMax = (slotCount: number) => Math.max(0, slotCount - 1);
+
+const useBoardSwipe = (params: Params) => {
   const {
     slotCount,
     stepPX,
-    initialV,
     initialH,
+    initialV,
     isHorizontal = true,
     isVertical = true,
-  } = parms;
+    minDistancePx = 10,
+    lockDirectionPx = 10,
+    draggingMode = "down",
+  } = params;
 
-  const [slot, setSlot] = useState<SlotDict>({
-    VERTICAL: initialV,
+  const max = axisMax(slotCount);
+
+  const [slot, setSlot] = useState<SlotDict>(() => ({
     HORIZONTAL: initialH,
-  });
-
-  const safeSlot: SlotDict = slot;
-
-  const isVerticalAxis = (axis: AxisType) => axis === "VERTICAL";
-
-  // ✅ 추가: 축 허용 여부
-  const isAxisEnabled = useCallback(
-    (axis: AxisType) => (isVerticalAxis(axis) ? isVertical : isHorizontal),
-    [isHorizontal, isVertical],
-  );
-
-  const getSlotValue = useCallback(
-    (slot: SlotDict, axis: AxisType) => slot[axis],
-    [],
-  );
-
-  const setSlotValue = useCallback(
-    (slot: SlotDict, axis: AxisType, v: number) => {
-      return { ...slot, [axis]: v };
-    },
-    [],
-  );
+    VERTICAL: initialV,
+  }));
 
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const startSlotRef = useRef<SlotDict>(safeSlot);
-  const liveSlotRef = useRef<SlotDict>(safeSlot);
-  const isDraggingRef = useRef(false);
+  const startSlotRef = useRef<SlotDict>(slot);
+  const liveSlotRef = useRef<SlotDict>(slot);
 
-  const [dragInfo, setDragInfo] = useState<DragInfo>({
-    isDragging: false,
-    axis: null,
-    direction: { VERTICAL: null, HORIZONTAL: null },
-  });
-
-  const setDragInfoSafe = useCallback((patch: Partial<DragInfo>) => {
-    setDragInfo((prev) => {
-      const next = { ...prev, ...patch };
-      return next.isDragging === prev.isDragging &&
-        next.axis === prev.axis &&
-        next.direction === prev.direction
-        ? prev
-        : next;
-    });
+  const commitSlot = useCallback((next: SlotDict) => {
+    liveSlotRef.current = next;
+    setSlot(next);
   }, []);
 
-  const min = 0;
-  const max = slotCount - 1;
-
-  const commitSlot = useCallback((nextSlot: SlotDict) => {
-    liveSlotRef.current = nextSlot;
-    setSlot(nextSlot);
-  }, []);
+  const isAxisEnabled = useCallback(
+    (axis: AxisType) => {
+      if (axis === "HORIZONTAL") return isHorizontal;
+      return isVertical;
+    },
+    [isHorizontal, isVertical],
+  );
 
   const revertToStart = useCallback(() => {
-    const back = startSlotRef.current;
-    commitSlot(back);
+    setIsAnimating(true);
+    commitSlot(startSlotRef.current);
   }, [commitSlot]);
 
   const snapTo = useCallback(
     (axis: AxisType, target: number) => {
+      setIsAnimating(true);
       const next = setSlotValue(liveSlotRef.current, axis, target);
       commitSlot(next);
     },
-    [commitSlot, setSlotValue],
+    [commitSlot],
   );
 
-  const { bind, direction } = useSwipe<HTMLDivElement>({
-    onProgress: ({ deltaX, deltaY, axis, direction }: SwipeProgressPayload) => {
-      if (!isDraggingRef.current) return;
-      if (!axis || !direction) return;
+  const { bind, isDragging, dragAxis, direction } = useSwipe<HTMLDivElement>({
+    minDistancePx,
+    lockDirectionPx,
+    draggingMode,
 
-      // ✅ 추가: 막힌 축이면 아무 것도 안 하게
+    onProgress: ({ deltaX, deltaY, axis }) => {
+      if (!axis) return;
       if (!isAxisEnabled(axis)) return;
 
       setIsAnimating(false);
-      setDragInfoSafe({ axis, direction });
 
-      const axisDelta = isVerticalAxis(axis) ? deltaY : deltaX;
+      const axisDelta = axis === "HORIZONTAL" ? deltaX : deltaY;
       const start = getSlotValue(startSlotRef.current, axis);
       if (start === undefined) return;
 
-      const raw = clamp(start - axisDelta / stepPX, min, max);
-      const snapped = clamp(Math.round(raw), min, max);
+      const raw = start - axisDelta / stepPX;
+      const snapped = clamp(Math.round(raw), axisMin, max);
 
       const next = setSlotValue(liveSlotRef.current, axis, snapped);
       commitSlot(next);
     },
 
     onEnd: ({ passed, axis, totalDx, totalDy }) => {
-      isDraggingRef.current = false;
-      setIsAnimating(true);
-      setDragInfoSafe({ isDragging: false, axis: null, direction: null });
-
-      // ✅ 추가: 막힌 축이면 무조건 원복
-      if (!axis || !isAxisEnabled(axis)) {
+      if (!isAxisEnabled(axis)) {
         revertToStart();
         return;
       }
@@ -143,37 +119,39 @@ const useBoardSwipe = (parms: Parms) => {
         return;
       }
 
-      const total = isVerticalAxis(axis) ? totalDy : totalDx;
+      const total = axis === "HORIZONTAL" ? totalDx : totalDy;
       const start = getSlotValue(startSlotRef.current, axis);
       if (start === undefined) return;
 
-      const target = clamp(Math.round(start - total / stepPX), min, max);
+      const raw = start - total / stepPX;
+      const target = clamp(Math.round(raw), axisMin, max);
+
       snapTo(axis, target);
     },
   });
 
   const onPointerDown: PointerEventHandler<HTMLDivElement> = (e) => {
-    // ✅ 추가: 둘 다 막혀있으면 스와이프 자체를 시작하지 않게
-    if (!isHorizontal && !isVertical) return;
-
-    isDraggingRef.current = true;
     startSlotRef.current = liveSlotRef.current;
-    setDragInfoSafe({ isDragging: true, axis: null, direction: null });
+    setIsAnimating(false);
     bind.onPointerDown(e);
   };
 
-  const onTransitionEnd = () => setIsAnimating(false);
+  const onTransitionEnd = () => {
+    setIsAnimating(false);
+  };
 
   return {
     slot,
-    bind,
-    onPointerDown,
-    onTransitionEnd,
 
     isAnimating,
-    isDragging: dragInfo.isDragging,
-    dragAxis: dragInfo.axis,
-    dragDirection: direction,
+    onTransitionEnd,
+
+    bind,
+    onPointerDown,
+
+    isDragging,
+    dragAxis,
+    direction,
   };
 };
 
