@@ -9,18 +9,17 @@ import {
   type SlotDict,
 } from "@interfacesV02/type";
 import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
+import {
+  useBoardSlotContext,
+  useBoardStepContext,
+} from "@hooksV02/data/context/context";
 
 const SwipeEvaluationBoard = () => {
-  const {
-    vertical,
-    horizontal,
-    evaluationSlot,
-    navigatePreference,
-    setEvaluationSlot,
-    itemSummaryDict,
-    boardInformation,
-    currentItemID,
-  } = useBoardDataContext();
+  const { vertical, horizontal, itemSummaryDict, boardInformation } =
+    useBoardDataContext();
+
+  const { evaluationSlot, setEvaluationSlot } = useBoardSlotContext();
+  const { navigatePreference, currentItemID } = useBoardStepContext();
 
   if (evaluationSlot === undefined) return;
 
@@ -38,9 +37,13 @@ const SwipeEvaluationBoard = () => {
   const isFirst = direction.HORIZONTAL === null && direction.VERTICAL === null;
 
   const getSubTitle = (axis: AxisType, data: AxisData) => {
-    const slotID = evaluationSlot[axis];
-    const slotType = data.slotList[slotID].slotType;
-    const group = data.groupDict[data.slotList[slotID].userAxisGroupID];
+    const slotIDX = evaluationSlot[axis];
+
+    const slotID = data.slotList[slotIDX];
+    const slot = data.slotDict[slotID];
+
+    const slotType = slot.slotType;
+    const group = data.groupDict[slot.userAxisGroupID];
 
     // 아이콘 - 그룹명 조합
     const info = boardInformation.axisDict[axis];
@@ -144,8 +147,10 @@ const SwipeEvaluationBoard = () => {
 
 export default SwipeEvaluationBoard;
 
-const getComparisonItem = (data: AxisData, comparisonSlotID: number) => {
-  const bundleID = data.slotList[comparisonSlotID].userAxisBundleID;
+const getComparisonItem = (data: AxisData, comparisonSlotIDX: number) => {
+  const comparisonSlotID = data.slotList[comparisonSlotIDX];
+  const comparisonSlot = data.slotDict[comparisonSlotID];
+  const bundleID = comparisonSlot.userAxisBundleID;
 
   if (bundleID === undefined) return;
 

@@ -29,6 +29,7 @@ const useBoardData = (parms: Parms) => {
     initialGroupDict: horizontalData.userAxisGroupDict,
     initialItemPositionDict: horizontalData.userAxisItemPosition,
     initialSlotList: horizontalData.userAxisSlotList,
+    initialSlotDict: horizontalData.userAxisSlotDict,
   });
 
   const vertical = useHandleAxisData({
@@ -36,6 +37,7 @@ const useBoardData = (parms: Parms) => {
     initialGroupDict: verticalData.userAxisGroupDict,
     initialItemPositionDict: verticalData.userAxisItemPosition,
     initialSlotList: verticalData.userAxisSlotList,
+    initialSlotDict: verticalData.userAxisSlotDict,
   });
 
   const preference = useHandleAxisData({
@@ -43,6 +45,7 @@ const useBoardData = (parms: Parms) => {
     initialGroupDict: preferenceData.userAxisGroupDict,
     initialItemPositionDict: preferenceData.userAxisItemPosition,
     initialSlotList: preferenceData.userAxisSlotList,
+    initialSlotDict: preferenceData.userAxisSlotDict,
   });
 
   const itemList: number[] = Object.keys(vertical.itemPositionDict).map(Number);

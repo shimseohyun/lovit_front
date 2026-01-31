@@ -4,6 +4,8 @@ import type {
   UserAxisBundleDict,
   UserAxisGroupDict,
   UserAxisItemPositionDict,
+  UserAxisSlot,
+  UserAxisSlotDict,
   UserAxisSlotList,
 } from "@interfacesV02/data/user";
 import createAxisSlot from "./createAxisSlot";
@@ -22,6 +24,7 @@ const convertRoughAxisData = (
   const userAxisBundleDict: UserAxisBundleDict = {};
   const userAxisItemPosition: UserAxisItemPositionDict = {};
   const userAxisSlotList: UserAxisSlotList = [];
+  const userAxisSlotDict: UserAxisSlotDict = {};
 
   let currentAxisGroupID: number = 0;
   let currentAxisBundleID: number = 0;
@@ -37,15 +40,21 @@ const convertRoughAxisData = (
         : groupIDX;
 
     if (group.length === 0) {
-      // 슬롯 넣기
-      userAxisSlotList.push({
+      const slotID = userAxisSlotList.length;
+
+      const newSlot: UserAxisSlot = {
         slotID: userAxisSlotList.length,
         slotType: "CENTER_LABEL",
         userAxisGroupID: currentAxisGroupID,
-      });
+      };
+
+      userAxisSlotDict[slotID] = newSlot;
+      userAxisSlotList.push(slotID);
     }
 
     /** 2. 번들별로 조회 */
+    let startSlotIDX = userAxisSlotList.length - 1;
+
     group.forEach((bundle, bundleIDX) => {
       let currentItemList: number[] = [];
 
@@ -71,7 +80,10 @@ const convertRoughAxisData = (
         currentAxisBundleID,
       );
 
-      userAxisSlotList.push(...newSlotList);
+      newSlotList.forEach((slot) => {
+        userAxisSlotList.push(slot.slotID);
+        userAxisSlotDict[slot.slotID] = slot;
+      });
 
       userAxisBundleDict[currentAxisBundleID] = {
         userAxisGroupID: currentAxisGroupID,
@@ -83,23 +95,26 @@ const convertRoughAxisData = (
       currentAxisBundleID++;
     });
     /** 2. 번들별로 조회 */
+    let endSlotIDX = userAxisSlotList.length - 1;
 
     userAxisGroupDict[currentAxisGroupID] = {
       userAxisGroupID: currentAxisGroupID,
-
       axisSide: axisSide,
       intensityLevel: currentIntensity,
-
       bundleList: currentBundleList,
+      slotStartIDX: startSlotIDX,
+      slotEndIDX: endSlotIDX,
     };
 
     currentAxisGroupID++;
   });
+
   return {
     userAxisBundleDict,
     userAxisGroupDict,
     userAxisItemPosition,
     userAxisSlotList,
+    userAxisSlotDict,
   };
 };
 

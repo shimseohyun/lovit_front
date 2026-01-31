@@ -9,24 +9,27 @@ import {
 } from "@interfacesV02/type";
 import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import StarRate from "@componentsV02/starRate/StarRate";
+import {
+  useBoardSlotContext,
+  useBoardStepContext,
+} from "@hooksV02/data/context/context";
 
 const SwipePreferenceBoard = () => {
-  const {
-    preference,
-    preferenceSlot,
-    setPreferenceSlot,
-    itemSummaryDict,
-    currentItemID,
-  } = useBoardDataContext();
+  const { preference, itemSummaryDict } = useBoardDataContext();
+  const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
+  const { currentItemID } = useBoardStepContext();
 
   const [direction, setDirection] = useState<BoardDirection>(emptyDirection);
 
   // TODO: 가운데를 찾는 인덱스가 없음 ㅜ
-  const centerIDX = Math.floor(preference.slotList.length / 2);
+  const centerIDX = preference.groupDict[5].slotStartIDX;
 
-  const slotID = preferenceSlot?.preference ?? centerIDX;
-  const slotType = preference.slotList[slotID].slotType;
-  const gorupID = preference.slotList[slotID].userAxisGroupID;
+  console.log(preference);
+
+  const slotID = preference.slotList[preferenceSlot?.preference ?? centerIDX];
+  const slot = preference.slotDict[slotID];
+  const slotType = slot.slotType;
+  const gorupID = slot.userAxisGroupID;
   const group = preference.groupDict[gorupID];
   const intensity = group.userAxisGroupID;
 
@@ -127,8 +130,9 @@ const SwipePreferenceBoard = () => {
 
 export default SwipePreferenceBoard;
 
-const getComparisonItem = (data: AxisData, comparisonSlotID: number) => {
-  const bundleID = data.slotList[comparisonSlotID].userAxisBundleID;
+const getComparisonItem = (data: AxisData, comparisonSlotIDX: number) => {
+  const comparisonID = data.slotList[comparisonSlotIDX];
+  const bundleID = data.slotDict[comparisonID].userAxisBundleID;
 
   if (bundleID === undefined) return;
 

@@ -7,8 +7,15 @@ type Parms = {
 const StarRate = (parms: Parms) => {
   const { num, onClickStar } = parms;
 
-  console.log(num);
-  return <S.Container>별점</S.Container>;
+  return (
+    <S.Container
+      onClick={() => {
+        onClickStar(num);
+      }}
+    >
+      별점
+    </S.Container>
+  );
 };
 
 export default StarRate;

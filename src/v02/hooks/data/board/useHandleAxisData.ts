@@ -8,6 +8,7 @@ import type {
   UserAxisGroupDict,
   UserAxisItemPosition,
   UserAxisItemPositionDict,
+  UserAxisSlotDict,
   UserAxisSlotList,
 } from "@interfacesV02/data/user";
 import createAxisSlot from "@utilsV02/createAxisSlot";
@@ -19,6 +20,7 @@ type Parms = {
   initialBundleDict?: UserAxisBundleDict;
   initialItemPositionDict?: UserAxisItemPositionDict;
   initialSlotList?: UserAxisSlotList;
+  initialSlotDict?: UserAxisSlotDict;
 };
 
 const useHandleAxisData = (parms: Parms) => {
@@ -27,6 +29,7 @@ const useHandleAxisData = (parms: Parms) => {
     initialBundleDict = {},
     initialItemPositionDict = {},
     initialSlotList = [],
+    initialSlotDict = {},
   } = parms;
 
   const [groupDict, setGroupDict] =
@@ -36,7 +39,9 @@ const useHandleAxisData = (parms: Parms) => {
 
   const [itemPositionDict, setItemPositionDict] =
     useState<UserAxisItemPositionDict>(initialItemPositionDict);
+
   const [slotList, setSlotList] = useState<UserAxisSlotList>(initialSlotList);
+  const [slotDict, setSlotDict] = useState<UserAxisSlotDict>(initialSlotDict);
 
   const createNewBundle = (itemID: number, groupID: number) => {
     const newBundleID = Object.keys(bundleDict).length;
@@ -123,18 +128,28 @@ const useHandleAxisData = (parms: Parms) => {
     bundleID: number | undefined,
     keyList: AxisSlotType[],
   ) => {
+    const newSlot = createAxisSlot(slotList.length, keyList, groupID, bundleID);
+    const newSlotDict = slotDict;
+
+    const newSlotIDX = newSlot.map((slot) => {
+      newSlotDict[slot.slotID] = slot;
+      return slot.slotID;
+    });
+
     const newSlotList = [
       ...slotList.slice(0, prevID),
-      ...createAxisSlot(slotList.length, keyList, groupID, bundleID),
+      ...newSlotIDX,
       ...slotList.slice(nextID),
     ];
 
+    setSlotDict(newSlotDict);
     setSlotList(newSlotList);
   };
 
-  const pushItem = (itemID: number, slotID: number) => {
-    const slot = slotList[slotID];
-    if (slot === undefined) return;
+  const pushItem = (itemID: number, slotIDX: number) => {
+    const slotID = slotList[slotIDX];
+    const slot = slotDict[slotID ?? 0];
+    if (slotID === undefined || slot === undefined) return;
 
     const slotType = slot.slotType;
     const groupID = slot.userAxisGroupID;
@@ -144,9 +159,9 @@ const useHandleAxisData = (parms: Parms) => {
         : slot.userAxisBundleID;
     updateItemPosition(itemID, groupID, bundleID);
     switch (slotType) {
-      // slotID 위치에 시작, 리스트, 끝 슬롯으로 대체
+      // slotIDX 위치에 시작, 리스트, 끝 슬롯으로 대체
       case "CENTER_LABEL": {
-        updateSlot(slotID, slotID + 1, groupID, bundleID, [
+        updateSlot(slotIDX, slotIDX + 1, groupID, bundleID, [
           "START_LABEL",
           "ITEM_LIST",
           "END_LABEL",
@@ -157,14 +172,16 @@ const useHandleAxisData = (parms: Parms) => {
         return;
       }
 
-      // slotID 뒤에 list, between 삽입
+      // slotIDX 뒤에 list, between 삽입
       case "BETWEEN": {
-        updateSlot(slotID + 1, slotID + 1, groupID, bundleID, [
+        updateSlot(slotIDX + 1, slotIDX + 1, groupID, bundleID, [
           "ITEM_LIST",
           "BETWEEN",
         ]);
 
-        const prevSlot = slotList[slotID - 1];
+        const prevSlotID = slotList[slotIDX - 1];
+        const prevSlot = slotDict[prevSlotID];
+
         const prevBundleID = prevSlot?.userAxisBundleID;
         if (prevBundleID === undefined) return;
 
@@ -178,7 +195,7 @@ const useHandleAxisData = (parms: Parms) => {
       }
 
       case "START_LABEL": {
-        updateSlot(slotID + 1, slotID + 1, groupID, bundleID, [
+        updateSlot(slotIDX + 1, slotIDX + 1, groupID, bundleID, [
           "ITEM_LIST",
           "BETWEEN",
         ]);
@@ -188,9 +205,12 @@ const useHandleAxisData = (parms: Parms) => {
         return;
       }
 
-      // slotID 앞에 between, list 삽입
+      // slotIDX 앞에 between, list 삽입
       case "END_LABEL": {
-        updateSlot(slotID, slotID, groupID, bundleID, ["BETWEEN", "ITEM_LIST"]);
+        updateSlot(slotIDX, slotIDX, groupID, bundleID, [
+          "BETWEEN",
+          "ITEM_LIST",
+        ]);
         const insertIDX = groupDict[groupID].bundleList.length;
         insertBundle(itemID, groupID, insertIDX);
 
@@ -220,7 +240,14 @@ const useHandleAxisData = (parms: Parms) => {
     }
   };
 
-  return { groupDict, bundleDict, itemPositionDict, slotList, pushItem };
+  return {
+    groupDict,
+    bundleDict,
+    itemPositionDict,
+    slotList,
+    slotDict,
+    pushItem,
+  };
 };
 
 export default useHandleAxisData;

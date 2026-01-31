@@ -130,13 +130,13 @@ const SwipeBoard = (parms: Parms) => {
             $position={getTranslate(currentSlot)}
             $axis={axis}
           >
-            {data.slotList.map((v, vIDX) => (
+            {data.slotList.map((slotID, vIDX) => (
               <S.BoardAxisItem
-                key={`${axis}-${v.slotID}`}
+                key={`${axis}-${vIDX}`}
                 $size={stepPX}
                 $axis={axis}
               >
-                {renderAxisMarker(axis, v, vIDX, data)}
+                {renderAxisMarker(axis, data.slotDict[slotID], vIDX, data)}
               </S.BoardAxisItem>
             ))}
           </S.BoardAxisWrpper>

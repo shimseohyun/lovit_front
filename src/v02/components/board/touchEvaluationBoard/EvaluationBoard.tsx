@@ -3,10 +3,12 @@ import * as S from "./EvaluationBoard.styled";
 import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
 import type { UserAxisGroupDict } from "@interfacesV02/data/user";
 import { getSlotCount } from "@utilsV02/createAxisSlot";
+import { useBoardStepContext } from "@hooksV02/data/context/context";
 
 const EvaluationBoard = () => {
-  const { itemList, boardSize, vertical, horizontal, navigateEvaluationSwipe } =
-    useBoardDataContext();
+  const { itemList, boardSize, vertical, horizontal } = useBoardDataContext();
+  const { navigateEvaluationSwipe } = useBoardStepContext();
+
   const { verticalPoints, horizontalPoints } = useGetBoardPoint();
 
   const CENTER_SIZE = 20;

@@ -6,7 +6,7 @@ import type {
   ItemSummaryDict,
 } from "@interfacesV02/data/system";
 
-import { type UseBoardDataReturn } from "@hooksV02/data/board/useBoardData";
+import type { UseBoardDataReturn } from "@hooksV02/data/board/useBoardData";
 import type { UseBoardSlotReturn } from "@hooksV02/data/board/useBoardSlot";
 import type { UseBoardStepReturn } from "../board/useBoardStep";
 
@@ -24,8 +24,9 @@ export type BoardStaticValue = {
   itemSummaryDict: ItemSummaryDict;
   boardSize: number;
   stepPX: number;
-} & UseBoardDataReturn &
-  UseBoardSlotReturn &
-  UseBoardStepReturn;
+} & UseBoardDataReturn;
+
+export type BoardSlotValue = UseBoardSlotReturn;
+export type BoardStepValue = UseBoardStepReturn;
 
 export type ProviderProps = PropsWithChildren<ProviderParams>;

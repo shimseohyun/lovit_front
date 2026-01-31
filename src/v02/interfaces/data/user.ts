@@ -15,6 +15,8 @@ export interface UserAxisGroup {
   intensityLevel: number;
 
   bundleList: UserAxisBundleID[];
+  slotStartIDX: number;
+  slotEndIDX: number;
 }
 
 export interface UserAxisBundle {
@@ -58,4 +60,5 @@ export type UserAxisItemPositionDict = Record<
 >;
 export type UserAxisPointDict = Record<ItemSummaryID, UserAxisPoint>;
 
-export type UserAxisSlotList = UserAxisSlot[];
+export type UserAxisSlotList = number[];
+export type UserAxisSlotDict = Record<UserAxisSlotID, UserAxisSlot>;
