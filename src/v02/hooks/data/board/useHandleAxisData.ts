@@ -1,3 +1,5 @@
+export type AxisData = ReturnType<typeof useHandleAxisData>;
+
 import type {
   AxisSlotType,
   UserAxisBundle,
@@ -14,7 +16,7 @@ import { useState } from "react";
 
 type Parms = {
   initialGroupDict?: UserAxisGroupDict;
-  initialBundleDic?: UserAxisBundleDict;
+  initialBundleDict?: UserAxisBundleDict;
   initialItemPositionDict?: UserAxisItemPositionDict;
   initialSlotList?: UserAxisSlotList;
 };
@@ -22,7 +24,7 @@ type Parms = {
 const useHandleAxisData = (parms: Parms) => {
   const {
     initialGroupDict = {},
-    initialBundleDic = {},
+    initialBundleDict = {},
     initialItemPositionDict = {},
     initialSlotList = [],
   } = parms;
@@ -30,7 +32,7 @@ const useHandleAxisData = (parms: Parms) => {
   const [groupDict, setGroupDict] =
     useState<UserAxisGroupDict>(initialGroupDict);
   const [bundleDict, setBundleDict] =
-    useState<UserAxisBundleDict>(initialBundleDic);
+    useState<UserAxisBundleDict>(initialBundleDict);
 
   const [itemPositionDict, setItemPositionDict] =
     useState<UserAxisItemPositionDict>(initialItemPositionDict);

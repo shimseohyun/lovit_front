@@ -1,4 +1,4 @@
-import { useBoardDataContext } from "@hooksV02/data/contextBoardData";
+import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
 import type {
   UserAxisGroupDict,
   UserAxisItemPositionDict,

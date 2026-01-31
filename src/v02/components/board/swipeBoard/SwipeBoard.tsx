@@ -1,16 +1,23 @@
 import type { AxisType } from "@interfacesV02/type";
 import AxisMarker from "./marker/AxisMarker";
-import * as S from "./SwipeEvaluationBoard.styled";
-import { useBoardDataContext } from "@hooksV02/data/contextBoardData";
+import * as S from "./SwipeBoard.styled";
+import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
 import useBoardSwipe from "@hooksV02/board/useBoardSwipe";
 import CurrentMarker from "./marker/CurrentMarker";
+import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
+import type { UserAxisSlot } from "@interfacesV02/data/user";
 
-const axisList = ["VERTICAL", "HORIZONTAL"] as AxisType[];
+type Parms = {
+  dataList: AxisData[];
+  axisList: AxisType[];
+};
 
-const SwipeEvaluationBoard = () => {
+const SwipeBoard = (parms: Parms) => {
+  const { dataList, axisList } = parms;
+  const isSolo = dataList.length === 1;
+
   const {
     bind,
-
     onPointerDown,
     onTransitionEnd,
     translate,
@@ -18,40 +25,26 @@ const SwipeEvaluationBoard = () => {
     dragAxis,
   } = useBoardSwipe();
 
-  const {
-    boardSize,
-    vertical,
-    horizontal,
-    boardSlot,
-    itemSummaryDict,
-    stepPX,
-  } = useBoardDataContext();
+  const { boardSize, evaluationSlot, itemSummaryDict, stepPX } =
+    useBoardDataContext();
 
-  if (boardSlot === undefined) return;
-
-  const axisByType: Record<
-    AxisType,
-    { data: typeof vertical; position: "x" | "y" }
-  > = {
-    VERTICAL: { data: vertical, position: "y" },
-    HORIZONTAL: { data: horizontal, position: "x" },
-  };
+  if (evaluationSlot === undefined) return;
 
   const renderAxisMarker = (
     axis: AxisType,
-    v: (typeof vertical.slotList)[number],
+    v: UserAxisSlot,
     vIDX: number,
+    data: AxisData,
   ) => {
-    const axisData = axisByType[axis].data;
-
     const isCurrent =
-      boardSlot[axis === "HORIZONTAL" ? "horizontal" : "vertical"] === vIDX;
+      evaluationSlot[axis === "HORIZONTAL" ? "horizontal" : "vertical"] ===
+      vIDX;
     const isVisible =
       !(dragAxis === null && isCurrent) &&
       (dragAxis === null || dragAxis === axis);
 
     if (v.slotType === "ITEM_LIST" && v.userAxisBundleID !== undefined) {
-      const bundle = axisData.bundleDict?.[v.userAxisBundleID];
+      const bundle = data.bundleDict?.[v.userAxisBundleID];
       const itemList = bundle?.itemList;
       const lastItemIDX = itemList?.[itemList.length - 1];
 
@@ -73,7 +66,7 @@ const SwipeEvaluationBoard = () => {
     } else {
       const groupId = v.userAxisGroupID;
       const group =
-        groupId !== undefined ? axisData.groupDict?.[groupId] : undefined;
+        groupId !== undefined ? data.groupDict?.[groupId] : undefined;
 
       if (!group) return null;
 
@@ -103,24 +96,25 @@ const SwipeEvaluationBoard = () => {
           {dragAxis !== "HORIZONTAL" && <S.BoardAxis $axis="VERTICAL" />}
         </S.BoardAxisContainer>
 
-        {axisList.map((axis) => {
-          const axisData = axisByType[axis].data;
+        {dataList.map((data, axisIDX) => {
+          const axis = axisList[axisIDX];
 
+          const pos = axis === "HORIZONTAL" ? "x" : "y";
           return (
             <S.BoardAxisWrpper
               key={axis}
               onTransitionEnd={onTransitionEnd}
-              $position={translate[axisByType[axis].position]}
+              $position={translate[pos]}
               $axis={axis}
               $isAnimating={isAnimating}
             >
-              {axisData.slotList.map((v, vIDX) => (
+              {data.slotList.map((v, vIDX) => (
                 <S.BoardAxisItem
                   key={`${axis}-${v.slotID}`}
                   $size={stepPX}
                   $axis={axis}
                 >
-                  {renderAxisMarker(axis, v, vIDX)}
+                  {renderAxisMarker(axis, v, vIDX, data)}
                 </S.BoardAxisItem>
               ))}
             </S.BoardAxisWrpper>
@@ -132,4 +126,4 @@ const SwipeEvaluationBoard = () => {
   );
 };
 
-export default SwipeEvaluationBoard;
+export default SwipeBoard;

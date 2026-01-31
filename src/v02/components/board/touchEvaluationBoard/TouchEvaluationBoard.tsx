@@ -1,11 +1,11 @@
 import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 import * as S from "./TouchEvaluationBoard.styled";
-import { useBoardDataContext } from "@hooksV02/data/contextBoardData";
+import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
 import type { UserAxisGroupDict } from "@interfacesV02/data/user";
 import { getSlotCount } from "@utilsV02/createAxisSlot";
 
 const TouchEvaluationBoard = () => {
-  const { itemList, boardSize, vertical, horizontal, setBoardSlot } =
+  const { itemList, boardSize, vertical, horizontal, navigateEvaluationSwipe } =
     useBoardDataContext();
   const { verticalPoints, horizontalPoints } = useGetBoardPoint();
 
@@ -46,7 +46,7 @@ const TouchEvaluationBoard = () => {
     const vSlotIDX = getSlotIDX(v, vertical.groupDict);
     const hSlotIDX = getSlotIDX(h, horizontal.groupDict);
 
-    setBoardSlot({ vertical: vSlotIDX, horizontal: hSlotIDX });
+    navigateEvaluationSwipe({ vertical: vSlotIDX, horizontal: hSlotIDX });
   };
 
   return (

@@ -9,7 +9,7 @@ const Spot = styled.div<{ $isCurrent: boolean }>`
   left: 50%;
   top: 50%;
 
-  border-radius: 2px;
+  border-radius: 6px;
   ${(p) => {
     if (p.$isCurrent) {
       return css`

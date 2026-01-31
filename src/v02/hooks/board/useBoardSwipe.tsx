@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 import type { PointerEventHandler } from "react";
 
-import type { AxisType, BoardSlot } from "@interfacesV02/type";
-import { useBoardDataContext } from "@hooksV02/data/contextBoardData";
+import type { AxisType, EvaluationSlot } from "@interfacesV02/type";
+import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
 import useSwipe, { type SwipeProgressPayload } from "@hooksV02/swipe/useSwipe";
 
 type Translate = { x: number; y: number };
@@ -18,23 +18,26 @@ const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
 const useBoardSwipe = () => {
-  const { boardSize, stepPX, vertical, boardSlot, setBoardSlot } =
+  const { boardSize, stepPX, vertical, evaluationSlot, setEvaluationSlot } =
     useBoardDataContext();
 
   const slotCount = vertical.slotList.length - 1;
 
-  const safeSlot: BoardSlot = boardSlot ?? { horizontal: 0, vertical: 0 };
+  const safeSlot: EvaluationSlot = evaluationSlot ?? {
+    horizontal: 0,
+    vertical: 0,
+  };
 
   const isVerticalAxis = (axis: AxisType) => axis === "VERTICAL";
 
   const getSlotValue = useCallback(
-    (slot: BoardSlot, axis: AxisType) =>
+    (slot: EvaluationSlot, axis: AxisType) =>
       isVerticalAxis(axis) ? slot.vertical : slot.horizontal,
     [],
   );
 
   const setSlotValue = useCallback(
-    (slot: BoardSlot, axis: AxisType, v: number) => {
+    (slot: EvaluationSlot, axis: AxisType, v: number) => {
       return isVerticalAxis(axis)
         ? { ...slot, vertical: v }
         : { ...slot, horizontal: v };
@@ -50,7 +53,7 @@ const useBoardSwipe = () => {
   );
 
   const toTranslate = useCallback(
-    (slot: BoardSlot): Translate => ({
+    (slot: EvaluationSlot): Translate => ({
       x: getTranslate(slot.horizontal),
       y: getTranslate(slot.vertical),
     }),
@@ -73,8 +76,8 @@ const useBoardSwipe = () => {
   );
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const startSlotRef = useRef<BoardSlot>(safeSlot);
-  const liveSlotRef = useRef<BoardSlot>(safeSlot);
+  const startSlotRef = useRef<EvaluationSlot>(safeSlot);
+  const liveSlotRef = useRef<EvaluationSlot>(safeSlot);
   const isDraggingRef = useRef(false);
 
   const [dragInfo, setDragInfo] = useState<DragInfo>({
@@ -98,11 +101,11 @@ const useBoardSwipe = () => {
   const max = slotCount;
 
   const commitSlot = useCallback(
-    (nextSlot: BoardSlot) => {
+    (nextSlot: EvaluationSlot) => {
       liveSlotRef.current = nextSlot;
-      setBoardSlot(nextSlot);
+      setEvaluationSlot(nextSlot);
     },
-    [setBoardSlot],
+    [setEvaluationSlot],
   );
 
   const revertToStart = useCallback(() => {
@@ -169,7 +172,7 @@ const useBoardSwipe = () => {
   const onTransitionEnd = () => setIsAnimating(false);
 
   return {
-    boardSlot,
+    evaluationSlot,
     bind,
     onPointerDown,
     onTransitionEnd,
