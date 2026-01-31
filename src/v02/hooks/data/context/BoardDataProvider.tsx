@@ -7,7 +7,7 @@ import { defaultBoardSize, defaultStepPx } from "./constant";
 import type { BoardStaticValue, ProviderProps } from "./type";
 
 import useBoardData from "@hooksV02/data/board/useBoardData";
-import useEvaluationSlot from "@hooksV02/data/board/useEvaluationSlot";
+import useBoardSlot from "@hooksV02/data/board/useBoardSlot";
 import useBoardStep from "../board/useBoardStep";
 
 export const BoardDataProvider = (props: ProviderProps) => {
@@ -24,7 +24,7 @@ export const BoardDataProvider = (props: ProviderProps) => {
     verticalRough,
     preferenceRough,
   });
-  const evaluationSlot = useEvaluationSlot();
+  const evaluationSlot = useBoardSlot();
 
   const boardStep = useBoardStep({
     setEvaluationSlot: evaluationSlot.setEvaluationSlot,

@@ -1,9 +1,13 @@
-import type { AxisType, SwipeDirectionType } from "@interfacesV02/type";
-import { useEffect, useMemo, useRef } from "react";
+import type {
+  AxisType,
+  BoardDirection,
+  DirectionType,
+} from "@interfacesV02/type";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { PointerEvent, PointerEventHandler } from "react";
 
 export type SwipeResult = {
-  direction: SwipeDirectionType;
+  direction: BoardDirection;
   axis: AxisType;
 
   totalDx: number;
@@ -20,7 +24,7 @@ export type SwipeProgressPayload = {
   deltaX: number;
   deltaY: number;
   axis: AxisType | null;
-  direction: SwipeDirectionType | null;
+  direction: BoardDirection | null;
 };
 
 export type SwipeBind<T extends HTMLElement = HTMLElement> = {
@@ -71,18 +75,15 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
     axisLocked: null as AxisType | null,
   });
 
-  const getDirection = (
-    axis: AxisType,
-    dx: number,
-    dy: number,
-  ): SwipeDirectionType =>
-    axis === "HORIZONTAL"
-      ? dx >= 0
-        ? "RIGHT"
-        : "LEFT"
-      : dy >= 0
-        ? "DOWN"
-        : "UP";
+  const [direction, setDirection] = useState<BoardDirection>({
+    VERTICAL: null,
+    HORIZONTAL: null,
+  });
+
+  const updateDirection = (axis: AxisType, d: number) => {
+    const newDirection: DirectionType = d >= 0 ? "START" : "END";
+    setDirection({ ...direction, [axis]: newDirection });
+  };
 
   const bind: SwipeBind<T> = useMemo(() => {
     const onPointerDown: PointerEventHandler<T> = (e) => {
@@ -125,8 +126,10 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
           Math.abs(deltaX) >= Math.abs(deltaY) ? "HORIZONTAL" : "VERTICAL";
       }
 
-      // ✅ axis가 정해졌으면 direction도 계산해서 넘김
-      const direction = getDirection(s.axisLocked, deltaX, deltaY);
+      updateDirection(
+        s.axisLocked,
+        s.axisLocked === "HORIZONTAL" ? deltaX : deltaY,
+      );
 
       onProgressRef.current?.({
         deltaX,
@@ -159,11 +162,7 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
 
       const passed = distancePx >= minDistancePx;
 
-      const direction: SwipeDirectionType = getDirection(
-        axis,
-        totalDx,
-        totalDy,
-      );
+      updateDirection(axis, axis === "HORIZONTAL" ? totalDx : totalDy);
 
       onEndRef.current?.({
         direction,
@@ -199,7 +198,7 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
     };
   }, [lockDirectionPx, minDistancePx]);
 
-  return { bind };
+  return { bind, direction };
 };
 
 export default useSwipe;

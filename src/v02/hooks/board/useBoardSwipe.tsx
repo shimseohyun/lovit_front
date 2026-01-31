@@ -1,89 +1,76 @@
 import { useCallback, useRef, useState } from "react";
 import type { PointerEventHandler } from "react";
-
-import type { AxisType, EvaluationSlot } from "@interfacesV02/type";
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
+import type { AxisType } from "@interfacesV02/type";
 import useSwipe, { type SwipeProgressPayload } from "@hooksV02/swipe/useSwipe";
-
-type Translate = { x: number; y: number };
 
 type SwipeDirection = SwipeProgressPayload["direction"];
 type DragInfo = {
   isDragging: boolean;
   axis: AxisType | null;
-  direction: SwipeDirection | null;
+  direction: SwipeDirection;
 };
 
 const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
-const useBoardSwipe = () => {
-  const { boardSize, stepPX, vertical, evaluationSlot, setEvaluationSlot } =
-    useBoardDataContext();
+type SlotDict = Partial<Record<AxisType, number>>;
 
-  const slotCount = vertical.slotList.length - 1;
+type Parms = {
+  slotCount: number;
+  stepPX: number;
+  initialV?: number;
+  initialH?: number;
+  isHorizontal?: boolean;
+  isVertical?: boolean;
+};
 
-  const safeSlot: EvaluationSlot = evaluationSlot ?? {
-    horizontal: 0,
-    vertical: 0,
-  };
+const useBoardSwipe = (parms: Parms) => {
+  const {
+    slotCount,
+    stepPX,
+    initialV,
+    initialH,
+    isHorizontal = true,
+    isVertical = true,
+  } = parms;
+
+  const [slot, setSlot] = useState<SlotDict>({
+    VERTICAL: initialV,
+    HORIZONTAL: initialH,
+  });
+
+  const safeSlot: SlotDict = slot;
 
   const isVerticalAxis = (axis: AxisType) => axis === "VERTICAL";
 
+  // ✅ 추가: 축 허용 여부
+  const isAxisEnabled = useCallback(
+    (axis: AxisType) => (isVerticalAxis(axis) ? isVertical : isHorizontal),
+    [isHorizontal, isVertical],
+  );
+
   const getSlotValue = useCallback(
-    (slot: EvaluationSlot, axis: AxisType) =>
-      isVerticalAxis(axis) ? slot.vertical : slot.horizontal,
+    (slot: SlotDict, axis: AxisType) => slot[axis],
     [],
   );
 
   const setSlotValue = useCallback(
-    (slot: EvaluationSlot, axis: AxisType, v: number) => {
-      return isVerticalAxis(axis)
-        ? { ...slot, vertical: v }
-        : { ...slot, horizontal: v };
+    (slot: SlotDict, axis: AxisType, v: number) => {
+      return { ...slot, [axis]: v };
     },
     [],
   );
 
-  const getTranslate = useCallback(
-    (slotNum: number) => {
-      return boardSize / 2 + (slotCount / 2 - slotNum) * stepPX;
-    },
-    [boardSize, stepPX],
-  );
-
-  const toTranslate = useCallback(
-    (slot: EvaluationSlot): Translate => ({
-      x: getTranslate(slot.horizontal),
-      y: getTranslate(slot.vertical),
-    }),
-    [getTranslate],
-  );
-
-  const updateTranslateByAxis = useCallback(
-    (axis: AxisType, raw: number) => {
-      setTranslate((prev) =>
-        isVerticalAxis(axis)
-          ? { ...prev, y: getTranslate(raw) }
-          : { ...prev, x: getTranslate(raw) },
-      );
-    },
-    [getTranslate],
-  );
-
-  const [translate, setTranslate] = useState<Translate>(() =>
-    toTranslate(safeSlot),
-  );
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const startSlotRef = useRef<EvaluationSlot>(safeSlot);
-  const liveSlotRef = useRef<EvaluationSlot>(safeSlot);
+  const startSlotRef = useRef<SlotDict>(safeSlot);
+  const liveSlotRef = useRef<SlotDict>(safeSlot);
   const isDraggingRef = useRef(false);
 
   const [dragInfo, setDragInfo] = useState<DragInfo>({
     isDragging: false,
     axis: null,
-    direction: null,
+    direction: { VERTICAL: null, HORIZONTAL: null },
   });
 
   const setDragInfoSafe = useCallback((patch: Partial<DragInfo>) => {
@@ -98,50 +85,46 @@ const useBoardSwipe = () => {
   }, []);
 
   const min = 0;
-  const max = slotCount;
+  const max = slotCount - 1;
 
-  const commitSlot = useCallback(
-    (nextSlot: EvaluationSlot) => {
-      liveSlotRef.current = nextSlot;
-      setEvaluationSlot(nextSlot);
-    },
-    [setEvaluationSlot],
-  );
+  const commitSlot = useCallback((nextSlot: SlotDict) => {
+    liveSlotRef.current = nextSlot;
+    setSlot(nextSlot);
+  }, []);
 
   const revertToStart = useCallback(() => {
     const back = startSlotRef.current;
     commitSlot(back);
-    setTranslate(toTranslate(back));
-  }, [commitSlot, toTranslate]);
+  }, [commitSlot]);
 
   const snapTo = useCallback(
     (axis: AxisType, target: number) => {
       const next = setSlotValue(liveSlotRef.current, axis, target);
       commitSlot(next);
-      setTranslate(toTranslate(next));
     },
-    [commitSlot, setSlotValue, toTranslate],
+    [commitSlot, setSlotValue],
   );
 
-  const { bind } = useSwipe<HTMLDivElement>({
+  const { bind, direction } = useSwipe<HTMLDivElement>({
     onProgress: ({ deltaX, deltaY, axis, direction }: SwipeProgressPayload) => {
       if (!isDraggingRef.current) return;
+      if (!axis || !direction) return;
+
+      // ✅ 추가: 막힌 축이면 아무 것도 안 하게
+      if (!isAxisEnabled(axis)) return;
 
       setIsAnimating(false);
-
-      if (!axis || !direction) return;
       setDragInfoSafe({ axis, direction });
 
       const axisDelta = isVerticalAxis(axis) ? deltaY : deltaX;
       const start = getSlotValue(startSlotRef.current, axis);
+      if (start === undefined) return;
 
       const raw = clamp(start - axisDelta / stepPX, min, max);
       const snapped = clamp(Math.round(raw), min, max);
 
       const next = setSlotValue(liveSlotRef.current, axis, snapped);
       commitSlot(next);
-
-      updateTranslateByAxis(axis, raw);
     },
 
     onEnd: ({ passed, axis, totalDx, totalDy }) => {
@@ -149,13 +132,20 @@ const useBoardSwipe = () => {
       setIsAnimating(true);
       setDragInfoSafe({ isDragging: false, axis: null, direction: null });
 
-      if (!passed || !axis) {
+      // ✅ 추가: 막힌 축이면 무조건 원복
+      if (!axis || !isAxisEnabled(axis)) {
+        revertToStart();
+        return;
+      }
+
+      if (!passed) {
         revertToStart();
         return;
       }
 
       const total = isVerticalAxis(axis) ? totalDy : totalDx;
       const start = getSlotValue(startSlotRef.current, axis);
+      if (start === undefined) return;
 
       const target = clamp(Math.round(start - total / stepPX), min, max);
       snapTo(axis, target);
@@ -163,6 +153,9 @@ const useBoardSwipe = () => {
   });
 
   const onPointerDown: PointerEventHandler<HTMLDivElement> = (e) => {
+    // ✅ 추가: 둘 다 막혀있으면 스와이프 자체를 시작하지 않게
+    if (!isHorizontal && !isVertical) return;
+
     isDraggingRef.current = true;
     startSlotRef.current = liveSlotRef.current;
     setDragInfoSafe({ isDragging: true, axis: null, direction: null });
@@ -172,17 +165,15 @@ const useBoardSwipe = () => {
   const onTransitionEnd = () => setIsAnimating(false);
 
   return {
-    evaluationSlot,
+    slot,
     bind,
     onPointerDown,
     onTransitionEnd,
-    slot: safeSlot,
-    translate,
-    isAnimating,
 
+    isAnimating,
     isDragging: dragInfo.isDragging,
     dragAxis: dragInfo.axis,
-    dragDirection: dragInfo.direction,
+    dragDirection: direction,
   };
 };
 

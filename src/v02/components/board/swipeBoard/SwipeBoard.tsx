@@ -1,4 +1,6 @@
-import type { AxisType } from "@interfacesV02/type";
+import { useEffect } from "react";
+
+import type { AxisType, BoardDirection, SlotDict } from "@interfacesV02/type";
 import AxisMarker from "./marker/AxisMarker";
 import * as S from "./SwipeBoard.styled";
 import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
@@ -10,25 +12,49 @@ import type { UserAxisSlot } from "@interfacesV02/data/user";
 type Parms = {
   dataList: AxisData[];
   axisList: AxisType[];
+  initialH?: number;
+  initialV?: number;
+
+  // ✅ slot이 바뀔 때마다 부모로 전달
+  onSlotChange?: (slot: SlotDict, direction: BoardDirection) => void;
 };
 
 const SwipeBoard = (parms: Parms) => {
-  const { dataList, axisList } = parms;
-  const isSolo = dataList.length === 1;
+  const { dataList, axisList, initialH, initialV, onSlotChange } = parms;
+
+  if (dataList.length === 0 || axisList.length === 0) return null;
+
+  const slotCount = dataList[0].slotList.length;
+
+  const isHorizontal = axisList.includes("HORIZONTAL");
+  const isVertical = axisList.includes("VERTICAL");
+
+  const { boardSize, itemSummaryDict, stepPX } = useBoardDataContext();
 
   const {
     bind,
+    slot,
     onPointerDown,
     onTransitionEnd,
-    translate,
-    isAnimating,
     dragAxis,
-  } = useBoardSwipe();
+    dragDirection,
+  } = useBoardSwipe({
+    slotCount,
+    stepPX,
+    initialH,
+    initialV,
+    isHorizontal,
+    isVertical,
+  });
 
-  const { boardSize, evaluationSlot, itemSummaryDict, stepPX } =
-    useBoardDataContext();
+  // ✅ slot이 바뀔 때마다 부모로 push
+  useEffect(() => {
+    if (dragDirection && onSlotChange) onSlotChange(slot, dragDirection);
+  }, [slot, onSlotChange]);
 
-  if (evaluationSlot === undefined) return;
+  const getTranslate = (slotIDX: number) => {
+    return boardSize / 2 + (slotCount / 2 - slotIDX) * stepPX - stepPX / 2;
+  };
 
   const renderAxisMarker = (
     axis: AxisType,
@@ -36,9 +62,9 @@ const SwipeBoard = (parms: Parms) => {
     vIDX: number,
     data: AxisData,
   ) => {
-    const isCurrent =
-      evaluationSlot[axis === "HORIZONTAL" ? "horizontal" : "vertical"] ===
-      vIDX;
+    const currentSlot = slot[axis] ?? 0;
+    const isCurrent = currentSlot === vIDX;
+
     const isVisible =
       !(dragAxis === null && isCurrent) &&
       (dragAxis === null || dragAxis === axis);
@@ -63,66 +89,62 @@ const SwipeBoard = (parms: Parms) => {
           imgURL={item.thumbnailURL}
         />
       );
-    } else {
-      const groupId = v.userAxisGroupID;
-      const group =
-        groupId !== undefined ? data.groupDict?.[groupId] : undefined;
-
-      if (!group) return null;
-
-      return (
-        <AxisMarker
-          isVisible={isVisible}
-          isSelected={dragAxis === axis}
-          isCurrent={isCurrent}
-          axis={axis}
-          type={v.slotType}
-          label={`${group.intensityLevel} ${group.axisSide}`}
-        />
-      );
     }
+
+    const groupId = v.userAxisGroupID;
+    const group = groupId !== undefined ? data.groupDict?.[groupId] : undefined;
+    if (!group) return null;
+
+    return (
+      <AxisMarker
+        isVisible={isVisible}
+        isSelected={dragAxis === axis}
+        isCurrent={isCurrent}
+        axis={axis}
+        type={v.slotType}
+        label={`${group.intensityLevel} ${group.axisSide}`}
+      />
+    );
   };
 
   return (
-    <>
-      <S.BoardContaienr
-        {...bind}
-        onPointerDown={onPointerDown}
-        $size={boardSize}
-      >
-        <S.BoardAxisContainer>
-          {dragAxis !== "VERTICAL" && <S.BoardAxis $axis="HORIZONTAL" />}
+    <S.BoardContaienr {...bind} onPointerDown={onPointerDown} $size={boardSize}>
+      <S.BoardAxisContainer>
+        {isHorizontal && dragAxis !== "VERTICAL" && (
+          <S.BoardAxis $axis="HORIZONTAL" />
+        )}
 
-          {dragAxis !== "HORIZONTAL" && <S.BoardAxis $axis="VERTICAL" />}
-        </S.BoardAxisContainer>
+        {isVertical && dragAxis !== "HORIZONTAL" && (
+          <S.BoardAxis $axis="VERTICAL" />
+        )}
+      </S.BoardAxisContainer>
 
-        {dataList.map((data, axisIDX) => {
-          const axis = axisList[axisIDX];
+      {dataList.map((data, axisIDX) => {
+        const axis = axisList[axisIDX];
+        const currentSlot = slot[axis] ?? 0;
 
-          const pos = axis === "HORIZONTAL" ? "x" : "y";
-          return (
-            <S.BoardAxisWrpper
-              key={axis}
-              onTransitionEnd={onTransitionEnd}
-              $position={translate[pos]}
-              $axis={axis}
-              $isAnimating={isAnimating}
-            >
-              {data.slotList.map((v, vIDX) => (
-                <S.BoardAxisItem
-                  key={`${axis}-${v.slotID}`}
-                  $size={stepPX}
-                  $axis={axis}
-                >
-                  {renderAxisMarker(axis, v, vIDX, data)}
-                </S.BoardAxisItem>
-              ))}
-            </S.BoardAxisWrpper>
-          );
-        })}
-        <CurrentMarker axis={dragAxis} />
-      </S.BoardContaienr>
-    </>
+        return (
+          <S.BoardAxisWrpper
+            key={axis}
+            onTransitionEnd={onTransitionEnd}
+            $position={getTranslate(currentSlot)}
+            $axis={axis}
+          >
+            {data.slotList.map((v, vIDX) => (
+              <S.BoardAxisItem
+                key={`${axis}-${v.slotID}`}
+                $size={stepPX}
+                $axis={axis}
+              >
+                {renderAxisMarker(axis, v, vIDX, data)}
+              </S.BoardAxisItem>
+            ))}
+          </S.BoardAxisWrpper>
+        );
+      })}
+
+      <CurrentMarker axis={dragAxis} />
+    </S.BoardContaienr>
   );
 };
 

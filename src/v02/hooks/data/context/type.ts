@@ -4,7 +4,7 @@ import type { RoughAxisData } from "@interfacesV02/data/user";
 import type { ItemSummaryDict } from "@interfacesV02/data/system";
 
 import { type UseBoardDataReturn } from "@hooksV02/data/board/useBoardData";
-import type { UseEvaluationSlotReturn } from "@hooksV02/data/board/useEvaluationSlot";
+import type { UseBoardSlotReturn } from "@hooksV02/data/board/useBoardSlot";
 import type { UseBoardStepReturn } from "../board/useBoardStep";
 
 export type ProviderParams = {
@@ -19,7 +19,7 @@ export type BoardStaticValue = {
   boardSize: number;
   stepPX: number;
 } & UseBoardDataReturn &
-  UseEvaluationSlotReturn &
+  UseBoardSlotReturn &
   UseBoardStepReturn;
 
 export type ProviderProps = PropsWithChildren<ProviderParams>;

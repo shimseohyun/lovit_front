@@ -10,7 +10,6 @@ export const BoardContaienr = styled.div<{ $size: number }>`
   `}
   position:relative;
   overflow: hidden;
-  position: fixed;
 `;
 
 export const BoardAxisContainer = styled.div`
@@ -46,11 +45,11 @@ export const BoardAxis = styled.div<{
 export const BoardAxisWrpper = styled.div<{
   $position: number;
   $axis: AxisType;
-  $isAnimating: boolean;
 }>`
   pointer-events: none;
-  transition: ${({ $isAnimating }) =>
-    $isAnimating ? "top 220ms ease, left 220ms ease" : "none"};
+  transition:
+    top 220ms ease,
+    left 220ms ease;
 
   ${({ $position, $axis }) => {
     if ($axis === "HORIZONTAL") {

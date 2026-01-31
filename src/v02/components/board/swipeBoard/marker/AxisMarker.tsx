@@ -13,8 +13,8 @@ const Spot = styled.div<{ $isCurrent: boolean }>`
   ${(p) => {
     if (p.$isCurrent) {
       return css`
-        width: 6px;
-        height: 6px;
+        width: 8px;
+        height: 8px;
         background-color: ${p.theme.strokeColors.strokeStorngest};
       `;
     } else {
