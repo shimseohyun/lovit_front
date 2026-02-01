@@ -43,7 +43,7 @@ const SwipeEvaluationBoard = () => {
     const group = data.groupDict[slot.userAxisGroupID];
 
     // 아이콘 - 그룹명 조합
-    const info = boardInformation.axisDict[axis];
+    const info = boardInformation.evaluationAxisDict[axis];
     const icon = info.partDict[group.axisSide].icon ?? "";
     const groupLabel = info.partDict[group.axisSide].label;
 

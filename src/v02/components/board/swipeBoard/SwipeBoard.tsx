@@ -1,11 +1,12 @@
 import type { AxisType, SlotDict } from "@interfacesV02/type";
-import AxisMarker from "./marker/AxisMarker";
+
 import * as S from "./SwipeBoard.styled";
 
 import CurrentMarker from "./marker/CurrentMarker";
 import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import type { UserAxisSlot } from "@interfacesV02/data/user";
 import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
+import AxisMarker from "./marker/AxisMarker";
 
 type Parms = {
   boardSize: number;
@@ -41,6 +42,8 @@ const SwipeBoard = (parms: Parms) => {
     itemSummaryDict,
   } = parms;
 
+  // 항상 드래그 상태를 유지
+  const isSolo = dataList.length === 1;
   const isHorizontal = axisList.includes("HORIZONTAL");
   const isVertical = axisList.includes("VERTICAL");
 
@@ -56,10 +59,11 @@ const SwipeBoard = (parms: Parms) => {
   ) => {
     const currentSlot = slot[axis] ?? 0;
     const isCurrent = currentSlot === vIDX;
+    const isSelected = isSolo || dragAxis === axis;
 
     const isVisible =
-      !(dragAxis === null && isCurrent) &&
-      (dragAxis === null || dragAxis === axis);
+      isSolo ||
+      (!(dragAxis === null && isCurrent) && (dragAxis === null || isSelected));
 
     if (v.slotType === "ITEM_LIST" && v.userAxisBundleID !== undefined) {
       const bundle = data.bundleDict?.[v.userAxisBundleID];
@@ -73,7 +77,7 @@ const SwipeBoard = (parms: Parms) => {
       return (
         <AxisMarker
           isVisible={isVisible}
-          isSelected={dragAxis === axis}
+          isSelected={isSelected}
           isCurrent={isCurrent}
           axis={axis}
           type={v.slotType}
@@ -90,7 +94,7 @@ const SwipeBoard = (parms: Parms) => {
     return (
       <AxisMarker
         isVisible={isVisible}
-        isSelected={dragAxis === axis}
+        isSelected={isSelected}
         isCurrent={isCurrent}
         axis={axis}
         type={v.slotType}
@@ -135,7 +139,9 @@ const SwipeBoard = (parms: Parms) => {
         );
       })}
 
-      <CurrentMarker axis={dragAxis} />
+      <CurrentMarker
+        axis={isSolo ? (isHorizontal ? "HORIZONTAL" : "VERTICAL") : dragAxis}
+      />
     </S.BoardContaienr>
   );
 };

@@ -2,7 +2,6 @@ export type UseBoardStepReturn = ReturnType<typeof useBoardStep>;
 
 import type { EvaluationSlot } from "@interfacesV02/type";
 import { useState } from "react";
-import type { AxisData } from "./useHandleAxisData";
 
 type BoardStep = "EVALUATION_TOUCH" | "EVALUATION_SWIPE" | "PREFERENCE";
 

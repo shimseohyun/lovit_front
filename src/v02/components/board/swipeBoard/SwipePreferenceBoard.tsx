@@ -12,12 +12,13 @@ import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
 
 import { getSlotStartIDX } from "@utilsV02/getSlotIDX";
 
-import StarRate from "@componentsV02/starRate/StarRate";
 import useSwipeBoard from "./useSwipeBoard";
 import SwipeBoard from "./SwipeBoard";
+import HeartRateInput from "@componentsV02/starRate/HeartRateInput";
 
 const SwipePreferenceBoard = () => {
-  const { preference, itemSummaryDict, pushItem } = useBoardDataContext();
+  const { preference, itemSummaryDict, pushItem, boardInformation } =
+    useBoardDataContext();
   const { preferenceSlot, setPreferenceSlot, resetSlot } =
     useBoardSlotContext();
   const { currentItemID, confrimCurrentStep } = useBoardStepContext();
@@ -56,7 +57,7 @@ const SwipePreferenceBoard = () => {
   const getSubTitle = () => {
     // 아이콘 - 그룹명 조합
     const icon = "🩷";
-    const groupLabel = "취향";
+    const groupLabel = "마음이 가요";
 
     const dragDirection = direction["HORIZONTAL"];
 
@@ -79,7 +80,7 @@ const SwipePreferenceBoard = () => {
       (dragDirection === "START" && slotType === "START_LABEL") ||
       (dragDirection === "END" && slotType === "END_LABEL")
     ) {
-      const d = dragDirection === "END" ? -1 : 1;
+      const d = dragDirection === "END" ? 1 : -1;
 
       const comparisonItemID = getComparisonItem(preference, slotID + d) ?? 0;
       const comparisonLabel = d === 1 ? "더" : "덜";
@@ -123,11 +124,19 @@ const SwipePreferenceBoard = () => {
   return (
     <>
       <Title />
+      <S.BoardTitleDescription>
+        좌우로 드래그 하거나, 하트를 터치해주세요!
+      </S.BoardTitleDescription>
+
       <SwipeBoard {...swipeBoardProps} />
-      <StarRate
-        num={preferenceSlot?.preference ?? 5}
-        onClickStar={onClickStar}
-      />
+
+      <S.BoardRateContaienr>
+        <span>
+          {boardInformation.preferenceAxis.intensityLabelList[gorupID]}
+        </span>
+        <HeartRateInput value={gorupID} onChange={onClickStar} />
+      </S.BoardRateContaienr>
+
       <button
         onClick={() => {
           pushItem();
@@ -145,7 +154,8 @@ export default SwipePreferenceBoard;
 
 const getComparisonItem = (data: AxisData, comparisonSlotIDX: number) => {
   const comparisonID = data.slotList[comparisonSlotIDX];
-  const bundleID = data.slotDict[comparisonID].userAxisBundleID;
+
+  const bundleID = data.slotDict[comparisonID]?.userAxisBundleID;
 
   if (bundleID === undefined) return;
 

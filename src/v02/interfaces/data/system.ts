@@ -5,15 +5,24 @@ export type EvaluationPart = {
   label: string;
   icon?: string;
 };
+
 export type EvaluationAxis = {
   evaluationAxisID: number;
   partDict: Record<DirectionType, EvaluationPart>;
+  stepCountperSice: number;
+  intensityLabelList: string[];
+};
+
+export type PreferenceAxis = {
+  preferenceAxisID: number;
+  stepCount: number;
   intensityLabelList: string[];
 };
 
 export type BoardInformation = {
   boardID: number;
-  axisDict: Record<AxisType, EvaluationAxis>;
+  evaluationAxisDict: Record<AxisType, EvaluationAxis>;
+  preferenceAxis: PreferenceAxis;
 };
 
 export interface EvaluationBoardID {

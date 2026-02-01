@@ -113,3 +113,19 @@ export const BoardTitleSubChip = styled.div`
     color: ${p.theme.fontColors.titleStronger};
   `}
 `;
+
+export const BoardRateContaienr = styled.div`
+  width: 100%;
+  padding: 10px 24px 20px 24px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  ${(p) => css`
+    ${p.theme.fonts.body2B}
+    color: ${p.theme.fontColors.textLight};
+  `}
+`;
