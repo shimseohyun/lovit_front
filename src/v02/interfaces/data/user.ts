@@ -8,12 +8,21 @@ type UserAxisGroupID = PrimaryKey;
 type UserAxisBundleID = PrimaryKey;
 type UserAxisSlotID = PrimaryKey;
 
+export type AxisGroupSummary = {
+  type: "EVALUATION" | "PREFERENCE";
+  groupIcon: string;
+  intensityLabel: string;
+  groupLabel: string;
+  groupDescription: string;
+};
+
 export interface UserAxisGroup {
   userAxisGroupID: UserAxisGroupID;
 
+  groupSummary: AxisGroupSummary;
+
   axisSide: DirectionType;
   intensityLevel: number;
-
   bundleList: UserAxisBundleID[];
 }
 

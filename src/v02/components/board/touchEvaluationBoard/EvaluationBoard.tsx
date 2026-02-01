@@ -1,11 +1,14 @@
 import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 import * as S from "./EvaluationBoard.styled";
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
-import { useBoardStepContext } from "@hooksV02/data/context/context";
+
+import {
+  useBoardStaticContext,
+  useBoardStepContext,
+} from "@hooksV02/data/context/context";
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 
 const EvaluationBoard = () => {
-  const { itemList, boardSize, vertical, horizontal } = useBoardDataContext();
+  const { itemList, boardSize, vertical, horizontal } = useBoardStaticContext();
   const { navigateEvaluationSwipe } = useBoardStepContext();
 
   const { verticalPoints, horizontalPoints } = useGetBoardPoint();

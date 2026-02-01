@@ -11,6 +11,7 @@ import type { UseBoardSlotReturn } from "@hooksV02/data/board/useBoardSlot";
 import type { UseBoardStepReturn } from "../board/useBoardStep";
 
 export type ProviderParams = {
+  checkingItemList: number[];
   boardInformation: BoardInformation;
   itemSummaryDict: ItemSummaryDict;
 

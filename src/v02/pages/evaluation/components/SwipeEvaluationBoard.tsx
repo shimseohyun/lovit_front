@@ -1,19 +1,18 @@
-import * as S from "../Board.styled";
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
+import * as S from "./Board.styled";
 
 import { type AxisType, type SlotDict } from "@interfacesV02/type";
 import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import {
   useBoardSlotContext,
+  useBoardStaticContext,
   useBoardStepContext,
 } from "@hooksV02/data/context/context";
-import useSwipeBoard from "./useSwipeBoard";
-import SwipeBoard from "./SwipeBoard";
+
+import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
+import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 
 const SwipeEvaluationBoard = () => {
-  const { vertical, horizontal, itemSummaryDict, boardInformation } =
-    useBoardDataContext();
-
+  const { vertical, horizontal, itemSummaryDict } = useBoardStaticContext();
   const { evaluationSlot, setEvaluationSlot } = useBoardSlotContext();
   const { navigatePreference, currentItemID } = useBoardStepContext();
 
@@ -27,8 +26,10 @@ const SwipeEvaluationBoard = () => {
   const { dragDirection: direction, swipeBoardProps } = useSwipeBoard({
     slot: evaluationSlot,
     getSlot: getSlot,
-    dataList: [vertical, horizontal],
-    axisList: ["VERTICAL", "HORIZONTAL"],
+    dataDict: {
+      VERTICAL: vertical,
+      HORIZONTAL: horizontal,
+    },
   });
 
   const isFirst = direction.HORIZONTAL === null && direction.VERTICAL === null;
@@ -43,9 +44,8 @@ const SwipeEvaluationBoard = () => {
     const group = data.groupDict[slot.userAxisGroupID];
 
     // 아이콘 - 그룹명 조합
-    const info = boardInformation.evaluationAxisDict[axis];
-    const icon = info.partDict[group.axisSide].icon ?? "";
-    const groupLabel = info.partDict[group.axisSide].label;
+    const icon = group.groupSummary.groupIcon;
+    const groupLabel = group.groupSummary.groupLabel;
 
     const dragDirection = direction[axis];
 
@@ -58,7 +58,7 @@ const SwipeEvaluationBoard = () => {
     ) {
       return renderGroupTitle({
         icon: icon,
-        intensity: info.intensityLabelList[group.intensityLevel - 1],
+        intensity: group.groupSummary.intensityLabel,
         group: groupLabel,
       });
     }
@@ -72,7 +72,7 @@ const SwipeEvaluationBoard = () => {
       const d = dragDirection === "END" ? -1 : 1;
       const a = group.axisSide === "END" ? -1 : 1;
 
-      const comparisonItemID = getComparisonItem(data, slotID + d) ?? 0;
+      const comparisonItemID = getComparisonItem(data, slotIDX + d) ?? 0;
       const comparisonLabel = d * a === 1 ? "더" : "덜";
 
       return renderComparisonTitle({
@@ -85,7 +85,7 @@ const SwipeEvaluationBoard = () => {
 
     // 아이템 리스트
     if (slotType === "ITEM_LIST") {
-      const comparisonItemID = getComparisonItem(data, slotID) ?? 0;
+      const comparisonItemID = getComparisonItem(data, slotIDX) ?? 0;
 
       return renderSameTitle({
         comparison: itemSummaryDict[comparisonItemID].name,
@@ -124,13 +124,6 @@ const SwipeEvaluationBoard = () => {
       </S.BoardTitleDescription>
 
       <SwipeBoard {...swipeBoardProps} />
-      <button
-        onClick={() => {
-          navigatePreference();
-        }}
-      >
-        확인
-      </button>
     </>
   );
 };

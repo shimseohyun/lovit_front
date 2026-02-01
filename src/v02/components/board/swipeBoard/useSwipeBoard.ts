@@ -1,24 +1,30 @@
 import { useMemo } from "react";
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
+
 import useBoardSwipe from "@hooksV02/board/useBoardSwipe";
-import type { AxisType, SlotDict } from "@interfacesV02/type";
-import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
+import type { BoardAxisDict, SlotCount, SlotDict } from "@interfacesV02/type";
+import { useBoardStaticContext } from "@hooksV02/data/context/context";
 
 type Parms = {
   slot: SlotDict;
   getSlot: (s: SlotDict) => void;
-  dataList: AxisData[];
-  axisList: AxisType[];
+  dataDict: BoardAxisDict;
 };
 
 const useSwipeBoard = (parms: Parms) => {
-  const { slot, getSlot, dataList, axisList } = parms;
+  const { slot, getSlot, dataDict } = parms;
 
-  const slotCount = dataList[0].slotList.length;
-  const isHorizontal = axisList.includes("HORIZONTAL");
-  const isVertical = axisList.includes("VERTICAL");
+  const horizontal = dataDict.HORIZONTAL;
+  const vertical = dataDict.VERTICAL;
 
-  const { boardSize, itemSummaryDict, stepPX } = useBoardDataContext();
+  const slotCount: SlotCount = {
+    HORIZONTAL: horizontal?.slotList.length ?? 0,
+    VERTICAL: vertical?.slotList.length ?? 0,
+  };
+
+  const isHorizontal = horizontal !== undefined;
+  const isVertical = vertical !== undefined;
+
+  const { boardSize, stepPX } = useBoardStaticContext();
 
   const { bind, onPointerDown, onTransitionEnd, dragAxis, dragDirection } =
     useBoardSwipe({
@@ -35,27 +41,22 @@ const useSwipeBoard = (parms: Parms) => {
       boardSize,
       stepPX,
       slotCount,
-      dataList,
-      axisList,
+      dataDict,
       slot,
       dragAxis,
       bind,
       onPointerDown,
       onTransitionEnd,
-      itemSummaryDict,
     }),
     [
       boardSize,
       stepPX,
       slotCount,
-      dataList,
-      axisList,
-
+      dataDict,
       dragAxis,
       bind,
       onPointerDown,
       onTransitionEnd,
-      itemSummaryDict,
     ],
   );
 

@@ -1,7 +1,9 @@
 import type {
+  AxisGroupSummary,
   AxisSlotType,
   RoughAxisData,
   UserAxisBundleDict,
+  UserAxisGroup,
   UserAxisGroupDict,
   UserAxisItemPositionDict,
   UserAxisSlot,
@@ -10,15 +12,77 @@ import type {
 } from "@interfacesV02/data/user";
 import createAxisSlot from "./createAxisSlot";
 import type { DirectionType } from "@interfacesV02/type";
+import type {
+  EvaluationAxis,
+  PreferenceAxis,
+} from "@interfacesV02/data/system";
 
-const getIntensity = (currentID: number, groupCountPerSide: number) => {
-  return Math.abs(currentID - groupCountPerSide);
+const getIntensity = (currentID: number, stepPerSide: number) => {
+  // 0, 1, 2
+  // 2, 1, 0
+  if (currentID < stepPerSide) return stepPerSide - currentID - 1;
+
+  // 3 4 5
+  // 0 1 2
+  return currentID - stepPerSide;
 };
 
+export const convertEvaluationRoughAxisData = (
+  data: RoughAxisData,
+  evaluationAxis: EvaluationAxis,
+) => {
+  const stepPerSide = evaluationAxis.setpPerSide;
+  const createNewEvaluationGroup = (groupID: number): UserAxisGroup => {
+    let axisSide: DirectionType = groupID - stepPerSide < 0 ? "START" : "END";
+    const groupSide = evaluationAxis.partDict[axisSide];
+
+    const intensity = getIntensity(groupID, stepPerSide);
+    const groupSummary: AxisGroupSummary = {
+      type: "EVALUATION",
+      groupIcon: groupSide.icon ?? "",
+      intensityLabel: evaluationAxis.intensityLabelList[intensity],
+      groupLabel: groupSide.label,
+      groupDescription: "",
+    };
+
+    return {
+      userAxisGroupID: groupID,
+      groupSummary: groupSummary,
+      axisSide: axisSide,
+      intensityLevel: intensity,
+      bundleList: [],
+    };
+  };
+
+  return convertRoughAxisData(data, createNewEvaluationGroup);
+};
+
+export const convertPreferenceRoughAxisData = (
+  data: RoughAxisData,
+  preferenceAxis: PreferenceAxis,
+) => {
+  const createNewPreferenceGroup = (groupID: number): UserAxisGroup => {
+    const groupSummary: AxisGroupSummary = {
+      type: "PREFERENCE",
+      groupIcon: preferenceAxis.icon ?? "",
+      intensityLabel: `${groupID / 2}`,
+      groupLabel: preferenceAxis.label,
+      groupDescription: preferenceAxis.intensityLabelList[groupID],
+    };
+
+    return {
+      userAxisGroupID: groupID,
+      groupSummary: groupSummary,
+      axisSide: "END",
+      intensityLevel: 0,
+      bundleList: [],
+    };
+  };
+  return convertRoughAxisData(data, createNewPreferenceGroup);
+};
 const convertRoughAxisData = (
   data: RoughAxisData,
-  groupCountPerSide: number,
-  type: "EVALUATION" | "PREFERENCE",
+  createNewGroup: (groupID: number) => UserAxisGroup,
 ) => {
   const userAxisGroupDict: UserAxisGroupDict = {};
   const userAxisBundleDict: UserAxisBundleDict = {};
@@ -30,14 +94,8 @@ const convertRoughAxisData = (
   let currentAxisBundleID: number = 0;
 
   /** 1. 그룹별로 조회 */
-  data.forEach((group, groupIDX) => {
-    let axisSide: DirectionType =
-      groupIDX - groupCountPerSide < 0 ? "START" : "END";
+  data.forEach((group) => {
     let currentBundleList: number[] = [];
-    let currentIntensity =
-      type === "EVALUATION"
-        ? getIntensity(groupIDX, groupCountPerSide)
-        : groupIDX;
 
     if (group.length === 0) {
       const slotID = userAxisSlotList.length;
@@ -92,14 +150,9 @@ const convertRoughAxisData = (
       currentBundleList.push(currentAxisBundleID);
       currentAxisBundleID++;
     });
-    /** 2. 번들별로 조회 */
 
-    userAxisGroupDict[currentAxisGroupID] = {
-      userAxisGroupID: currentAxisGroupID,
-      axisSide: axisSide,
-      intensityLevel: currentIntensity,
-      bundleList: currentBundleList,
-    };
+    /** 2. 번들별로 조회 */
+    userAxisGroupDict[currentAxisGroupID] = createNewGroup(currentAxisGroupID);
 
     currentAxisGroupID++;
   });
@@ -112,5 +165,3 @@ const convertRoughAxisData = (
     userAxisSlotDict,
   };
 };
-
-export default convertRoughAxisData;

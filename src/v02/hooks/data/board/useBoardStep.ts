@@ -6,17 +6,18 @@ import { useState } from "react";
 type BoardStep = "EVALUATION_TOUCH" | "EVALUATION_SWIPE" | "PREFERENCE";
 
 type Parms = {
+  checkingItemList: number[];
   setEvaluationSlot: (slot?: EvaluationSlot) => void;
-  itemListLength: number;
 };
 
 const useBoardStep = (parms: Parms) => {
-  const { setEvaluationSlot, itemListLength } = parms;
+  const { setEvaluationSlot, checkingItemList } = parms;
 
-  const [currentItemID, setCurrentItemID] = useState<number>(0);
+  const final = checkingItemList.length;
+  const [currentItemIDX, setCurrentItemIDX] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<BoardStep>("EVALUATION_TOUCH");
 
-  const [isFin, setIsFin] = useState<boolean>(itemListLength == currentItemID);
+  const [isFin, setIsFin] = useState<boolean>(final == currentItemIDX);
 
   const navigateEvaluationSwipe = (slot: EvaluationSlot) => {
     setEvaluationSlot(slot);
@@ -28,19 +29,27 @@ const useBoardStep = (parms: Parms) => {
   };
 
   const confrimCurrentStep = () => {
-    setCurrentItemID(currentItemID + 1);
-    setCurrentStep("EVALUATION_TOUCH");
-    setEvaluationSlot();
+    const next = currentItemIDX + 1;
+    if (next === final) {
+      setIsFin(true);
+      setEvaluationSlot();
+    } else {
+      setCurrentItemIDX(currentItemIDX + 1);
+      setCurrentStep("EVALUATION_TOUCH");
+      setEvaluationSlot();
+    }
   };
 
   const quitAllStep = () => {
     setIsFin(true);
   };
 
+  const currentItemID = checkingItemList[currentItemIDX] ?? 0;
+
   return {
     isFin,
     currentStep,
-    currentItemID,
+    currentItemID: currentItemID,
     navigateEvaluationSwipe,
     navigatePreference,
     confrimCurrentStep,

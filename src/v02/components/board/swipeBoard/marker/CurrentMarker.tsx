@@ -2,6 +2,25 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { AxisType } from "@interfacesV02/type";
 
+type Parms = {
+  axis: AxisType | null;
+  imgURL: string;
+};
+
+const CurrentMarker = (parms: Parms) => {
+  const { axis, imgURL } = parms;
+
+  const isDragging = axis !== null;
+
+  return (
+    <MarkerContainer $axis={axis}>
+      <Marker $imgURL={imgURL} $isDragging={isDragging} $axis={axis} />
+      {isDragging &&
+        (axis === "HORIZONTAL" ? <HorizontalPoint /> : <VerticalPoint />)}
+    </MarkerContainer>
+  );
+};
+
 const MarkerContainer = styled.div<{ $axis: AxisType | null }>`
   position: absolute;
   transform: translate(-50%, -50%);
@@ -68,24 +87,6 @@ const Marker = styled.div<{
     box-shadow: 0 0 0 2px ${p.theme.foregroundColors.foregroundStrongest};
   `}
 `;
-
-type Parms = {
-  axis: AxisType | null;
-};
-
-const CurrentMarker = (parms: Parms) => {
-  const { axis } = parms;
-
-  const isDragging = axis !== null;
-
-  return (
-    <MarkerContainer $axis={axis}>
-      <Marker $imgURL="" $isDragging={isDragging} $axis={axis} />
-      {isDragging &&
-        (axis === "HORIZONTAL" ? <HorizontalPoint /> : <VerticalPoint />)}
-    </MarkerContainer>
-  );
-};
 
 const PointContainerVertical = styled.div`
   position: absolute;

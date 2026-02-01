@@ -18,21 +18,23 @@ export const BoardDataProvider = (props: ProviderProps) => {
     horizontalRough,
     verticalRough,
     preferenceRough,
-    itemSummaryDict = {},
     boardInformation,
+    itemSummaryDict = {},
+    checkingItemList = [],
   } = props;
 
   const boardData = useBoardData({
     horizontalRough,
     verticalRough,
     preferenceRough,
+    boardInformation,
   });
 
   const boardSlot = useBoardSlot();
 
   const boardStep = useBoardStep({
+    checkingItemList: checkingItemList,
     setEvaluationSlot: boardSlot.setEvaluationSlot,
-    itemListLength: 10,
   });
 
   const pushItem = () => {

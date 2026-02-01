@@ -1,4 +1,9 @@
-import type { AxisType, SlotDict } from "@interfacesV02/type";
+import type {
+  AxisType,
+  BoardAxisDict,
+  SlotCount,
+  SlotDict,
+} from "@interfacesV02/type";
 
 import * as S from "./SwipeBoard.styled";
 
@@ -7,48 +12,53 @@ import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import type { UserAxisSlot } from "@interfacesV02/data/user";
 import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
 import AxisMarker from "./marker/AxisMarker";
+import {
+  useBoardStaticContext,
+  useBoardStepContext,
+} from "@hooksV02/data/context/context";
 
 type Parms = {
   boardSize: number;
   stepPX: number;
-  slotCount: number;
-
-  dataList: AxisData[];
-  axisList: AxisType[];
-
   slot: SlotDict;
+  slotCount: SlotCount;
+  dataDict: BoardAxisDict;
 
   dragAxis: AxisType | null;
 
   bind: SwipeBind;
   onPointerDown: any;
   onTransitionEnd: any;
-
-  itemSummaryDict: Record<number, { name: string; thumbnailURL: string }>;
 };
 
 const SwipeBoard = (parms: Parms) => {
   const {
     boardSize,
     stepPX,
-    slotCount,
-    dataList,
-    axisList,
-    slot,
+
     dragAxis,
     bind,
     onPointerDown,
     onTransitionEnd,
-    itemSummaryDict,
+
+    slotCount,
+    dataDict,
+    slot,
   } = parms;
 
-  // 항상 드래그 상태를 유지
-  const isSolo = dataList.length === 1;
-  const isHorizontal = axisList.includes("HORIZONTAL");
-  const isVertical = axisList.includes("VERTICAL");
+  const { currentItemID } = useBoardStepContext();
+  const { itemSummaryDict } = useBoardStaticContext();
 
-  const getTranslate = (slotIDX: number) => {
-    return boardSize / 2 + (slotCount / 2 - slotIDX) * stepPX - stepPX / 2;
+  const isHorizontal = dataDict.HORIZONTAL !== undefined;
+  const isVertical = dataDict.VERTICAL !== undefined;
+
+  // 항상 드래그 상태를 유지
+  const isSolo = !(isHorizontal && isVertical);
+
+  const getTranslate = (slotIDX: number, axis: AxisType) => {
+    return (
+      boardSize / 2 + (slotCount[axis] / 2 - slotIDX) * stepPX - stepPX / 2
+    );
   };
 
   const renderAxisMarker = (
@@ -85,23 +95,25 @@ const SwipeBoard = (parms: Parms) => {
           imgURL={item.thumbnailURL}
         />
       );
+    } else {
+      const groupID = v.userAxisGroupID;
+      const group = data.groupDict[groupID];
+
+      return (
+        <AxisMarker
+          isVisible={isVisible}
+          isSelected={isSelected}
+          isCurrent={isCurrent}
+          axis={axis}
+          type={v.slotType}
+          label={group.groupSummary.intensityLabel}
+          icon={group.groupSummary.groupIcon}
+        />
+      );
     }
-
-    const groupId = v.userAxisGroupID;
-    const group = groupId !== undefined ? data.groupDict?.[groupId] : undefined;
-    if (!group) return null;
-
-    return (
-      <AxisMarker
-        isVisible={isVisible}
-        isSelected={isSelected}
-        isCurrent={isCurrent}
-        axis={axis}
-        type={v.slotType}
-        label={`${group.intensityLevel} ${group.axisSide}`}
-      />
-    );
   };
+
+  const axisList: AxisType[] = ["HORIZONTAL", "VERTICAL"];
 
   return (
     <S.BoardContaienr {...bind} onPointerDown={onPointerDown} $size={boardSize}>
@@ -115,15 +127,17 @@ const SwipeBoard = (parms: Parms) => {
         )}
       </S.BoardAxisContainer>
 
-      {dataList.map((data, axisIDX) => {
-        const axis = axisList[axisIDX];
+      {axisList.map((axis, axisID) => {
+        const data = dataDict[axis];
+        if (data === undefined) return;
+
         const currentSlot = slot[axis] ?? 0;
 
         return (
           <S.BoardAxisWrpper
-            key={axis}
+            key={axisID}
             onTransitionEnd={onTransitionEnd}
-            $position={getTranslate(currentSlot)}
+            $position={getTranslate(currentSlot, axis)}
             $axis={axis}
           >
             {data.slotList.map((slotID, vIDX) => (
@@ -140,6 +154,7 @@ const SwipeBoard = (parms: Parms) => {
       })}
 
       <CurrentMarker
+        imgURL={itemSummaryDict[currentItemID].thumbnailURL}
         axis={isSolo ? (isHorizontal ? "HORIZONTAL" : "VERTICAL") : dragAxis}
       />
     </S.BoardContaienr>

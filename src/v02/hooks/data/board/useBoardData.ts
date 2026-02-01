@@ -2,12 +2,18 @@ export type UseBoardDataReturn = ReturnType<typeof useBoardData>;
 
 import type { RoughAxisData } from "@interfacesV02/data/user";
 import useHandleAxisData from "./useHandleAxisData";
-import convertRoughAxisData from "@utilsV02/convertRoughAxisData";
+import {
+  convertEvaluationRoughAxisData,
+  convertPreferenceRoughAxisData,
+} from "@utilsV02/convertRoughAxisData";
+import type { BoardInformation } from "@interfacesV02/data/system";
 
 type Parms = {
   horizontalRough?: RoughAxisData;
   verticalRough?: RoughAxisData;
   preferenceRough?: RoughAxisData;
+
+  boardInformation: BoardInformation;
 };
 
 const useBoardData = (parms: Parms) => {
@@ -15,13 +21,19 @@ const useBoardData = (parms: Parms) => {
     horizontalRough = [],
     verticalRough = [],
     preferenceRough = [],
+    boardInformation,
   } = parms;
-  const verticalData = convertRoughAxisData(verticalRough, 3, "EVALUATION");
-  const horizontalData = convertRoughAxisData(horizontalRough, 3, "EVALUATION");
-  const preferenceData = convertRoughAxisData(
+  const verticalData = convertEvaluationRoughAxisData(
+    verticalRough,
+    boardInformation.evaluationAxisDict.VERTICAL,
+  );
+  const horizontalData = convertEvaluationRoughAxisData(
+    horizontalRough,
+    boardInformation.evaluationAxisDict.HORIZONTAL,
+  );
+  const preferenceData = convertPreferenceRoughAxisData(
     preferenceRough,
-    11,
-    "PREFERENCE",
+    boardInformation.preferenceAxis,
   );
 
   const horizontal = useHandleAxisData({

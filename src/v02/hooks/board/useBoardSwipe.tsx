@@ -1,5 +1,5 @@
 import useSwipe from "@hooksV02/swipe/useSwipe";
-import type { AxisType, SlotDict } from "@interfacesV02/type";
+import type { AxisType, SlotCount, SlotDict } from "@interfacesV02/type";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEventHandler } from "react";
 
@@ -10,7 +10,7 @@ type Params = {
   slot: SlotDict;
   getSlot: (s: SlotDict) => void;
 
-  slotCount: number;
+  slotCount: SlotCount;
   stepPX: number;
 
   isHorizontal?: boolean;
@@ -31,7 +31,13 @@ const setSlotValue = (
 ): SlotDict => ({ ...slot, [axis]: value });
 
 const axisMin = 0;
-const axisMax = (slotCount: number) => Math.max(0, slotCount - 1);
+const axisMax = (slotCount: SlotCount) => {
+  const newSlotCount: SlotCount = {
+    HORIZONTAL: Math.max(0, slotCount.HORIZONTAL - 1),
+    VERTICAL: Math.max(0, slotCount.VERTICAL - 1),
+  };
+  return newSlotCount;
+};
 
 const useBoardSwipe = (params: Params) => {
   const {
@@ -46,7 +52,7 @@ const useBoardSwipe = (params: Params) => {
     draggingMode = "down",
   } = params;
 
-  const max = axisMax(slotCount);
+  const max: SlotCount = axisMax(slotCount);
 
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -101,7 +107,7 @@ const useBoardSwipe = (params: Params) => {
       const start = getSlotValue(startSlotRef.current, axis) ?? 0;
 
       const raw = start - axisDelta / stepPX;
-      const snapped = clamp(Math.round(raw), axisMin, max);
+      const snapped = clamp(Math.round(raw), axisMin, max[axis]);
 
       const next = setSlotValue(liveSlotRef.current, axis, snapped);
       commitSlot(next);
@@ -123,7 +129,7 @@ const useBoardSwipe = (params: Params) => {
       if (start === undefined) return;
 
       const raw = start - total / stepPX;
-      const target = clamp(Math.round(raw), axisMin, max);
+      const target = clamp(Math.round(raw), axisMin, max[axis]);
 
       snapTo(axis, target);
     },

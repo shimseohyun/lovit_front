@@ -17,7 +17,7 @@ const DOBOO_BUTTER_AXIS: EvaluationAxis = {
       icon: "🥞",
     },
   },
-  stepCountperSice: 3,
+  setpPerSide: 3,
   intensityLabelList: ["약간", "제법", "완전"],
 };
 
@@ -34,13 +34,15 @@ const CAT_DOG_AXIS: EvaluationAxis = {
       icon: "🐶",
     },
   },
-  stepCountperSice: 3,
+  setpPerSide: 3,
   intensityLabelList: ["약간", "제법", "완전"],
 };
 
 const FACE_AXIS: PreferenceAxis = {
   preferenceAxisID: 0,
   stepCount: 11,
+  label: "마음이 가요",
+  icon: "🩷",
   intensityLabelList: [
     "취향과 완전 멀어요",
     "취향과 제법 멀어요",

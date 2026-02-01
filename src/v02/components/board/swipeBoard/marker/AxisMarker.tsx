@@ -156,10 +156,20 @@ type Parms = {
   type: AxisSlotType;
   label: string;
   imgURL?: string;
+  icon?: string;
 };
 
 const AxisMarker = (parms: Parms) => {
-  const { isSelected, isVisible, isCurrent, axis, type, label, imgURL } = parms;
+  const {
+    isSelected,
+    isVisible,
+    isCurrent,
+    axis,
+    type,
+    label,
+    imgURL,
+    icon = "",
+  } = parms;
 
   const isLabel = type !== "ITEM_LIST";
   const isNone = type === "BETWEEN";
@@ -179,7 +189,7 @@ const AxisMarker = (parms: Parms) => {
           $imgURL={imgURL}
         >
           <MarkerLabel $isLabel={isLabel}>{label}</MarkerLabel>
-          {isLabel && <>🥞</>}
+          {isLabel && <>{icon}</>}
         </Marker>
       )}
     </MarkerCotainer>

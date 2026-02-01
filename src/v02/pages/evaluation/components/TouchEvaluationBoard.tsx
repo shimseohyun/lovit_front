@@ -1,8 +1,9 @@
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
-import * as S from "../Board.styled";
+import * as S from "./Board.styled";
 
-import EvaluationBoard from "./EvaluationBoard";
+import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
 import { useBoardStepContext } from "@hooksV02/data/context/context";
+
+import EvaluationBoard from "@componentsV02/board/touchEvaluationBoard/EvaluationBoard";
 
 const TouchEvaluationBoard = () => {
   const { itemSummaryDict } = useBoardDataContext();

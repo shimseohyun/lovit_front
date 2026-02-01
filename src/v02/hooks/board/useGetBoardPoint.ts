@@ -1,4 +1,4 @@
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
+import { useBoardStaticContext } from "@hooksV02/data/context/context";
 import type {
   UserAxisGroupDict,
   UserAxisItemPositionDict,
@@ -7,7 +7,7 @@ import type {
 
 const useGetBoardPoint = () => {
   const TOTAL_GROUP_COUNT = 6;
-  const { vertical, horizontal, itemList } = useBoardDataContext();
+  const { vertical, horizontal, itemList } = useBoardStaticContext();
 
   const getPoints = (
     positionDict: UserAxisItemPositionDict,

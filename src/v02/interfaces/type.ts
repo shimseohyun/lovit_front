@@ -1,3 +1,5 @@
+import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
+
 export type AxisType = "HORIZONTAL" | "VERTICAL";
 export type DirectionType = "END" | "START";
 
@@ -12,4 +14,6 @@ export type EvaluationSlot = Record<AxisType, number>;
 
 export type PreferenceSlot = { preference: number };
 
+export type BoardAxisDict = Partial<Record<AxisType, AxisData>>;
+export type SlotCount = Record<AxisType, number>;
 export type SlotDict = Partial<Record<AxisType, number>>;
