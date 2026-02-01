@@ -1,71 +1,53 @@
-import { useEffect, useState } from "react";
-
 import * as S from "./Board.styled";
 
-import { type SlotDict } from "@interfacesV02/type";
-
+import { type AxisType, type SlotDict } from "@interfacesV02/type";
+import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import {
   useBoardSlotContext,
   useBoardStaticContext,
   useBoardStepContext,
 } from "@hooksV02/data/context/context";
 
-import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
-
-import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
-
-import HeartRateInput from "@componentsV02/starRate/HeartRateInput";
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 
-const SwipePreferenceBoard = () => {
-  const { preference, itemSummaryDict, pushItem } = useBoardStaticContext();
-  const { preferenceSlot, setPreferenceSlot, resetSlot } =
-    useBoardSlotContext();
-  const { currentItemID, confrimCurrentStep } = useBoardStepContext();
+const SwipeEvaluationBoard = () => {
+  const { vertical, horizontal, itemSummaryDict } = useBoardStaticContext();
+  const { evaluationSlot, setEvaluationSlot } = useBoardSlotContext();
+  const { currentItemID } = useBoardStepContext();
 
-  const centerIDX = getSlotCenterIDX(5, preference.groupDict);
+  if (evaluationSlot === undefined) return;
+
   const getSlot = (s: SlotDict) => {
-    if (s.HORIZONTAL === undefined) return;
-    setPreferenceSlot({ preference: s.HORIZONTAL });
+    if (s.VERTICAL === undefined || s.HORIZONTAL === undefined) return;
+    setEvaluationSlot({ VERTICAL: s.VERTICAL, HORIZONTAL: s.HORIZONTAL });
   };
 
   const { dragDirection: direction, swipeBoardProps } = useSwipeBoard({
-    slot: { HORIZONTAL: preferenceSlot?.preference },
+    slot: evaluationSlot,
     getSlot: getSlot,
-    dataDict: { HORIZONTAL: preference },
+    dataDict: {
+      VERTICAL: vertical,
+      HORIZONTAL: horizontal,
+    },
   });
 
-  const [isFirst, setIsFirst] = useState<boolean>(
-    direction.HORIZONTAL === null && direction.VERTICAL === null,
-  );
+  const isFirst = direction.HORIZONTAL === null && direction.VERTICAL === null;
 
-  useEffect(() => {
-    setPreferenceSlot({ preference: centerIDX });
-  }, []);
+  const getSubTitle = (axis: AxisType, data: AxisData) => {
+    const slotIDX = evaluationSlot[axis];
 
-  const onClickStar = (num: number) => {
-    const slotIDX = getSlotCenterIDX(num, preference.groupDict);
-    setPreferenceSlot({ preference: slotIDX });
-    setIsFirst(true);
-  };
+    const slotID = data.slotList[slotIDX];
+    const slot = data.slotDict[slotID];
 
-  const slotID = preference.slotList[preferenceSlot?.preference ?? centerIDX];
-  const slot = preference.slotDict[slotID];
-  const slotType = slot.slotType;
-  const gorupID = slot.userAxisGroupID;
-  const group = preference.groupDict[gorupID];
-  const icon = group.groupSummary.groupIcon;
-  const groupLabel = group.groupSummary.groupLabel;
-  const intensity = group.groupSummary.intensityLabel;
+    const slotType = slot.slotType;
+    const group = data.groupDict[slot.userAxisGroupID];
 
-  useEffect(() => {
-    setIsFirst(direction.HORIZONTAL === null && direction.VERTICAL === null);
-  }, [direction]);
+    // 아이콘 - 그룹명 조합
+    const icon = group.groupSummary.groupIcon;
+    const groupLabel = group.groupSummary.groupLabel;
 
-  const getSubTitle = () => {
-    const slotIDX = preferenceSlot?.preference ?? 0;
-    const dragDirection = direction["HORIZONTAL"];
+    const dragDirection = direction[axis];
 
     // 그룹 라벨만 출력
     if (
@@ -76,7 +58,8 @@ const SwipePreferenceBoard = () => {
     ) {
       return renderGroupTitle({
         icon: icon,
-        intensity: intensity,
+        intensity: group.groupSummary.intensityLabel,
+        group: groupLabel,
       });
     }
 
@@ -87,9 +70,10 @@ const SwipePreferenceBoard = () => {
       (dragDirection === "END" && slotType === "END_LABEL")
     ) {
       const d = dragDirection === "END" ? -1 : 1;
+      const a = group.axisSide === "END" ? -1 : 1;
 
-      const comparisonItemID = getComparisonItem(preference, slotIDX + d) ?? 0;
-      const comparisonLabel = d === -1 ? "더" : "덜";
+      const comparisonItemID = getComparisonItem(data, slotIDX + d) ?? 0;
+      const comparisonLabel = d * a === 1 ? "더" : "덜";
 
       return renderComparisonTitle({
         comparison: itemSummaryDict[comparisonItemID].name,
@@ -101,7 +85,7 @@ const SwipePreferenceBoard = () => {
 
     // 아이템 리스트
     if (slotType === "ITEM_LIST") {
-      const comparisonItemID = getComparisonItem(preference, slotIDX) ?? 0;
+      const comparisonItemID = getComparisonItem(data, slotIDX) ?? 0;
 
       return renderSameTitle({
         comparison: itemSummaryDict[comparisonItemID].name,
@@ -112,6 +96,7 @@ const SwipePreferenceBoard = () => {
   };
 
   const item = itemSummaryDict[currentItemID];
+
   const Title = () => {
     return (
       <S.BoardTitleContainer>
@@ -119,9 +104,13 @@ const SwipePreferenceBoard = () => {
           <h6>{item.category}</h6>
           <h3>{item.name}</h3>
         </S.BoardTitleItemSection>
-        <S.BoardTitleMain>얼마나 취향인가요?</S.BoardTitleMain>
         <S.BoardTitleSubContainer>
-          <S.BoardTitleSubWrapper>{getSubTitle()}</S.BoardTitleSubWrapper>
+          <S.BoardTitleSubWrapper>
+            {getSubTitle("VERTICAL", vertical)}
+          </S.BoardTitleSubWrapper>
+          <S.BoardTitleSubWrapper>
+            {getSubTitle("HORIZONTAL", horizontal)}
+          </S.BoardTitleSubWrapper>
         </S.BoardTitleSubContainer>
       </S.BoardTitleContainer>
     );
@@ -131,24 +120,20 @@ const SwipePreferenceBoard = () => {
     <>
       <Title />
       <S.BoardTitleDescription>
-        좌우로 드래그 하거나, 하트를 터치해주세요!
+        상하좌우로 드래그해서 세부적인 분류를 할 수 있어요.
       </S.BoardTitleDescription>
 
       <SwipeBoard {...swipeBoardProps} />
-
-      <S.BoardRateContaienr>
-        <span>{group.groupSummary.groupDescription}</span>
-        <HeartRateInput value={gorupID} onChange={onClickStar} />
-      </S.BoardRateContaienr>
     </>
   );
 };
 
-export default SwipePreferenceBoard;
+export default SwipeEvaluationBoard;
 
 const getComparisonItem = (data: AxisData, comparisonSlotIDX: number) => {
-  const comparisonID = data.slotList[comparisonSlotIDX];
-  const bundleID = data.slotDict[comparisonID]?.userAxisBundleID;
+  const comparisonSlotID = data.slotList[comparisonSlotIDX];
+  const comparisonSlot = data.slotDict[comparisonSlotID];
+  const bundleID = comparisonSlot.userAxisBundleID;
 
   if (bundleID === undefined) return;
 
@@ -160,12 +145,16 @@ const getComparisonItem = (data: AxisData, comparisonSlotIDX: number) => {
 };
 
 // "[그룹]"
-const renderGroupTitle = (parms: { icon: string; intensity: string }) => {
-  const { icon, intensity } = parms;
+const renderGroupTitle = (parms: {
+  icon: string;
+  intensity: string;
+  group: string;
+}) => {
+  const { icon, intensity, group } = parms;
   return (
     <>
       <S.BoardTitleSubChip>
-        {icon} {intensity}
+        {icon} {intensity} {group}
       </S.BoardTitleSubChip>
     </>
   );
