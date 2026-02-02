@@ -3,9 +3,9 @@ import type { PropsWithChildren } from "react";
 import type { RoughAxisData } from "@interfacesV02/data/user";
 import type { BoardInformation } from "@interfacesV02/data/system";
 
-import type { UseBoardDataReturn } from "@hooksV02/data/board/useBoardData";
-import type { UseBoardSlotReturn } from "@hooksV02/data/board/useBoardSlot";
-import type { UseBoardStepReturn } from "../board/useBoardStep";
+import type { UseBoardDataReturn } from "@hooksV02/board/useBoardData";
+import type { UseBoardSlotReturn } from "@hooksV02/board/useBoardSlot";
+import type { UseBoardStepReturn } from "@hooksV02/board/useBoardStep";
 
 export type ProviderParams = {
   checkingItemList: number[];

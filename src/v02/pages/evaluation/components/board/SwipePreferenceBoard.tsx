@@ -8,9 +8,9 @@ import {
   useBoardSlotContext,
   useBoardStaticContext,
   useBoardStepContext,
-} from "@hooksV02/data/context/context";
+} from "@hooksV02/board/context/context";
 
-import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
+import type { AxisData } from "@hooksV02/board/useHandleAxisData";
 
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 

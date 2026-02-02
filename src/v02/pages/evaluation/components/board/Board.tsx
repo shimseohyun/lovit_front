@@ -1,4 +1,4 @@
-import { useBoardStepContext } from "@hooksV02/data/context/context";
+import { useBoardStepContext } from "@hooksV02/board/context/context";
 
 import TouchEvaluationBoard from "./TouchEvaluationBoard";
 import SwipeEvaluationBoard from "./SwipeEvaluationBoard";

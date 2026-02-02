@@ -2,7 +2,7 @@ import * as S from "./Board.styled";
 
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
 import useGetBoardResult from "@hooksV02/board/useGetBoardResult";
-import { useBoardStaticContext } from "@hooksV02/data/context/context";
+import { useBoardStaticContext } from "@hooksV02/board/context/context";
 
 const Result = () => {
   const { boardInformation } = useBoardStaticContext();

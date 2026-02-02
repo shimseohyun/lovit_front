@@ -4,7 +4,7 @@ import * as S from "./EvaluationBoard.styled";
 
 import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 
-import { useBoardStaticContext } from "@hooksV02/data/context/context";
+import { useBoardStaticContext } from "@hooksV02/board/context/context";
 import BoardMarker from "./marker/BoardMarker";
 
 import type { DirectionType } from "@interfacesV02/type";

@@ -1,12 +1,12 @@
 import * as S from "./Board.styled";
 
 import { type AxisType, type SlotDict } from "@interfacesV02/type";
-import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
+import type { AxisData } from "@hooksV02/board/useHandleAxisData";
 import {
   useBoardSlotContext,
   useBoardStaticContext,
   useBoardStepContext,
-} from "@hooksV02/data/context/context";
+} from "@hooksV02/board/context/context";
 
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";

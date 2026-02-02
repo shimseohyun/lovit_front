@@ -1,4 +1,4 @@
-import { useBoardStaticContext } from "@hooksV02/data/context/context";
+import { useBoardStaticContext } from "@hooksV02/board/context/context";
 import useGetBoardPoint from "./useGetBoardPoint";
 import type { ResultType } from "@interfacesV02/type";
 

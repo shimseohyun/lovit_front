@@ -4,7 +4,7 @@ import {
   useBoardSlotContext,
   useBoardStaticContext,
   useBoardStepContext,
-} from "@hooksV02/data/context/context";
+} from "@hooksV02/board/context/context";
 
 const EvaluationButton = () => {
   const { pushItem } = useBoardStaticContext();

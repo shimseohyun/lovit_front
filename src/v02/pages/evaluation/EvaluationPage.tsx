@@ -2,7 +2,7 @@ import * as S from "./EvaluationPage.styld";
 
 import { FACE_BOARD_INFO } from "@dataV02/boardInfoDummy";
 
-import { BoardDataProvider } from "@hooksV02/data/context/BoardDataProvider";
+import { BoardDataProvider } from "@hooksV02/board/context/BoardDataProvider";
 import EvaluationButton from "./components/board/EvaluationButton";
 import Board from "./components/board/Board";
 

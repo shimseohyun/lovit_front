@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import useBoardSwipe from "@hooksV02/board/useBoardSwipe";
 import type { BoardAxisDict, SlotCount, SlotDict } from "@interfacesV02/type";
-import { useBoardStaticContext } from "@hooksV02/data/context/context";
+import { useBoardStaticContext } from "@hooksV02/board/context/context";
 
 type Parms = {
   slot: SlotDict;

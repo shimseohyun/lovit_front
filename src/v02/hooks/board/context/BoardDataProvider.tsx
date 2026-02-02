@@ -8,9 +8,10 @@ import {
 import { defaultStepPx } from "./constant";
 import type { BoardStaticValue, ProviderProps } from "./type";
 
-import useBoardData from "@hooksV02/data/board/useBoardData";
-import useBoardSlot from "@hooksV02/data/board/useBoardSlot";
-import useBoardStep from "../board/useBoardStep";
+import useBoardData from "@hooksV02/board/useBoardData";
+import useBoardSlot from "@hooksV02/board/useBoardSlot";
+import useBoardStep from "@hooksV02/board/useBoardStep";
+
 import useViewport from "@hooksV02/useViewPort";
 
 export const BoardDataProvider = (props: ProviderProps) => {

@@ -3,7 +3,7 @@ import * as S from "./Board.styled";
 import {
   useBoardStaticContext,
   useBoardStepContext,
-} from "@hooksV02/data/context/context";
+} from "@hooksV02/board/context/context";
 
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";

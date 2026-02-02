@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useBoardStaticContext } from "./context/context";
+import { useBoardStaticContext } from "./context";
 
 export const useBoardDataContext = () => {
   const staticValue = useBoardStaticContext();

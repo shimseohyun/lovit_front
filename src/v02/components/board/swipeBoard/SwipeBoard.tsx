@@ -7,11 +7,11 @@ import type {
 
 import * as S from "./SwipeBoard.styled";
 
-import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
+import type { AxisData } from "@hooksV02/board/useHandleAxisData";
 import type { UserAxisSlot } from "@interfacesV02/data/user";
 import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
 
-import { useBoardStepContext } from "@hooksV02/data/context/context";
+import { useBoardStepContext } from "@hooksV02/board/context/context";
 import AxisMarker from "./marker/AxisMarker";
 import CurrentMarker from "./marker/CurrentMarker";
 import { getItemSummary } from "@dataV02/itemSummary";
