@@ -1,21 +1,6 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-export const FixedPageContainer = styled.div`
-  width: 100%;
-  height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: fixed;
-  overflow: visible;
-  transform: translateX(-50%);
-  left: 50%;
-  ${(p) => css`
-    max-width: ${p.theme.maxWidth};
-  `}
-`;
-
 export const BoardTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -23,6 +8,11 @@ export const BoardTitleContainer = styled.div`
 
   width: 100%;
   padding: 10px 16px 0 16px;
+
+  ${(p) => css`
+    ${p.theme.fonts.head1}
+    color:${p.theme.fontColors.titleStrongest};
+  `}
 `;
 
 export const BoardTitleMain = styled.div`
@@ -39,7 +29,8 @@ export const BoardTitleDescription = styled.div`
   align-items: center;
 
   width: 100%;
-  padding: 12px 0;
+  padding-top: 4px;
+  padding-bottom: 12px;
 
   ${(p) => css`
     ${p.theme.fonts.body2}
@@ -86,20 +77,29 @@ export const BoardTitleSubContainer = styled.h1`
 
   padding: 8px 0 4px 0;
   gap: 4px;
-
-  ${(p) => css`
-    ${p.theme.fonts.narrative}
-    color: ${p.theme.fontColors.textLighter};
-  `}
 `;
 
-export const BoardTitleSubWrapper = styled.div`
+export const BoardTitleSubWrapper = styled.div<{ $isSelected: boolean }>`
   display: flex;
   width: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 4px;
+
+  ${({ $isSelected, ...p }) => {
+    if ($isSelected)
+      return css`
+        ${p.theme.fonts.narrative}
+        color: ${p.theme.fontColors.titleStronger};
+      `;
+    else {
+      return css`
+        ${p.theme.fonts.narrative}
+        color: ${p.theme.fontColors.textDisable};
+      `;
+    }
+  }}
 `;
 
 export const BoardTitleSubChip = styled.div`
@@ -110,7 +110,6 @@ export const BoardTitleSubChip = styled.div`
   ${(p) => css`
     ${p.theme.fonts.narrative}
     background-color:${p.theme.foregroundColors.foregroundLighter};
-    color: ${p.theme.fontColors.titleStronger};
   `}
 `;
 

@@ -32,7 +32,10 @@ export const convertEvaluationRoughAxisData = (
   evaluationAxis: EvaluationAxis,
 ) => {
   const stepPerSide = evaluationAxis.setpPerSide;
-  const createNewEvaluationGroup = (groupID: number): UserAxisGroup => {
+  const createNewEvaluationGroup = (
+    groupID: number,
+    bundleList: number[],
+  ): UserAxisGroup => {
     let axisSide: DirectionType = groupID - stepPerSide < 0 ? "START" : "END";
     const groupSide = evaluationAxis.partDict[axisSide];
 
@@ -50,7 +53,7 @@ export const convertEvaluationRoughAxisData = (
       groupSummary: groupSummary,
       axisSide: axisSide,
       intensityLevel: intensity,
-      bundleList: [],
+      bundleList: bundleList,
     };
   };
 
@@ -61,7 +64,10 @@ export const convertPreferenceRoughAxisData = (
   data: RoughAxisData,
   preferenceAxis: PreferenceAxis,
 ) => {
-  const createNewPreferenceGroup = (groupID: number): UserAxisGroup => {
+  const createNewPreferenceGroup = (
+    groupID: number,
+    bundleList: number[],
+  ): UserAxisGroup => {
     const groupSummary: AxisGroupSummary = {
       type: "PREFERENCE",
       groupIcon: preferenceAxis.icon ?? "",
@@ -75,14 +81,14 @@ export const convertPreferenceRoughAxisData = (
       groupSummary: groupSummary,
       axisSide: "END",
       intensityLevel: 0,
-      bundleList: [],
+      bundleList: bundleList,
     };
   };
   return convertRoughAxisData(data, createNewPreferenceGroup);
 };
 const convertRoughAxisData = (
   data: RoughAxisData,
-  createNewGroup: (groupID: number) => UserAxisGroup,
+  createNewGroup: (groupID: number, bundleList: number[]) => UserAxisGroup,
 ) => {
   const userAxisGroupDict: UserAxisGroupDict = {};
   const userAxisBundleDict: UserAxisBundleDict = {};
@@ -152,7 +158,10 @@ const convertRoughAxisData = (
     });
 
     /** 2. 번들별로 조회 */
-    userAxisGroupDict[currentAxisGroupID] = createNewGroup(currentAxisGroupID);
+    userAxisGroupDict[currentAxisGroupID] = createNewGroup(
+      currentAxisGroupID,
+      currentBundleList,
+    );
 
     currentAxisGroupID++;
   });

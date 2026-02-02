@@ -118,6 +118,7 @@ const useHandleAxisData = (parms: Parms) => {
       ...itemPositionDict,
       [itemID]: newItemPosition,
     };
+
     setItemPositionDict(newItemPositoinDict);
   };
 
@@ -128,7 +129,8 @@ const useHandleAxisData = (parms: Parms) => {
     bundleID: number | undefined,
     keyList: AxisSlotType[],
   ) => {
-    const newSlot = createAxisSlot(slotList.length, keyList, groupID, bundleID);
+    const newSlotIDStart = Object.keys(slotDict).length;
+    const newSlot = createAxisSlot(newSlotIDStart, keyList, groupID, bundleID);
     const newSlotDict = slotDict;
 
     const newSlotIDX = newSlot.map((slot) => {
@@ -158,6 +160,7 @@ const useHandleAxisData = (parms: Parms) => {
         ? Object.keys(bundleDict).length
         : slot.userAxisBundleID;
     updateItemPosition(itemID, groupID, bundleID);
+
     switch (slotType) {
       // slotIDX 위치에 시작, 리스트, 끝 슬롯으로 대체
       case "CENTER_LABEL": {

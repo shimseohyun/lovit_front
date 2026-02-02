@@ -7,6 +7,7 @@ type Parms = {
   points: Point[];
   screenSize: number;
 };
+
 const useGetResult = (parms: Parms) => {
   const { points, screenSize } = parms;
 
@@ -60,7 +61,6 @@ const useGetResult = (parms: Parms) => {
     img = `/assets/result/face/${resultVertical}_${resultHorizontal}.png`;
   }
 
-  console.log(label, img, "");
   return {
     label: label,
     img: img,

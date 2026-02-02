@@ -25,6 +25,8 @@ export type BoardInformation = {
   boardID: number;
   evaluationAxisDict: Record<AxisType, EvaluationAxis>;
   preferenceAxis: PreferenceAxis;
+
+  neutralLabel: string[];
 };
 
 export interface EvaluationBoardID {

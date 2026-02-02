@@ -120,7 +120,9 @@ const SwipePreferenceBoard = () => {
         </S.BoardTitleItemSection>
         <S.BoardTitleMain>얼마나 취향인가요?</S.BoardTitleMain>
         <S.BoardTitleSubContainer>
-          <S.BoardTitleSubWrapper>{getSubTitle()}</S.BoardTitleSubWrapper>
+          <S.BoardTitleSubWrapper $isSelected={true}>
+            {getSubTitle()}
+          </S.BoardTitleSubWrapper>
         </S.BoardTitleSubContainer>
       </S.BoardTitleContainer>
     );

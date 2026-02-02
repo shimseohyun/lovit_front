@@ -8,7 +8,7 @@ import {
 
 const EvaluationButton = () => {
   const { pushItem } = useBoardStaticContext();
-  const { currentStep, confrimCurrentStep, navigatePreference } =
+  const { isFin, currentStep, confrimCurrentStep, navigatePreference } =
     useBoardStepContext();
   const { resetSlot } = useBoardSlotContext();
 
@@ -21,6 +21,14 @@ const EvaluationButton = () => {
     resetSlot();
     confrimCurrentStep();
   };
+
+  if (isFin) {
+    return (
+      <BottomButton>
+        <FillButton type="button">끝~</FillButton>
+      </BottomButton>
+    );
+  }
 
   if (currentStep === "EVALUATION_TOUCH") return;
   return (

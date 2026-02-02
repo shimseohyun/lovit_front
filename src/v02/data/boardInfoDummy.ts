@@ -65,4 +65,5 @@ export const FACE_BOARD_INFO: BoardInformation = {
     HORIZONTAL: CAT_DOG_AXIS,
   },
   preferenceAxis: FACE_AXIS,
+  neutralLabel: ["미녀면 다 좋아", "균형잡힌 미녀가 좋아"],
 };

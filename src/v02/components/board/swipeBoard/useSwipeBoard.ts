@@ -60,7 +60,7 @@ const useSwipeBoard = (parms: Parms) => {
     ],
   );
 
-  return { dragDirection, swipeBoardProps };
+  return { dragDirection, swipeBoardProps, dragAxis };
 };
 
 export default useSwipeBoard;

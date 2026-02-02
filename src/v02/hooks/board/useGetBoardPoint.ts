@@ -6,15 +6,17 @@ import type {
 } from "@interfacesV02/data/user";
 
 const useGetBoardPoint = () => {
-  const TOTAL_GROUP_COUNT = 6;
-  const { vertical, horizontal, itemList } = useBoardStaticContext();
+  const { vertical, horizontal, preference, itemList } =
+    useBoardStaticContext();
 
   const getPoints = (
     positionDict: UserAxisItemPositionDict,
     groupDict: UserAxisGroupDict,
   ) => {
     const pointDict: UserAxisPointDict = {};
+    const TOTAL_GROUP_COUNT = Object.keys(groupDict).length;
 
+    const gap = 1 / TOTAL_GROUP_COUNT;
     itemList.forEach((item) => {
       const position = positionDict[item];
       const groupID = position.userAxisGroupID;
@@ -24,15 +26,15 @@ const useGetBoardPoint = () => {
       const bundleCount = bundleList.length;
       const bundleIDX = bundleList.findIndex((i) => i === bundleID);
 
-      const percent =
-        groupID / TOTAL_GROUP_COUNT +
-        ((1 / TOTAL_GROUP_COUNT) * (bundleIDX + 1)) / (bundleCount + 1);
+      const start = groupID / TOTAL_GROUP_COUNT;
+      const percent = start + (gap * (bundleIDX + 1)) / (bundleCount + 1);
 
       pointDict[item] = {
         percentage: Math.round(percent * 10000) / 100,
         groupID: groupID,
       };
     });
+
     return pointDict;
   };
 
@@ -41,6 +43,10 @@ const useGetBoardPoint = () => {
     horizontalPoints: getPoints(
       horizontal.itemPositionDict,
       horizontal.groupDict,
+    ),
+    preferncePoints: getPoints(
+      preference.itemPositionDict,
+      preference.groupDict,
     ),
   };
 };

@@ -11,6 +11,7 @@ import type { BoardStaticValue, ProviderProps } from "./type";
 import useBoardData from "@hooksV02/data/board/useBoardData";
 import useBoardSlot from "@hooksV02/data/board/useBoardSlot";
 import useBoardStep from "../board/useBoardStep";
+import useViewport from "@hooksV02/useViewPort";
 
 export const BoardDataProvider = (props: ProviderProps) => {
   const {
@@ -54,12 +55,14 @@ export const BoardDataProvider = (props: ProviderProps) => {
     boardData.horizontal.pushItem(itemID, h);
   };
 
+  const size = useViewport();
+
   // ✅ 정적(혹은 저빈도) 값만
   const staticValue: BoardStaticValue = useMemo(
     () => ({
       boardInformation,
       itemSummaryDict,
-      boardSize: defaultBoardSize,
+      boardSize: size.width,
       stepPX: defaultStepPx,
       pushItem,
       ...boardData,

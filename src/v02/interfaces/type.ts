@@ -3,6 +3,8 @@ import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 export type AxisType = "HORIZONTAL" | "VERTICAL";
 export type DirectionType = "END" | "START";
 
+export type ResultType = DirectionType | "MIDDLE";
+
 export const emptyDirection: BoardDirection = {
   HORIZONTAL: null,
   VERTICAL: null,

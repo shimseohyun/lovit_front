@@ -23,7 +23,11 @@ const SwipeEvaluationBoard = () => {
     setEvaluationSlot({ VERTICAL: s.VERTICAL, HORIZONTAL: s.HORIZONTAL });
   };
 
-  const { dragDirection: direction, swipeBoardProps } = useSwipeBoard({
+  const {
+    dragDirection: direction,
+    swipeBoardProps,
+    dragAxis,
+  } = useSwipeBoard({
     slot: evaluationSlot,
     getSlot: getSlot,
     dataDict: {
@@ -105,10 +109,17 @@ const SwipeEvaluationBoard = () => {
           <h3>{item.name}</h3>
         </S.BoardTitleItemSection>
         <S.BoardTitleSubContainer>
-          <S.BoardTitleSubWrapper>
+          {/* 상하 */}
+          <S.BoardTitleSubWrapper
+            $isSelected={dragAxis === "VERTICAL" || dragAxis === null}
+          >
             {getSubTitle("VERTICAL", vertical)}
           </S.BoardTitleSubWrapper>
-          <S.BoardTitleSubWrapper>
+
+          {/* 좌우 */}
+          <S.BoardTitleSubWrapper
+            $isSelected={dragAxis === "HORIZONTAL" || dragAxis === null}
+          >
             {getSubTitle("HORIZONTAL", horizontal)}
           </S.BoardTitleSubWrapper>
         </S.BoardTitleSubContainer>

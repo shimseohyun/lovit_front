@@ -10,8 +10,12 @@ const EvaluationPage = () => {
   const h = [[], [], [], [], [], []];
   const v = [[], [], [], [], [], []];
   const p = [[], [], [], [], [], [], [], [], [], [], []];
+  const checkingItemList: number[] = [0, 1, 2, 3, 4];
 
-  const checkingItemList = [0, 1, 2, 3, 4];
+  // const h = [[[0]], [], [[1, 2]], [], [], []];
+  // const v = [[[0]], [], [], [[1]], [], [[2]]];
+  // const p = [[[0]], [], [[1]], [], [], [], [], [], [], [], [[2]]];
+  // const checkingItemList: number[] = [3];
 
   return (
     <BoardDataProvider
@@ -24,9 +28,7 @@ const EvaluationPage = () => {
     >
       <S.Container>
         <S.ViewPort>
-          {/* 보드 */}
           <Board />
-          {/* 보드 */}
         </S.ViewPort>
 
         <EvaluationButton />

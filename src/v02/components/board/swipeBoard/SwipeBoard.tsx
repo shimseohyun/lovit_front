@@ -7,15 +7,16 @@ import type {
 
 import * as S from "./SwipeBoard.styled";
 
-import CurrentMarker from "./marker/CurrentMarker";
 import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import type { UserAxisSlot } from "@interfacesV02/data/user";
 import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
-import AxisMarker from "./marker/AxisMarker";
+
 import {
   useBoardStaticContext,
   useBoardStepContext,
 } from "@hooksV02/data/context/context";
+import AxisMarker from "./marker/AxisMarker";
+import CurrentMarker from "./marker/CurrentMarker";
 
 type Parms = {
   boardSize: number;

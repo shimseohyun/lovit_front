@@ -1,13 +1,18 @@
 import * as S from "./Board.styled";
 
 import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
-import { useBoardStepContext } from "@hooksV02/data/context/context";
+import {
+  useBoardStaticContext,
+  useBoardStepContext,
+} from "@hooksV02/data/context/context";
 
-import EvaluationBoard from "@componentsV02/board/touchEvaluationBoard/EvaluationBoard";
+import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
+import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
 
 const TouchEvaluationBoard = () => {
+  const { vertical, horizontal } = useBoardStaticContext();
   const { itemSummaryDict } = useBoardDataContext();
-  const { currentItemID } = useBoardStepContext();
+  const { currentItemID, navigateEvaluationSwipe } = useBoardStepContext();
 
   const item = itemSummaryDict[currentItemID];
   const Title = () => {
@@ -22,6 +27,13 @@ const TouchEvaluationBoard = () => {
     );
   };
 
+  const onClickBoardGrid = (v: number, h: number) => {
+    const vSlotIDX = getSlotCenterIDX(v, vertical.groupDict);
+    const hSlotIDX = getSlotCenterIDX(h, horizontal.groupDict);
+
+    navigateEvaluationSwipe({ VERTICAL: vSlotIDX, HORIZONTAL: hSlotIDX });
+  };
+
   return (
     <>
       <Title />
@@ -29,7 +41,7 @@ const TouchEvaluationBoard = () => {
         어디에 속하는지 사분면에서 선택해주세요!
       </S.BoardTitleDescription>
 
-      <EvaluationBoard />
+      <EvaluationBoard onClickGridItem={onClickBoardGrid} />
     </>
   );
 };
