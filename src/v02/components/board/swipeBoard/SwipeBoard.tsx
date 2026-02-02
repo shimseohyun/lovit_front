@@ -11,12 +11,10 @@ import type { AxisData } from "@hooksV02/data/board/useHandleAxisData";
 import type { UserAxisSlot } from "@interfacesV02/data/user";
 import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
 
-import {
-  useBoardStaticContext,
-  useBoardStepContext,
-} from "@hooksV02/data/context/context";
+import { useBoardStepContext } from "@hooksV02/data/context/context";
 import AxisMarker from "./marker/AxisMarker";
 import CurrentMarker from "./marker/CurrentMarker";
+import { getItemSummary } from "@dataV02/itemSummary";
 
 type Parms = {
   boardSize: number;
@@ -48,7 +46,6 @@ const SwipeBoard = (parms: Parms) => {
   } = parms;
 
   const { currentItemID } = useBoardStepContext();
-  const { itemSummaryDict } = useBoardStaticContext();
 
   const isHorizontal = dataDict.HORIZONTAL !== undefined;
   const isVertical = dataDict.VERTICAL !== undefined;
@@ -82,7 +79,7 @@ const SwipeBoard = (parms: Parms) => {
       const lastItemIDX = itemList?.[itemList.length - 1];
 
       const item =
-        lastItemIDX !== undefined ? itemSummaryDict[lastItemIDX] : undefined;
+        lastItemIDX !== undefined ? getItemSummary(lastItemIDX) : undefined;
       if (!item) return null;
 
       return (
@@ -155,7 +152,7 @@ const SwipeBoard = (parms: Parms) => {
       })}
 
       <CurrentMarker
-        imgURL={itemSummaryDict[currentItemID].thumbnailURL}
+        imgURL={getItemSummary(currentItemID).thumbnailURL}
         axis={isSolo ? (isHorizontal ? "HORIZONTAL" : "VERTICAL") : dragAxis}
       />
     </S.BoardContaienr>

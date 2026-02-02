@@ -1,6 +1,8 @@
 import type { ItemSummaryDict } from "@interfacesV02/data/system";
 
-export const itemSummaryDummy: ItemSummaryDict = {
+export const getItemSummary = (itemID: number) => itemSummaryIdol[itemID];
+
+const itemSummaryIdol: ItemSummaryDict = {
   0: {
     itemSummaryID: 0,
     name: "아이린",

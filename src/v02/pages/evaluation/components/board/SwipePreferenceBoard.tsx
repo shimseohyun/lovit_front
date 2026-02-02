@@ -17,9 +17,10 @@ import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 import HeartRateInput from "@componentsV02/starRate/HeartRateInput";
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
+import { getItemSummary } from "@dataV02/itemSummary";
 
 const SwipePreferenceBoard = () => {
-  const { preference, itemSummaryDict } = useBoardStaticContext();
+  const { preference } = useBoardStaticContext();
   const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
   const { currentItemID } = useBoardStepContext();
 
@@ -91,7 +92,7 @@ const SwipePreferenceBoard = () => {
       const comparisonLabel = d === -1 ? "더" : "덜";
 
       return renderComparisonTitle({
-        comparison: itemSummaryDict[comparisonItemID].name,
+        comparison: getItemSummary(comparisonItemID).name,
         icon: icon,
         abs: comparisonLabel,
         group: groupLabel,
@@ -103,14 +104,14 @@ const SwipePreferenceBoard = () => {
       const comparisonItemID = getComparisonItem(preference, slotIDX) ?? 0;
 
       return renderSameTitle({
-        comparison: itemSummaryDict[comparisonItemID].name,
+        comparison: getItemSummary(comparisonItemID).name,
         icon: icon,
         group: groupLabel,
       });
     }
   };
 
-  const item = itemSummaryDict[currentItemID];
+  const item = getItemSummary(currentItemID);
   const Title = () => {
     return (
       <S.BoardTitleContainer>

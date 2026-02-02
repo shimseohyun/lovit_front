@@ -1,6 +1,5 @@
 import * as S from "./Board.styled";
 
-import { useBoardDataContext } from "@hooksV02/data/useBoardDataContext";
 import {
   useBoardStaticContext,
   useBoardStepContext,
@@ -8,13 +7,14 @@ import {
 
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
+import { getItemSummary } from "@dataV02/itemSummary";
 
 const TouchEvaluationBoard = () => {
   const { vertical, horizontal } = useBoardStaticContext();
-  const { itemSummaryDict } = useBoardDataContext();
+
   const { currentItemID, navigateEvaluationSwipe } = useBoardStepContext();
 
-  const item = itemSummaryDict[currentItemID];
+  const item = getItemSummary(currentItemID);
   const Title = () => {
     return (
       <S.BoardTitleContainer>

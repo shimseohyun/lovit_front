@@ -8,6 +8,7 @@ import { useBoardStaticContext } from "@hooksV02/data/context/context";
 import BoardMarker from "./marker/BoardMarker";
 
 import type { DirectionType } from "@interfacesV02/type";
+import { getItemSummary } from "@dataV02/itemSummary";
 
 type Parms = {
   type?: "RESULT" | "BOARD";
@@ -17,8 +18,7 @@ type Parms = {
 const EvaluationBoard = (parms: Parms) => {
   const { children, onClickGridItem, type = "BOARD" } = parms;
 
-  const { itemList, boardSize, itemSummaryDict, boardInformation } =
-    useBoardStaticContext();
+  const { itemList, boardSize, boardInformation } = useBoardStaticContext();
 
   const { verticalPoints, horizontalPoints, preferncePoints } =
     useGetBoardPoint();
@@ -99,16 +99,16 @@ const EvaluationBoard = (parms: Parms) => {
           })}
         </S.BoardGrid>
 
-        {itemList.map((item, i) => {
+        {itemList.map((itemID, i) => {
           return (
             <BoardMarker
               key={i}
-              left={getPercentWithCenter(horizontalPoints[item].percentage)}
-              top={getPercentWithCenter(verticalPoints[item].percentage)}
+              left={getPercentWithCenter(horizontalPoints[itemID].percentage)}
+              top={getPercentWithCenter(verticalPoints[itemID].percentage)}
               preferencePercent={
                 type === "RESULT" ? preferncePoints[i].percentage : undefined
               }
-              img={itemSummaryDict[item].thumbnailURL}
+              img={getItemSummary(itemID).thumbnailURL}
             />
           );
         })}

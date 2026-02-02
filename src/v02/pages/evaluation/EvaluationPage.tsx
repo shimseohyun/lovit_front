@@ -1,7 +1,7 @@
 import * as S from "./EvaluationPage.styld";
 
 import { FACE_BOARD_INFO } from "@dataV02/boardInfoDummy";
-import { itemSummaryDummy } from "@dataV02/itemSummaryDummy";
+
 import { BoardDataProvider } from "@hooksV02/data/context/BoardDataProvider";
 import EvaluationButton from "./components/board/EvaluationButton";
 import Board from "./components/board/Board";
@@ -23,7 +23,6 @@ const EvaluationPage = () => {
       horizontalRough={h}
       verticalRough={v}
       preferenceRough={p}
-      itemSummaryDict={itemSummaryDummy}
       checkingItemList={checkingItemList}
     >
       <S.Container>

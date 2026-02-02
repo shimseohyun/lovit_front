@@ -10,9 +10,10 @@ import {
 
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
+import { getItemSummary } from "@dataV02/itemSummary";
 
 const SwipeEvaluationBoard = () => {
-  const { vertical, horizontal, itemSummaryDict } = useBoardStaticContext();
+  const { vertical, horizontal } = useBoardStaticContext();
   const { evaluationSlot, setEvaluationSlot } = useBoardSlotContext();
   const { currentItemID } = useBoardStepContext();
 
@@ -80,7 +81,7 @@ const SwipeEvaluationBoard = () => {
       const comparisonLabel = d * a === 1 ? "더" : "덜";
 
       return renderComparisonTitle({
-        comparison: itemSummaryDict[comparisonItemID].name,
+        comparison: getItemSummary(comparisonItemID).name,
         icon: icon,
         abs: comparisonLabel,
         group: groupLabel,
@@ -92,14 +93,14 @@ const SwipeEvaluationBoard = () => {
       const comparisonItemID = getComparisonItem(data, slotIDX) ?? 0;
 
       return renderSameTitle({
-        comparison: itemSummaryDict[comparisonItemID].name,
+        comparison: getItemSummary(comparisonItemID).name,
         icon: icon,
         group: groupLabel,
       });
     }
   };
 
-  const item = itemSummaryDict[currentItemID];
+  const item = getItemSummary(currentItemID);
 
   const Title = () => {
     return (

@@ -5,7 +5,7 @@ import {
   BoardSlotContext,
   BoardStepContext,
 } from "./context";
-import { defaultBoardSize, defaultStepPx } from "./constant";
+import { defaultStepPx } from "./constant";
 import type { BoardStaticValue, ProviderProps } from "./type";
 
 import useBoardData from "@hooksV02/data/board/useBoardData";
@@ -20,7 +20,7 @@ export const BoardDataProvider = (props: ProviderProps) => {
     verticalRough,
     preferenceRough,
     boardInformation,
-    itemSummaryDict = {},
+
     checkingItemList = [],
   } = props;
 
@@ -61,13 +61,13 @@ export const BoardDataProvider = (props: ProviderProps) => {
   const staticValue: BoardStaticValue = useMemo(
     () => ({
       boardInformation,
-      itemSummaryDict,
+
       boardSize: size.width,
       stepPX: defaultStepPx,
       pushItem,
       ...boardData,
     }),
-    [boardInformation, itemSummaryDict, boardData],
+    [boardInformation, boardData],
   );
 
   // ✅ slot/step은 따로 provider로 분리
