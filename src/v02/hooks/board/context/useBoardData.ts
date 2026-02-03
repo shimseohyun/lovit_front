@@ -29,7 +29,7 @@ const useBoardData = (calcKey?: unknown) => {
     const pSlot = getSlotData(p.group, p.bundle);
 
     const horizontal: AxisData = {
-      type: "PREFERENCE",
+      type: "HORIZONTAL",
       groupDict: h.group,
       bundleDict: h.bundle,
       itemPositionDict: h.itemPosition,

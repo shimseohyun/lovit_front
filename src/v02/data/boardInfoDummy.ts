@@ -185,10 +185,71 @@ const FACE_AXIS: Axis = {
 export const FACE_BOARD_INFO: BoardInformation = {
   boardID: 0,
 
-  neutralLabel: ["미녀면 다 좋아", "균형잡힌 미녀가 좋아"],
   axisDict: {
     HORIZONTAL: CAT_DOG_AXIS,
     VERTICAL: DOBOO_BUTTER_AXIS,
     PREFERENCE: FACE_AXIS,
+  },
+
+  // Vertical - Horizontal 순서
+  resultDict: {
+    START: {
+      START: [
+        {
+          img: "/assets/result/face2/START_START.png",
+          label: "두부 고양이 콜렉터",
+        },
+      ],
+      MIDDLE: [
+        { img: "/assets/result/face2/START_MIDDLE.png", label: "두부 콜렉터" },
+      ],
+      END: [
+        {
+          img: "/assets/result/face2/START_END.png",
+          label: "두부 강아지 콜렉터",
+        },
+      ],
+    },
+    MIDDLE: {
+      START: [
+        {
+          img: "/assets/result/face2/MIDDLE_START.png",
+          label: "고양이 콜렉터",
+        },
+      ],
+      MIDDLE: [
+        {
+          img: "/assets/result/face2/MIDDLE_MIDDLE_1.png",
+          label: "균형 잡힌 미녀가 좋아!",
+        },
+        {
+          img: "/assets/result/face2/MIDDLE_MIDDLE_0.png",
+          label: "미녀면 다 좋아!",
+        },
+      ],
+      END: [
+        {
+          img: "/assets/result/face2/MIDDLE_END.png",
+          label: "강아지 콜렉터",
+        },
+      ],
+    },
+    END: {
+      START: [
+        {
+          img: "/assets/result/face2/END_START.png",
+          label: "버터 고양이 콜렉터",
+        },
+      ],
+      MIDDLE: [
+        { img: "/assets/result/face2/END_MIDDLE.png", label: "버터 콜렉터" },
+      ],
+      END: [
+        {
+          img: "/assets/result/face2/END_ENDpng",
+          label: "강아지 콜렉터",
+        },
+      ],
+    },
   },
 };

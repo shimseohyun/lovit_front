@@ -54,7 +54,7 @@ const SwipePreferenceBoard = () => {
   const slotType = slot.slotType;
   const gorupID = slot.userAxisGroupID;
   const groupSummary =
-    boardInformation.axisDict["HORIZONTAL"].groupSummary[gorupID];
+    boardInformation.axisDict["PREFERENCE"].groupSummary[gorupID];
 
   const icon = groupSummary.groupIcon;
   const groupLabel = groupSummary.groupLabel;

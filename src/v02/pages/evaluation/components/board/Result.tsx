@@ -6,28 +6,30 @@ import { useBoardStaticContext } from "@hooksV02/board/context/context";
 
 const Result = () => {
   const { boardInformation } = useBoardStaticContext();
-  const { horizontalResult, verticalResult } = useGetBoardResult();
 
-  const horizontalLabel = horizontalResult === "MIDDLE" ? undefined : "결과";
+  const { horizontal, vertical } = useGetBoardResult();
+  const verticalZone = vertical.zone;
+  const horizontalZone = horizontal.zone;
 
-  const vericalLabel = verticalResult === "MIDDLE" ? undefined : "결과";
+  const horizontalVariance = horizontal.profile;
+  const verticalValVariance = vertical.profile;
+
+  const focus =
+    verticalZone === "MIDDLE" && horizontalZone === "MIDDLE"
+      ? horizontalVariance === "FOCUSED" && verticalValVariance === "FOCUSED"
+        ? 0
+        : 1
+      : 0;
+
+  const result =
+    boardInformation.resultDict[verticalZone][horizontalZone][focus];
 
   const Title = () => {
     return (
       <>
         <S.BoardTitleContainer>
-          <S.BoardTitleItemImg
-            src={`/assets/result/face2/${verticalResult}_${horizontalResult}.png`}
-          />
-          <span>
-            {vericalLabel || horizontalLabel ? (
-              <>
-                {horizontalLabel} {vericalLabel} 콜렉터
-              </>
-            ) : (
-              <>{boardInformation.neutralLabel[0]}</>
-            )}
-          </span>
+          <S.BoardTitleItemImg src={result.img} />
+          <span>{result.label}</span>
         </S.BoardTitleContainer>
 
         <S.BoardTitleDescription>

@@ -1,4 +1,8 @@
-import type { BoardAxisType, DirectionType } from "@interfacesV02/type";
+import type {
+  BoardAxisType,
+  DirectionType,
+  ResultType,
+} from "@interfacesV02/type";
 import type { PrimaryKey } from ".";
 
 export type Axis = {
@@ -22,8 +26,16 @@ export type BoardInformation = {
   boardID: number;
   axisDict: Record<BoardAxisType, Axis>;
 
-  neutralLabel: string[];
+  resultDict: BoardResultDict;
 };
+export type ResultData = {
+  label: string;
+  img: string;
+};
+export type BoardResultDict = Record<
+  ResultType,
+  Record<ResultType, ResultData[]>
+>;
 
 export interface EvaluationBoardID {
   evaluationBoardID: PrimaryKey;

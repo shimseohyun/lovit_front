@@ -18,7 +18,6 @@ export type AxisData = {
 export type AxisType = "HORIZONTAL" | "VERTICAL";
 export type BoardAxisType = "HORIZONTAL" | "VERTICAL" | "PREFERENCE";
 export type DirectionType = "END" | "START";
-
 export type ResultType = DirectionType | "MIDDLE";
 
 export const emptyDirection: BoardDirection = {
