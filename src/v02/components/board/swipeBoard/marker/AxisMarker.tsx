@@ -26,6 +26,7 @@ const Spot = styled.div<{ $isCurrent: boolean }>`
     }
   }}
 `;
+
 const MarkerCotainer = styled.div<{
   $isSelected: boolean;
   $axis: AxisType;
@@ -65,10 +66,11 @@ const MarkerCotainer = styled.div<{
         align-items: center;
       `;
     }
-  }}
+  }};
 `;
 
 const Marker = styled.div<{
+  $isCurrent: boolean;
   $isSelected: boolean;
   $axis: AxisType;
   $isLabel: boolean;
@@ -85,13 +87,29 @@ const Marker = styled.div<{
 
   overflow: visible;
 
-  ${({ $isSelected, $axis }) => {
+  ${(p) => css`
+    background-color: ${p.theme.foregroundColors.foregroundLighter};
+    ${p.$isLabel
+      ? css``
+      : css`
+          background-image: url(${p.$imgURL});
+          background-size: cover;
+          background-position: center center;
+          box-shadow: 0 0 0 1px ${p.theme.strokeColors.strokeLighter};
+        `}
+  `}
+
+  ${({ $isSelected, $axis, $isCurrent, ...p }) => {
     if ($isSelected) {
       return css`
         margin-top: ${$axis === "HORIZONTAL" ? 24 : 0}px;
         margin-left: ${$axis === "HORIZONTAL" ? 0 : 24}px;
         width: 48px;
         height: 48px;
+        ${$isCurrent &&
+        css`
+          box-shadow: 0 0 0 2px ${p.theme.strokeColors.strokeStorngest};
+        `}
       `;
     } else {
       return css`
@@ -101,24 +119,9 @@ const Marker = styled.div<{
     }
   }}
   transition: margin ease-out 120ms;
-
-  ${(p) => css`
-    background-color: ${p.theme.foregroundColors.foregroundLighter};
-    ${p.$isLabel
-      ? css`
-          font-size: 19px;
-          line-height: 32px;
-        `
-      : css`
-          background-image: url(${p.$imgURL});
-          background-size: cover;
-          background-position: center center;
-          box-shadow: 0 0 0 1px ${p.theme.strokeColors.strokeLighter};
-        `}
-  `}
 `;
 
-const MarkerLabel = styled.div<{ $isLabel: boolean }>`
+const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -139,12 +142,17 @@ const MarkerLabel = styled.div<{ $isLabel: boolean }>`
   ${(p) => css`
     padding: ${p.$isLabel ? "1px 6px" : "2px 5px"};
 
-    ${p.$isLabel ? p.theme.fonts.body3B : p.theme.fonts.body4B}
-    color: ${p.$isLabel
-      ? p.theme.fontColors.titleStronger
-      : p.theme.fontColors.textLight};
+    ${p.$isLabel ? p.theme.fonts.body3B : p.theme.fonts.body4B};
 
-    background-color: ${p.theme.foregroundColors.foregroundLight};
+    ${p.$isCurrent
+      ? css`
+          color: ${p.theme.fontColors.textInverseLight};
+          background-color: ${p.theme.foregroundColors.foregroundStrongest};
+        `
+      : css`
+          color: ${p.theme.fontColors.textDisable};
+          background-color: ${p.theme.foregroundColors.foregroundLighter};
+        `}
   `}
 `;
 
@@ -157,7 +165,16 @@ type Parms = {
   label: string;
   imgURL?: string;
   icon?: string;
+  iconIntensity?: number;
 };
+
+const IconLabel = styled.div<{ $isSelected: boolean; $iconIntensity: number }>`
+  ${({ $isSelected, $iconIntensity }) => css`
+    font-size: ${$isSelected ? 28 : 20}px;
+    line-height: 32px;
+    opacity: ${$iconIntensity}%;
+  `}
+`;
 
 const AxisMarker = (parms: Parms) => {
   const {
@@ -169,6 +186,7 @@ const AxisMarker = (parms: Parms) => {
     label,
     imgURL,
     icon = "",
+    iconIntensity = 100,
   } = parms;
 
   const isLabel = type !== "ITEM_LIST";
@@ -183,13 +201,20 @@ const AxisMarker = (parms: Parms) => {
       <Spot $isCurrent={isCurrent} />
       {!isNone && (
         <Marker
+          $isCurrent={isCurrent}
           $isSelected={isSelected}
           $axis={axis}
           $isLabel={isLabel}
           $imgURL={imgURL}
         >
-          <MarkerLabel $isLabel={isLabel}>{label}</MarkerLabel>
-          {isLabel && <>{icon}</>}
+          <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
+            {label}
+          </MarkerLabel>
+          {isLabel && (
+            <IconLabel $isSelected={isSelected} $iconIntensity={iconIntensity}>
+              {icon}
+            </IconLabel>
+          )}
         </Marker>
       )}
     </MarkerCotainer>

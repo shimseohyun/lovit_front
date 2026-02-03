@@ -20,6 +20,7 @@ export type AxisGroupSummary = {
   intensityLabel: string;
   groupLabel: string;
   groupDescription: string;
+  iconIntensity: number;
 };
 
 export type BoardInformation = {

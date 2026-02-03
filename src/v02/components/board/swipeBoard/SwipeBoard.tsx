@@ -111,6 +111,7 @@ const SwipeBoard = (parms: Parms) => {
           type={v.slotType}
           label={groupSummary.intensityLabel}
           icon={groupSummary.groupIcon}
+          iconIntensity={groupSummary.iconIntensity}
         />
       );
     }

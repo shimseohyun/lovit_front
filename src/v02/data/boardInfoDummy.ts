@@ -10,6 +10,7 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "완전",
       groupLabel: "두부",
       groupDescription: "",
+      iconIntensity: 100,
     },
     {
       axisSide: "START",
@@ -17,6 +18,7 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "제법",
       groupLabel: "두부",
       groupDescription: "",
+      iconIntensity: 50,
     },
     {
       axisSide: "START",
@@ -24,13 +26,16 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "약간",
       groupLabel: "두부",
       groupDescription: "",
+      iconIntensity: 20,
     },
+
     {
       axisSide: "END",
       groupIcon: "🥞",
       intensityLabel: "약간",
       groupLabel: "버터",
       groupDescription: "",
+      iconIntensity: 20,
     },
     {
       axisSide: "END",
@@ -38,6 +43,7 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "제법",
       groupLabel: "버터",
       groupDescription: "",
+      iconIntensity: 50,
     },
     {
       axisSide: "END",
@@ -45,6 +51,7 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "완전",
       groupLabel: "버터",
       groupDescription: "",
+      iconIntensity: 100,
     },
   ],
 };
@@ -59,6 +66,7 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "완전",
       groupLabel: "고양이",
       groupDescription: "",
+      iconIntensity: 100,
     },
     {
       axisSide: "START",
@@ -66,6 +74,7 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "제법",
       groupLabel: "고양이",
       groupDescription: "",
+      iconIntensity: 50,
     },
     {
       axisSide: "START",
@@ -73,6 +82,7 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "약간",
       groupLabel: "고양이",
       groupDescription: "",
+      iconIntensity: 20,
     },
     {
       axisSide: "END",
@@ -80,6 +90,7 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "약간",
       groupLabel: "강아지",
       groupDescription: "",
+      iconIntensity: 20,
     },
     {
       axisSide: "END",
@@ -87,6 +98,7 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "제법",
       groupLabel: "강아지",
       groupDescription: "",
+      iconIntensity: 50,
     },
     {
       axisSide: "END",
@@ -94,6 +106,7 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "완전",
       groupLabel: "강아지",
       groupDescription: "",
+      iconIntensity: 100,
     },
   ],
 };
@@ -104,10 +117,11 @@ const FACE_AXIS: Axis = {
   groupSummary: [
     {
       axisSide: "END",
-      groupIcon: "🩷",
+      groupIcon: "💖",
       intensityLabel: "0",
-      groupLabel: "",
-      groupDescription: "",
+      groupLabel: "마음에 들어요",
+      groupDescription: "취향이 아니에요",
+      iconIntensity: 10,
     },
     {
       axisSide: "END",
@@ -115,13 +129,15 @@ const FACE_AXIS: Axis = {
       intensityLabel: "0.5",
       groupLabel: "마음에 들어요",
       groupDescription: "취향과 완전 멀어요",
+      iconIntensity: 19,
     },
     {
       axisSide: "END",
-      groupIcon: "🩷",
+      groupIcon: "💖",
       intensityLabel: "1",
       groupLabel: "마음에 들어요",
       groupDescription: "취향과 제법 멀어요",
+      iconIntensity: 28,
     },
     {
       axisSide: "END",
@@ -129,13 +145,15 @@ const FACE_AXIS: Axis = {
       intensityLabel: "1.5",
       groupLabel: "마음에 들어요",
       groupDescription: "취향과 약간 멀어요",
+      iconIntensity: 37,
     },
     {
       axisSide: "END",
-      groupIcon: "🩷",
+      groupIcon: "💖",
       intensityLabel: "2",
       groupLabel: "마음에 들어요",
       groupDescription: "약간 취향에서 벗어났어요",
+      iconIntensity: 46,
     },
     {
       axisSide: "END",
@@ -143,13 +161,15 @@ const FACE_AXIS: Axis = {
       intensityLabel: "2.5",
       groupLabel: "마음에 들어요",
       groupDescription: "보통이에요",
+      iconIntensity: 55,
     },
     {
       axisSide: "END",
-      groupIcon: "🩷",
+      groupIcon: "💖",
       intensityLabel: "3",
       groupLabel: "마음에 들어요",
       groupDescription: "약간 취향이에요",
+      iconIntensity: 64,
     },
     {
       axisSide: "END",
@@ -157,13 +177,15 @@ const FACE_AXIS: Axis = {
       intensityLabel: "3.5",
       groupLabel: "마음에 들어요",
       groupDescription: "제법 취향이에요",
+      iconIntensity: 73,
     },
     {
       axisSide: "END",
-      groupIcon: "🩷",
+      groupIcon: "💖",
       intensityLabel: "4",
       groupLabel: "마음에 들어요",
       groupDescription: "완전 취향이에요",
+      iconIntensity: 82,
     },
     {
       axisSide: "END",
@@ -171,13 +193,15 @@ const FACE_AXIS: Axis = {
       intensityLabel: "4.5",
       groupLabel: "마음에 들어요",
       groupDescription: "거의 완전 취향이에요",
+      iconIntensity: 91,
     },
     {
       axisSide: "END",
-      groupIcon: "🩷",
+      groupIcon: "💖",
       intensityLabel: "5",
       groupLabel: "마음에 들어요",
       groupDescription: "완전 마음을 울려요!",
+      iconIntensity: 100,
     },
   ],
 };

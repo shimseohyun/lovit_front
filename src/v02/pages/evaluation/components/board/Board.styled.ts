@@ -87,19 +87,15 @@ export const BoardTitleSubWrapper = styled.div<{ $isSelected: boolean }>`
   justify-content: center;
   gap: 4px;
 
-  ${({ $isSelected, ...p }) => {
-    if ($isSelected)
-      return css`
-        ${p.theme.fonts.narrative}
-        color: ${p.theme.fontColors.titleStronger};
-      `;
-    else {
-      return css`
-        ${p.theme.fonts.narrative}
-        color: ${p.theme.fontColors.textDisable};
-      `;
-    }
-  }}
+  ${(p) => css`
+    ${p.theme.fonts.narrative}
+    color: ${p.theme.fontColors.titleStronger};
+  `}
+  ${({ $isSelected }) =>
+    !$isSelected &&
+    css`
+      opacity: 30%;
+    `}
 `;
 
 export const BoardTitleSubChip = styled.div`
