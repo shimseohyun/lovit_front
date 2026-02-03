@@ -19,7 +19,7 @@ import { getItemSummary } from "@dataV02/itemSummary";
 import type { AxisData } from "@interfacesV02/type";
 
 const SwipePreferenceBoard = () => {
-  const { preference } = useBoardStaticContext();
+  const { preference, boardInformation } = useBoardStaticContext();
   const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
   const { currentItemID } = useBoardStepContext();
 
@@ -53,10 +53,12 @@ const SwipePreferenceBoard = () => {
   const slot = preference.slotDict[slotID];
   const slotType = slot.slotType;
   const gorupID = slot.userAxisGroupID;
-  const group = preference.groupDict[gorupID];
-  const icon = group.groupSummary.groupIcon;
-  const groupLabel = group.groupSummary.groupLabel;
-  const intensity = group.groupSummary.intensityLabel;
+  const groupSummary =
+    boardInformation.axisDict["HORIZONTAL"].groupSummary[gorupID];
+
+  const icon = groupSummary.groupIcon;
+  const groupLabel = groupSummary.groupLabel;
+  const intensity = groupSummary.intensityLabel;
 
   useEffect(() => {
     setIsFirst(direction.HORIZONTAL === null && direction.VERTICAL === null);
@@ -138,7 +140,7 @@ const SwipePreferenceBoard = () => {
       <SwipeBoard {...swipeBoardProps} />
 
       <S.BoardRateContaienr>
-        <span>{group.groupSummary.groupDescription}</span>
+        <span>{groupSummary.groupDescription}</span>
         <HeartRateInput value={gorupID} onChange={onClickStar} />
       </S.BoardRateContaienr>
     </>

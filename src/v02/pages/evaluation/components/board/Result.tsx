@@ -8,18 +8,9 @@ const Result = () => {
   const { boardInformation } = useBoardStaticContext();
   const { horizontalResult, verticalResult } = useGetBoardResult();
 
-  const horizontalLabel =
-    horizontalResult === "MIDDLE"
-      ? undefined
-      : boardInformation.evaluationAxisDict["HORIZONTAL"].partDict[
-          horizontalResult
-        ].label;
+  const horizontalLabel = horizontalResult === "MIDDLE" ? undefined : "결과";
 
-  const vericalLabel =
-    verticalResult === "MIDDLE"
-      ? undefined
-      : boardInformation.evaluationAxisDict["VERTICAL"].partDict[verticalResult]
-          .label;
+  const vericalLabel = verticalResult === "MIDDLE" ? undefined : "결과";
 
   const Title = () => {
     return (

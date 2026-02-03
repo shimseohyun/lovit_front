@@ -7,6 +7,7 @@ import type {
   UserAxisItemPosition,
   UserAxisItemPositionDict,
 } from "@interfacesV02/data/user";
+import type { BoardAxisType } from "@interfacesV02/type";
 
 export type LocalStorageKey =
   | "CHECKED_ITEM_LIST"
@@ -20,21 +21,19 @@ export type LocalStorageKey =
   | "PREFERENCE_BUNDLE_DICT"
   | "PREFERENCE_ITEM_DICT";
 
-export type EvaluationAxisType = "HORIZONTAL" | "VERTICAL" | "PREFERENCE";
-
-const groupKeyMap: Record<EvaluationAxisType, LocalStorageKey> = {
+const groupKeyMap: Record<BoardAxisType, LocalStorageKey> = {
   HORIZONTAL: "HORIZONTAL_GROUP_DICT",
   VERTICAL: "VERTICAL_GROUP_DICT",
   PREFERENCE: "PREFERENCE_GROUP_DICT",
 };
 
-const bundleKeyMap: Record<EvaluationAxisType, LocalStorageKey> = {
+const bundleKeyMap: Record<BoardAxisType, LocalStorageKey> = {
   HORIZONTAL: "HORIZONTAL_BUNDLE_DICT",
   VERTICAL: "VERTICAL_BUNDLE_DICT",
   PREFERENCE: "PREFERENCE_BUNDLE_DICT",
 };
 
-const itemKeyMap: Record<EvaluationAxisType, LocalStorageKey> = {
+const itemKeyMap: Record<BoardAxisType, LocalStorageKey> = {
   HORIZONTAL: "HORIZONTAL_ITEM_DICT",
   VERTICAL: "VERTICAL_ITEM_DICT",
   PREFERENCE: "PREFERENCE_ITEM_DICT",
@@ -112,7 +111,7 @@ export const setCheckedItemList = (list: ItemIDList) => {
 
 /**  Group */
 export const getGroupDict = (
-  type: EvaluationAxisType,
+  type: BoardAxisType,
   groupSize: number,
 ): UserAxisGroupDict => {
   const key = groupKeyMap[type];
@@ -121,38 +120,25 @@ export const getGroupDict = (
     initalValue[i] = {
       userAxisGroupID: i,
       bundleList: [],
-      groupSummary: {
-        type: "PREFERENCE",
-        groupIcon: "",
-        intensityLabel: "",
-        groupLabel: "",
-        groupDescription: "",
-      },
-
-      axisSide: "START",
-      intensityLevel: 0,
     };
   }
 
   return getDictFromLocalStorage<UserAxisGroupDict>(key, initalValue);
 };
 
-export const setGroupDict = (
-  type: EvaluationAxisType,
-  dict: UserAxisGroupDict,
-) => {
+export const setGroupDict = (type: BoardAxisType, dict: UserAxisGroupDict) => {
   const key = groupKeyMap[type];
   setDictToLocalStorage(key, dict);
 };
 
 /**  Bundle */
-export const getBundleDict = (type: EvaluationAxisType): UserAxisBundleDict => {
+export const getBundleDict = (type: BoardAxisType): UserAxisBundleDict => {
   const key = bundleKeyMap[type];
   return getDictFromLocalStorage<UserAxisBundleDict>(key, {});
 };
 
 export const setBundleDict = (
-  type: EvaluationAxisType,
+  type: BoardAxisType,
   dict: UserAxisBundleDict,
 ) => {
   const key = bundleKeyMap[type];
@@ -161,14 +147,14 @@ export const setBundleDict = (
 
 /**  ItemPosition */
 export const getItemPositionDict = (
-  type: EvaluationAxisType,
+  type: BoardAxisType,
 ): UserAxisItemPositionDict => {
   const key = itemKeyMap[type];
   return getDictFromLocalStorage<UserAxisItemPositionDict>(key, {});
 };
 
 export const setItemPositionDict = (
-  type: EvaluationAxisType,
+  type: BoardAxisType,
   dict: UserAxisItemPositionDict,
 ) => {
   const key = itemKeyMap[type];
@@ -177,7 +163,7 @@ export const setItemPositionDict = (
 
 /** 새 번들을 dict에 추가*/
 export const addBundleToDict = (
-  type: EvaluationAxisType,
+  type: BoardAxisType,
   bundleDict: UserAxisBundleDict,
   newBundle: UserAxisBundle,
 ) => {
@@ -206,7 +192,7 @@ export const addItemToCheckedItemList = (newItem: number) => {
 
 /** 새 아이템을 포지션에 추가 */
 export const addItemPositionToDict = (
-  type: EvaluationAxisType,
+  type: BoardAxisType,
   itemPositionDict: UserAxisItemPositionDict,
   newItemPosition: UserAxisItemPosition,
 ) => {
@@ -221,7 +207,7 @@ export const addItemPositionToDict = (
 
 /** 2) 기존 번들의 내용을 수정 (patch만) */
 export const updateBundleInDict = (
-  type: EvaluationAxisType,
+  type: BoardAxisType,
   bundleDict: UserAxisBundleDict,
   bundleID: number,
   patch: Partial<UserAxisBundle>,
@@ -244,7 +230,7 @@ export const updateBundleInDict = (
 
 /** 3) 기존 그룹의 내용을 수정 (patch만) */
 export const updateGroupInDict = (
-  type: EvaluationAxisType,
+  type: BoardAxisType,
   groupDict: UserAxisGroupDict,
   groupID: number,
   patch: Partial<UserAxisGroup>,

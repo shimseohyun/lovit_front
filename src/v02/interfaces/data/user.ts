@@ -1,4 +1,3 @@
-import type { DirectionType } from "@interfacesV02/type";
 import type { PrimaryKey } from ".";
 
 export type RoughAxisData = number[][][];
@@ -10,22 +9,9 @@ type UserAxisSlotID = PrimaryKey;
 
 export type ItemIDList = ItemSummaryID[];
 
-export type AxisGroupSummary = {
-  type: "EVALUATION" | "PREFERENCE";
-  groupIcon: string;
-  intensityLabel: string;
-  groupLabel: string;
-  groupDescription: string;
-};
-
 export interface UserAxisGroup {
   userAxisGroupID: UserAxisGroupID;
   bundleList: UserAxisBundleID[];
-
-  // 지워도 될것같음
-  groupSummary: AxisGroupSummary;
-  axisSide: DirectionType;
-  intensityLevel: number;
 }
 
 export interface UserAxisBundle {

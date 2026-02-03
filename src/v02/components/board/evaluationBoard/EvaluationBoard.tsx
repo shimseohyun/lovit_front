@@ -7,8 +7,8 @@ import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 import { useBoardStaticContext } from "@hooksV02/board/context/context";
 import BoardMarker from "./marker/BoardMarker";
 
-import type { DirectionType } from "@interfacesV02/type";
 import { getItemSummary } from "@dataV02/itemSummary";
+import type { AxisType } from "@interfacesV02/type";
 
 type Parms = {
   type?: "RESULT" | "BOARD";
@@ -47,32 +47,25 @@ const EvaluationBoard = (parms: Parms) => {
     <>
       <S.BoardContainer $size={boardSize - 24}>
         <S.BoardGrid $cols={6} $rows={6} $holePx={20}>
-          {[2, 1, 0, -1, 0, 1, 2].map((r, rIDX) => {
-            const rowPart: DirectionType = rIDX > 3 ? "END" : "START";
-            const rowInfo = boardInformation.evaluationAxisDict["VERTICAL"];
+          {[0, 1, 2, -1, 3, 4, 5].map((r, rIDX) => {
+            const rowInfo = boardInformation.axisDict["VERTICAL"];
 
-            return [2, 1, 0, -1, 0, 1, 2].map((c, cIDX) => {
-              const colPart: DirectionType = cIDX > 3 ? "END" : "START";
-              const colInfo = boardInformation.evaluationAxisDict["HORIZONTAL"];
+            return [0, 1, 2, -1, 3, 4, 5].map((c, cIDX) => {
+              const colInfo = boardInformation.axisDict["HORIZONTAL"];
 
               if (r === -1 && c === -1) {
                 return <S.Ceter className="center" key={`${rIDX}-${cIDX}`} />;
               } else if (r == -1 || c == -1) {
-                const axis = r === -1 ? "HORIZONTAL" : "VERTICAL";
-                const label =
-                  axis === "VERTICAL"
-                    ? rowInfo.partDict[rowPart].label
-                    : colInfo.partDict[colPart].label;
+                const axis: AxisType = r === -1 ? "HORIZONTAL" : "VERTICAL";
 
-                const icon =
-                  axis === "VERTICAL"
-                    ? rowInfo.partDict[rowPart].icon
-                    : colInfo.partDict[colPart].icon;
-
-                const intesity =
+                const info =
                   axis === "HORIZONTAL"
-                    ? rowInfo.intensityLabelList[c]
-                    : colInfo.intensityLabelList[r];
+                    ? colInfo.groupSummary[c]
+                    : rowInfo.groupSummary[r];
+
+                const label = info.groupLabel;
+                const icon = info.groupIcon;
+                const intesity = info.intensityLabel;
 
                 return (
                   <S.Label $axis={axis} key={`${rIDX}-${cIDX}`}>
@@ -85,12 +78,7 @@ const EvaluationBoard = (parms: Parms) => {
                     key={`${rIDX}-${cIDX}`}
                     $isAble={onClickGridItem !== undefined}
                     onClick={() =>
-                      onClickGridItem === undefined
-                        ? {}
-                        : onClickGridItem(
-                            rIDX > 3 ? rIDX - 1 : rIDX,
-                            cIDX > 3 ? cIDX - 1 : cIDX,
-                          )
+                      onClickGridItem === undefined ? {} : onClickGridItem(r, c)
                     }
                   />
                 );

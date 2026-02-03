@@ -1,10 +1,9 @@
-import type { AxisData } from "@interfacesV02/type";
+import type { AxisData, BoardAxisType } from "@interfacesV02/type";
 import {
   addBundleToDict,
   addItemPositionToDict,
   updateBundleInDict,
   updateGroupInDict,
-  type EvaluationAxisType,
 } from "@hooksV02/data/localStorage";
 import type {
   UserAxisBundle,
@@ -40,7 +39,7 @@ const createBundle = (
 const pushItemToAxis = (
   itemID: number,
   slotIDX: number,
-  type: EvaluationAxisType,
+  type: BoardAxisType,
   data: AxisData,
 ) => {
   const slotDict = data.slotDict;

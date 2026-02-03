@@ -10,7 +10,10 @@ import * as S from "./SwipeBoard.styled";
 import type { UserAxisSlot } from "@interfacesV02/data/user";
 import type { SwipeBind } from "@hooksV02/swipe/useSwipe";
 
-import { useBoardStepContext } from "@hooksV02/board/context/context";
+import {
+  useBoardStaticContext,
+  useBoardStepContext,
+} from "@hooksV02/board/context/context";
 import AxisMarker from "./marker/AxisMarker";
 import CurrentMarker from "./marker/CurrentMarker";
 import { getItemSummary } from "@dataV02/itemSummary";
@@ -45,6 +48,7 @@ const SwipeBoard = (parms: Parms) => {
     slot,
   } = parms;
 
+  const { boardInformation } = useBoardStaticContext();
   const { currentItemID } = useBoardStepContext();
 
   const isHorizontal = dataDict.HORIZONTAL !== undefined;
@@ -95,7 +99,8 @@ const SwipeBoard = (parms: Parms) => {
       );
     } else {
       const groupID = v.userAxisGroupID;
-      const group = data.groupDict[groupID];
+      const groupSummary =
+        boardInformation.axisDict[data.type].groupSummary[groupID];
 
       return (
         <AxisMarker
@@ -104,8 +109,8 @@ const SwipeBoard = (parms: Parms) => {
           isCurrent={isCurrent}
           axis={axis}
           type={v.slotType}
-          label={group.groupSummary.intensityLabel}
-          icon={group.groupSummary.groupIcon}
+          label={groupSummary.intensityLabel}
+          icon={groupSummary.groupIcon}
         />
       );
     }

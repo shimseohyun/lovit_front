@@ -1,30 +1,26 @@
-import type { AxisType, DirectionType } from "@interfacesV02/type";
+import type { BoardAxisType, DirectionType } from "@interfacesV02/type";
 import type { PrimaryKey } from ".";
 
-export type EvaluationPart = {
-  label: string;
-  icon?: string;
-};
+export type Axis = {
+  axisID: number;
 
-export type EvaluationAxis = {
-  evaluationAxisID: number;
-  partDict: Record<DirectionType, EvaluationPart>;
-  setpPerSide: number;
-  intensityLabelList: string[];
-};
-
-export type PreferenceAxis = {
-  preferenceAxisID: number;
   stepCount: number;
-  intensityLabelList: string[];
-  label: string;
-  icon?: string;
+
+  groupSummary: AxisGroupSummary[];
+};
+
+export type AxisGroupSummary = {
+  axisSide: DirectionType;
+
+  groupIcon: string;
+  intensityLabel: string;
+  groupLabel: string;
+  groupDescription: string;
 };
 
 export type BoardInformation = {
   boardID: number;
-  evaluationAxisDict: Record<AxisType, EvaluationAxis>;
-  preferenceAxis: PreferenceAxis;
+  axisDict: Record<BoardAxisType, Axis>;
 
   neutralLabel: string[];
 };

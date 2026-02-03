@@ -1,11 +1,11 @@
+import type { BoardAxisType } from "@interfacesV02/type";
 import {
   getBundleDict,
   getGroupDict,
   getItemPositionDict,
-  type EvaluationAxisType,
 } from "./localStorage";
 
-export const useGetAxisData = (type: EvaluationAxisType, gorupSize: number) => {
+export const useGetAxisData = (type: BoardAxisType, gorupSize: number) => {
   return {
     group: getGroupDict(type, gorupSize),
     bundle: getBundleDict(type),

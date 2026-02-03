@@ -14,7 +14,7 @@ import { getItemSummary } from "@dataV02/itemSummary";
 import type { AxisData } from "@interfacesV02/type";
 
 const SwipeEvaluationBoard = () => {
-  const { vertical, horizontal } = useBoardStaticContext();
+  const { vertical, horizontal, boardInformation } = useBoardStaticContext();
   const { evaluationSlot, setEvaluationSlot } = useBoardSlotContext();
   const { currentItemID } = useBoardStepContext();
 
@@ -47,11 +47,12 @@ const SwipeEvaluationBoard = () => {
     const slot = data.slotDict[slotID];
 
     const slotType = slot.slotType;
-    const group = data.groupDict[slot.userAxisGroupID];
+    const groupSummary =
+      boardInformation.axisDict[axis].groupSummary[slot.userAxisGroupID];
 
     // 아이콘 - 그룹명 조합
-    const icon = group.groupSummary.groupIcon;
-    const groupLabel = group.groupSummary.groupLabel;
+    const icon = groupSummary.groupIcon;
+    const groupLabel = groupSummary.groupLabel;
 
     const dragDirection = direction[axis];
 
@@ -64,7 +65,7 @@ const SwipeEvaluationBoard = () => {
     ) {
       return renderGroupTitle({
         icon: icon,
-        intensity: group.groupSummary.intensityLabel,
+        intensity: groupSummary.intensityLabel,
         group: groupLabel,
       });
     }
@@ -76,7 +77,7 @@ const SwipeEvaluationBoard = () => {
       (dragDirection === "END" && slotType === "END_LABEL")
     ) {
       const d = dragDirection === "END" ? -1 : 1;
-      const a = group.axisSide === "END" ? -1 : 1;
+      const a = groupSummary.axisSide === "END" ? -1 : 1;
 
       const comparisonItemID = getComparisonItem(data, slotIDX + d) ?? 0;
       const comparisonLabel = d * a === 1 ? "더" : "덜";
