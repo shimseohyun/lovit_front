@@ -15,12 +15,12 @@ import useBoardStep from "@hooksV02/board/context/useBoardStep";
 import useViewport from "@hooksV02/useViewPort";
 
 export const BoardDataProvider = (props: ProviderProps) => {
-  const { children, boardInformation, checkingItemList = [] } = props;
+  const { children, boardInformation, pendingItemIDList = [] } = props;
 
   const boardSlot = useBoardSlot();
 
   const boardStep = useBoardStep({
-    checkingItemList: checkingItemList,
+    pendingItemIDList: pendingItemIDList,
   });
 
   const boardData = useBoardData(boardStep.currentItemID);

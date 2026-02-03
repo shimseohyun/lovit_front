@@ -1,8 +1,12 @@
 import type { ItemSummaryDict } from "@interfacesV02/data/system";
+import type { ItemIDList } from "@interfacesV02/data/user";
 
-export const getItemSummary = (itemID: number) => itemSummaryIdol[itemID];
+export const getItemSummary = (itemID: number) => IDOL_SUMMAR_LIST[itemID];
+export const getItemIDList = (): ItemIDList => {
+  return Object.keys(IDOL_SUMMAR_LIST).map(Number);
+};
 
-const itemSummaryIdol: ItemSummaryDict = {
+const IDOL_SUMMAR_LIST: ItemSummaryDict = {
   0: {
     itemSummaryID: 0,
     name: "아이린",

@@ -1,4 +1,5 @@
 import type {
+  ItemIDList,
   UserAxisBundle,
   UserAxisBundleDict,
   UserAxisGroup,
@@ -8,6 +9,7 @@ import type {
 } from "@interfacesV02/data/user";
 
 export type LocalStorageKey =
+  | "CHECKED_ITEM_LIST"
   | "HORIZONTAL_GROUP_DICT"
   | "HORIZONTAL_BUNDLE_DICT"
   | "HORIZONTAL_ITEM_DICT"
@@ -41,6 +43,19 @@ const itemKeyMap: Record<EvaluationAxisType, LocalStorageKey> = {
 const isPlainObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
+const getValueFromLocalStorage = <T>(key: LocalStorageKey, fallback: T): T => {
+  if (typeof window === "undefined") return fallback;
+
+  const raw = window.localStorage.getItem(key);
+  if (!raw) return fallback;
+
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+};
+
 /**
  * 로컬스토리지에서 dict를 안전하게 읽어오는 공용 함수
  * - 값이 없거나 파싱 실패면 fallback
@@ -73,6 +88,11 @@ const getDictFromLocalStorage = <T extends Record<number, unknown>>(
   }
 };
 
+const setValueToLocalStorage = <T>(key: LocalStorageKey, value: T) => {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(key, JSON.stringify(value));
+};
+
 const setDictToLocalStorage = <T extends Record<number, unknown>>(
   key: LocalStorageKey,
   dict: T,
@@ -81,7 +101,16 @@ const setDictToLocalStorage = <T extends Record<number, unknown>>(
   window.localStorage.setItem(key, JSON.stringify(dict));
 };
 
-/** ✅ Group */
+/** ItemList */
+export const getCheckedItemIDList = (): ItemIDList => {
+  return getValueFromLocalStorage<ItemIDList>("CHECKED_ITEM_LIST", []);
+};
+
+export const setCheckedItemList = (list: ItemIDList) => {
+  setValueToLocalStorage("CHECKED_ITEM_LIST", list);
+};
+
+/**  Group */
 export const getGroupDict = (
   type: EvaluationAxisType,
   groupSize: number,
@@ -116,7 +145,7 @@ export const setGroupDict = (
   setDictToLocalStorage(key, dict);
 };
 
-/** ✅ Bundle */
+/**  Bundle */
 export const getBundleDict = (type: EvaluationAxisType): UserAxisBundleDict => {
   const key = bundleKeyMap[type];
   return getDictFromLocalStorage<UserAxisBundleDict>(key, {});
@@ -130,7 +159,7 @@ export const setBundleDict = (
   setDictToLocalStorage(key, dict);
 };
 
-/** ✅ ItemPosition */
+/**  ItemPosition */
 export const getItemPositionDict = (
   type: EvaluationAxisType,
 ): UserAxisItemPositionDict => {
@@ -146,9 +175,7 @@ export const setItemPositionDict = (
   setDictToLocalStorage(key, dict);
 };
 
-/**
- * 1) 새 번들을 dict에 추가
- */
+/** 새 번들을 dict에 추가*/
 export const addBundleToDict = (
   type: EvaluationAxisType,
   bundleDict: UserAxisBundleDict,
@@ -169,9 +196,15 @@ export const addBundleToDict = (
   setBundleDict(type, nextBundleDict);
 };
 
-/**
- * 1) 새 번들을 dict에 추가
- */
+/** 새 아이템을 체크 목록에 추가 */
+export const addItemToCheckedItemList = (newItem: number) => {
+  const checkedItemList = getCheckedItemIDList();
+  const nextCheckedItemList = [...checkedItemList, newItem];
+
+  setCheckedItemList(nextCheckedItemList);
+};
+
+/** 새 아이템을 포지션에 추가 */
 export const addItemPositionToDict = (
   type: EvaluationAxisType,
   itemPositionDict: UserAxisItemPositionDict,
@@ -186,9 +219,7 @@ export const addItemPositionToDict = (
   setItemPositionDict(type, nextItemPositionDcit);
 };
 
-/**
- * 2) 기존 번들의 내용을 수정 (patch만)
- */
+/** 2) 기존 번들의 내용을 수정 (patch만) */
 export const updateBundleInDict = (
   type: EvaluationAxisType,
   bundleDict: UserAxisBundleDict,
@@ -211,9 +242,7 @@ export const updateBundleInDict = (
   setBundleDict(type, nextBundleDict);
 };
 
-/**
- * 3) 기존 그룹의 내용을 수정 (patch만)
- */
+/** 3) 기존 그룹의 내용을 수정 (patch만) */
 export const updateGroupInDict = (
   type: EvaluationAxisType,
   groupDict: UserAxisGroupDict,

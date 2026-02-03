@@ -4,6 +4,7 @@ import {
   useBoardStaticContext,
   useBoardStepContext,
 } from "./context/context";
+import { addItemToCheckedItemList } from "@hooksV02/data/localStorage";
 
 const useBoardControl = () => {
   const { preference, vertical, horizontal } = useBoardStaticContext();
@@ -25,6 +26,7 @@ const useBoardControl = () => {
 
     const itemID = currentItemID;
 
+    addItemToCheckedItemList(itemID);
     pushItemToAxis(itemID, p, "PREFERENCE", preference);
     pushItemToAxis(itemID, v, "VERTICAL", vertical);
     pushItemToAxis(itemID, h, "HORIZONTAL", horizontal);

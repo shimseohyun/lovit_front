@@ -6,14 +6,14 @@ import { BoardDataProvider } from "@hooksV02/board/context/BoardDataProvider";
 import EvaluationButton from "./components/board/EvaluationButton";
 import Board from "./components/board/Board";
 import TestTool from "@componentsV02/test/TestTool";
+import useGetPendingItemIDList from "@hooksV02/data/useGetPendingItemIDList";
 
 const EvaluationPage = () => {
-  const checkingItemList: number[] = [0, 1, 2, 3, 4];
-
+  const { pendingItemIDList } = useGetPendingItemIDList();
   return (
     <BoardDataProvider
       boardInformation={FACE_BOARD_INFO}
-      checkingItemList={checkingItemList}
+      pendingItemIDList={pendingItemIDList}
     >
       <TestTool />
       <S.Container>

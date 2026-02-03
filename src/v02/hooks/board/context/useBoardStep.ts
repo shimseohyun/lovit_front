@@ -5,13 +5,13 @@ import { useState } from "react";
 type BoardStep = "EVALUATION_TOUCH" | "EVALUATION_SWIPE" | "PREFERENCE";
 
 type Parms = {
-  checkingItemList: number[];
+  pendingItemIDList: number[];
 };
 
 const useBoardStep = (parms: Parms) => {
-  const { checkingItemList } = parms;
+  const { pendingItemIDList } = parms;
 
-  const final = checkingItemList.length;
+  const final = pendingItemIDList.length;
   const [currentItemIDX, setCurrentItemIDX] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<BoardStep>("EVALUATION_TOUCH");
 
@@ -28,6 +28,7 @@ const useBoardStep = (parms: Parms) => {
       setIsFin(true);
     } else {
       setCurrentItemIDX(currentItemIDX + 1);
+      setCurrentStep("EVALUATION_TOUCH");
     }
   };
 
@@ -35,7 +36,7 @@ const useBoardStep = (parms: Parms) => {
     setIsFin(true);
   };
 
-  const currentItemID = checkingItemList[currentItemIDX] ?? 0;
+  const currentItemID = pendingItemIDList[currentItemIDX] ?? 0;
 
   return {
     isFin,

@@ -8,6 +8,8 @@ type UserAxisGroupID = PrimaryKey;
 type UserAxisBundleID = PrimaryKey;
 type UserAxisSlotID = PrimaryKey;
 
+export type ItemIDList = ItemSummaryID[];
+
 export type AxisGroupSummary = {
   type: "EVALUATION" | "PREFERENCE";
   groupIcon: string;

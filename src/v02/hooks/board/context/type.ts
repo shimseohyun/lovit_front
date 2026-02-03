@@ -7,7 +7,7 @@ import type { UseBoardSlotReturn } from "@hooksV02/board/context/useBoardSlot";
 import type { UseBoardStepReturn } from "@hooksV02/board/context/useBoardStep";
 
 export type ProviderParams = {
-  checkingItemList: number[];
+  pendingItemIDList: number[];
   boardInformation: BoardInformation;
 };
 
