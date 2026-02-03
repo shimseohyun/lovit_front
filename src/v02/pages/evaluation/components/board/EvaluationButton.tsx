@@ -1,23 +1,18 @@
 import BottomButton from "@componentsV02/button/BottomButton";
 import FillButton from "@componentsV02/button/FillButton";
-import {
-  useBoardSlotContext,
-  useBoardStaticContext,
-  useBoardStepContext,
-} from "@hooksV02/board/context/context";
+import { useBoardStepContext } from "@hooksV02/board/context/context";
+import useBoardControl from "@hooksV02/board/useBoardControl";
 
 const EvaluationButton = () => {
-  const { pushItem } = useBoardStaticContext();
-  const { evaluationSlot, preferenceSlot } = useBoardSlotContext();
-  const { isFin, currentStep, navigatePreference } = useBoardStepContext();
+  const { isFin, currentStep } = useBoardStepContext();
+  const { navigatePreferenceSwipe, confrimCurrentItem } = useBoardControl();
 
   const onClickNavigatePreference = () => {
-    navigatePreference();
+    navigatePreferenceSwipe();
   };
 
-  const onClickNavigateNextStep = () => {
-    if (evaluationSlot === undefined || preferenceSlot === undefined) return;
-    pushItem(evaluationSlot, preferenceSlot);
+  const onClickNavigateNextIDX = () => {
+    confrimCurrentItem();
   };
 
   if (isFin) {
@@ -35,7 +30,7 @@ const EvaluationButton = () => {
         <FillButton
           type="button"
           buttonType={"PRIMARY"}
-          onClick={onClickNavigateNextStep}
+          onClick={onClickNavigateNextIDX}
         >
           확인
         </FillButton>

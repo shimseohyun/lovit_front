@@ -8,11 +8,13 @@ import {
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
+import useBoardControl from "@hooksV02/board/useBoardControl";
 
 const TouchEvaluationBoard = () => {
   const { vertical, horizontal } = useBoardStaticContext();
 
-  const { currentItemID, navigateEvaluationSwipe } = useBoardStepContext();
+  const { currentItemID } = useBoardStepContext();
+  const { navigateEvaluationSwipe } = useBoardControl();
 
   const item = getItemSummary(currentItemID);
   const Title = () => {
@@ -31,7 +33,7 @@ const TouchEvaluationBoard = () => {
     const vSlotIDX = getSlotCenterIDX(v, vertical.groupDict);
     const hSlotIDX = getSlotCenterIDX(h, horizontal.groupDict);
 
-    navigateEvaluationSwipe({ VERTICAL: vSlotIDX, HORIZONTAL: hSlotIDX });
+    navigateEvaluationSwipe(vSlotIDX, hSlotIDX);
   };
 
   return (
