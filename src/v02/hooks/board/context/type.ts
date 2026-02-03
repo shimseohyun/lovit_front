@@ -2,9 +2,9 @@ import type { PropsWithChildren } from "react";
 
 import type { BoardInformation } from "@interfacesV02/data/system";
 
-import type { UseBoardDataReturn } from "@hooksV02/board/useBoardData";
-import type { UseBoardSlotReturn } from "@hooksV02/board/useBoardSlot";
-import type { UseBoardStepReturn } from "@hooksV02/board/useBoardStep";
+import type { UseBoardDataReturn } from "@hooksV02/board/context/useBoardData";
+import type { UseBoardSlotReturn } from "@hooksV02/board/context/useBoardSlot";
+import type { UseBoardStepReturn } from "@hooksV02/board/context/useBoardStep";
 import type { EvaluationSlot, PreferenceSlot } from "@interfacesV02/type";
 
 export type ProviderParams = {

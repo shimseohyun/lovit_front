@@ -1,4 +1,4 @@
-import type { AxisData } from "@hooksV02/board/useBoardData";
+import type { AxisData } from "@interfacesV02/type";
 import {
   addBundleToDict,
   addItemPositionToDict,

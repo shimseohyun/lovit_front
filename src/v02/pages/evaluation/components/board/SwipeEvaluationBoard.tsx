@@ -11,7 +11,7 @@ import {
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
-import type { AxisData } from "@hooksV02/board/useBoardData";
+import type { AxisData } from "@interfacesV02/type";
 
 const SwipeEvaluationBoard = () => {
   const { vertical, horizontal } = useBoardStaticContext();

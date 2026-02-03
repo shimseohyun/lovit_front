@@ -14,7 +14,7 @@ import { useBoardStepContext } from "@hooksV02/board/context/context";
 import AxisMarker from "./marker/AxisMarker";
 import CurrentMarker from "./marker/CurrentMarker";
 import { getItemSummary } from "@dataV02/itemSummary";
-import type { AxisData } from "@hooksV02/board/useBoardData";
+import type { AxisData } from "@interfacesV02/type";
 
 type Parms = {
   boardSize: number;

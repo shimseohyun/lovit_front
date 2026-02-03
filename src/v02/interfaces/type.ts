@@ -1,4 +1,18 @@
-import type { AxisData } from "@hooksV02/board/useBoardData";
+import type {
+  UserAxisBundleDict,
+  UserAxisGroupDict,
+  UserAxisItemPositionDict,
+  UserAxisSlotDict,
+  UserAxisSlotList,
+} from "./data/user";
+
+export type AxisData = {
+  groupDict: UserAxisGroupDict;
+  bundleDict: UserAxisBundleDict;
+  itemPositionDict: UserAxisItemPositionDict;
+  slotList: UserAxisSlotList;
+  slotDict: UserAxisSlotDict;
+};
 
 export type AxisType = "HORIZONTAL" | "VERTICAL";
 export type DirectionType = "END" | "START";

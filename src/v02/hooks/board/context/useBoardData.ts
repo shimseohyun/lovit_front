@@ -7,20 +7,12 @@ import { useGetAxisData } from "@hooksV02/data/useGetAxisData";
 import type {
   UserAxisBundleDict,
   UserAxisGroupDict,
-  UserAxisItemPositionDict,
   UserAxisSlot,
   UserAxisSlotDict,
   UserAxisSlotList,
 } from "@interfacesV02/data/user";
 import createAxisSlot from "@utilsV02/createAxisSlot";
-
-export type AxisData = {
-  groupDict: UserAxisGroupDict;
-  bundleDict: UserAxisBundleDict;
-  itemPositionDict: UserAxisItemPositionDict;
-  slotList: UserAxisSlotList;
-  slotDict: UserAxisSlotDict;
-};
+import type { AxisData } from "@interfacesV02/type";
 
 /**
  * ✅ calcKey(= currentItemID 같은 키)가 바뀔 때만
