@@ -35,12 +35,6 @@ const useGetResult = (parms: Parms) => {
   let label = "";
   let img = "";
 
-  console.log(
-    resultHorizontal,
-    resultVertical,
-    isNeutralHorizontal,
-    isNeutralVertical,
-  );
   if (resultHorizontal === 1 && resultVertical === 1) {
     if (isNeutralHorizontal && isNeutralVertical) {
       label = "균형잡힌 미남이 좋아";

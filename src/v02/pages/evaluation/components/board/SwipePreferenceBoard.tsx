@@ -10,14 +10,13 @@ import {
   useBoardStepContext,
 } from "@hooksV02/board/context/context";
 
-import type { AxisData } from "@hooksV02/board/useHandleAxisData";
-
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 
 import HeartRateInput from "@componentsV02/starRate/HeartRateInput";
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
+import type { AxisData } from "@hooksV02/board/useBoardData";
 
 const SwipePreferenceBoard = () => {
   const { preference } = useBoardStaticContext();

@@ -1,7 +1,7 @@
 import * as S from "./Board.styled";
 
 import { type AxisType, type SlotDict } from "@interfacesV02/type";
-import type { AxisData } from "@hooksV02/board/useHandleAxisData";
+
 import {
   useBoardSlotContext,
   useBoardStaticContext,
@@ -11,6 +11,7 @@ import {
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
+import type { AxisData } from "@hooksV02/board/useBoardData";
 
 const SwipeEvaluationBoard = () => {
   const { vertical, horizontal } = useBoardStaticContext();

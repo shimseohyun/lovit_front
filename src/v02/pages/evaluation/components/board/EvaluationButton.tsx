@@ -8,18 +8,16 @@ import {
 
 const EvaluationButton = () => {
   const { pushItem } = useBoardStaticContext();
-  const { isFin, currentStep, confrimCurrentStep, navigatePreference } =
-    useBoardStepContext();
-  const { resetSlot } = useBoardSlotContext();
+  const { evaluationSlot, preferenceSlot } = useBoardSlotContext();
+  const { isFin, currentStep, navigatePreference } = useBoardStepContext();
 
   const onClickNavigatePreference = () => {
     navigatePreference();
   };
 
   const onClickNavigateNextStep = () => {
-    pushItem();
-    resetSlot();
-    confrimCurrentStep();
+    if (evaluationSlot === undefined || preferenceSlot === undefined) return;
+    pushItem(evaluationSlot, preferenceSlot);
   };
 
   if (isFin) {

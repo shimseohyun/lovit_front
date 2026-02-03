@@ -30,6 +30,7 @@ const useBoardStep = (parms: Parms) => {
 
   const confrimCurrentStep = () => {
     const next = currentItemIDX + 1;
+
     if (next === final) {
       setIsFin(true);
       setEvaluationSlot();

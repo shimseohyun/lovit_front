@@ -18,12 +18,12 @@ export type AxisGroupSummary = {
 
 export interface UserAxisGroup {
   userAxisGroupID: UserAxisGroupID;
+  bundleList: UserAxisBundleID[];
 
+  // 지워도 될것같음
   groupSummary: AxisGroupSummary;
-
   axisSide: DirectionType;
   intensityLevel: number;
-  bundleList: UserAxisBundleID[];
 }
 
 export interface UserAxisBundle {
@@ -52,6 +52,7 @@ export interface UserAxisSlot {
 
   userAxisGroupID: UserAxisGroupID;
   userAxisBundleID?: UserAxisBundleID; // "ITEM_LIST" 에서만 존재
+  userAxisBundle?: number[];
 }
 
 export interface UserAxisPoint {
@@ -65,6 +66,7 @@ export type UserAxisItemPositionDict = Record<
   ItemSummaryID,
   UserAxisItemPosition
 >;
+
 export type UserAxisPointDict = Record<ItemSummaryID, UserAxisPoint>;
 
 export type UserAxisSlotList = number[];

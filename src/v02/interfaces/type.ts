@@ -1,4 +1,4 @@
-import type { AxisData } from "@hooksV02/board/useHandleAxisData";
+import type { AxisData } from "@hooksV02/board/useBoardData";
 
 export type AxisType = "HORIZONTAL" | "VERTICAL";
 export type DirectionType = "END" | "START";

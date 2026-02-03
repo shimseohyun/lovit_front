@@ -1,23 +1,19 @@
 import type { PropsWithChildren } from "react";
 
-import type { RoughAxisData } from "@interfacesV02/data/user";
 import type { BoardInformation } from "@interfacesV02/data/system";
 
 import type { UseBoardDataReturn } from "@hooksV02/board/useBoardData";
 import type { UseBoardSlotReturn } from "@hooksV02/board/useBoardSlot";
 import type { UseBoardStepReturn } from "@hooksV02/board/useBoardStep";
+import type { EvaluationSlot, PreferenceSlot } from "@interfacesV02/type";
 
 export type ProviderParams = {
   checkingItemList: number[];
   boardInformation: BoardInformation;
-
-  horizontalRough?: RoughAxisData;
-  verticalRough?: RoughAxisData;
-  preferenceRough?: RoughAxisData;
 };
 
 export type BoardStaticValue = {
-  pushItem: () => void;
+  pushItem: (e: EvaluationSlot, p: PreferenceSlot) => void;
   boardInformation: BoardInformation;
   boardSize: number;
   stepPX: number;

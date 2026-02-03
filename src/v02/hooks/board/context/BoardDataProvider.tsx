@@ -13,24 +13,11 @@ import useBoardSlot from "@hooksV02/board/useBoardSlot";
 import useBoardStep from "@hooksV02/board/useBoardStep";
 
 import useViewport from "@hooksV02/useViewPort";
+import pushItemToAxis from "@utilsV02/pushItemToAxis";
+import type { EvaluationSlot, PreferenceSlot } from "@interfacesV02/type";
 
 export const BoardDataProvider = (props: ProviderProps) => {
-  const {
-    children,
-    horizontalRough,
-    verticalRough,
-    preferenceRough,
-    boardInformation,
-
-    checkingItemList = [],
-  } = props;
-
-  const boardData = useBoardData({
-    horizontalRough,
-    verticalRough,
-    preferenceRough,
-    boardInformation,
-  });
+  const { children, boardInformation, checkingItemList = [] } = props;
 
   const boardSlot = useBoardSlot();
 
@@ -39,21 +26,28 @@ export const BoardDataProvider = (props: ProviderProps) => {
     setEvaluationSlot: boardSlot.setEvaluationSlot,
   });
 
-  const pushItem = () => {
-    if (
-      boardSlot.preferenceSlot?.preference === undefined ||
-      boardSlot.evaluationSlot === undefined
-    )
+  const boardData = useBoardData(boardStep.currentItemID);
+
+  const pushItem = (
+    evaluationSlot: EvaluationSlot,
+    preferenceSlot: PreferenceSlot,
+  ) => {
+    if (preferenceSlot.preference === undefined || evaluationSlot === undefined)
       return;
 
-    const p = boardSlot.preferenceSlot.preference;
-    const v = boardSlot.evaluationSlot.VERTICAL;
-    const h = boardSlot.evaluationSlot.HORIZONTAL;
+    const p = preferenceSlot.preference;
+    const v = evaluationSlot.VERTICAL;
+    const h = evaluationSlot.HORIZONTAL;
 
     const itemID = boardStep.currentItemID;
-    boardData.preference.pushItem(itemID, p);
-    boardData.vertical.pushItem(itemID, v);
-    boardData.horizontal.pushItem(itemID, h);
+
+    pushItemToAxis(itemID, p, "PREFERENCE", boardData.preference);
+    pushItemToAxis(itemID, v, "VERTICAL", boardData.vertical);
+    pushItemToAxis(itemID, h, "HORIZONTAL", boardData.horizontal);
+
+    boardStep.confrimCurrentStep();
+
+    // boardSlot.resetSlot();
   };
 
   const size = useViewport();
@@ -71,8 +65,6 @@ export const BoardDataProvider = (props: ProviderProps) => {
     [boardInformation, boardData],
   );
 
-  // ✅ slot/step은 따로 provider로 분리
-  // (가능하면 boardSlot / boardStep도 내부에서 useMemo로 안정화되면 더 좋아요)
   const slotValue = useMemo(() => boardSlot, [boardSlot]);
   const stepValue = useMemo(() => boardStep, [boardStep]);
 
