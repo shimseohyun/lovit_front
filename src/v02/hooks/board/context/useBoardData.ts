@@ -8,6 +8,7 @@ import type {
   UserAxisBundleDict,
   UserAxisGroupDict,
   UserAxisSlot,
+  UserAxisSlotByGroupDict,
   UserAxisSlotDict,
   UserAxisSlotList,
 } from "@interfacesV02/data/user";
@@ -35,6 +36,7 @@ const useBoardData = (calcKey?: unknown) => {
       itemPositionDict: h.itemPosition,
       slotList: hSlot.slotList,
       slotDict: hSlot.slotDict,
+      slotByGroupDict: hSlot.slotByGroupDict,
     };
 
     const vertical: AxisData = {
@@ -44,6 +46,7 @@ const useBoardData = (calcKey?: unknown) => {
       itemPositionDict: v.itemPosition,
       slotList: vSlot.slotList,
       slotDict: vSlot.slotDict,
+      slotByGroupDict: vSlot.slotByGroupDict,
     };
 
     const preference: AxisData = {
@@ -53,6 +56,7 @@ const useBoardData = (calcKey?: unknown) => {
       itemPositionDict: p.itemPosition,
       slotList: pSlot.slotList,
       slotDict: pSlot.slotDict,
+      slotByGroupDict: pSlot.slotByGroupDict,
     };
 
     const itemList: number[] = Object.keys(vertical.itemPositionDict).map(
@@ -78,6 +82,7 @@ const getSlotData = (
 
   const slotList: UserAxisSlotList = [];
   const slotDict: UserAxisSlotDict = {};
+  const slotByGroupDict: UserAxisSlotByGroupDict = {};
 
   let slotCursor = 0;
 
@@ -85,11 +90,13 @@ const getSlotData = (
     const group = groupDict[groupID];
     const bundleCount = group.bundleList.length;
 
+    let startSlotIDX = slotCursor;
     const pushSlots = (slots: UserAxisSlot[]) => {
       slots.forEach((slot) => {
         slotDict[slot.slotID] = slot;
         slotList.push(slot.slotID);
       });
+
       slotCursor += slots.length;
     };
 
@@ -102,10 +109,7 @@ const getSlotData = (
         [],
       );
       pushSlots(slots);
-      return;
-    }
-
-    if (bundleCount === 1) {
+    } else if (bundleCount === 1) {
       const bundleID = group.bundleList[0];
 
       const slots = createAxisSlot(
@@ -116,20 +120,28 @@ const getSlotData = (
         bundleDict[bundleID].itemList,
       );
       pushSlots(slots);
-      return;
+    } else {
+      group.bundleList.forEach((bundleID, bundleIDX) => {
+        const slots = createAxisSlot(
+          slotCursor,
+          [bundleIDX === 0 ? "START_LABEL" : "BETWEEN", "ITEM_LIST"],
+          groupID,
+          bundleID,
+          bundleDict[bundleID].itemList,
+        );
+        pushSlots(slots);
+      });
     }
 
-    group.bundleList.forEach((bundleID, bundleIDX) => {
-      const slots = createAxisSlot(
-        slotCursor,
-        [bundleIDX === 0 ? "START_LABEL" : "BETWEEN", "ITEM_LIST"],
-        groupID,
-        bundleID,
-        bundleDict[bundleID].itemList,
-      );
-      pushSlots(slots);
-    });
+    let endSlotIDX = slotCursor - 1;
+
+    slotByGroupDict[groupID] = {
+      groupID: groupID,
+      slotCount: endSlotIDX - startSlotIDX + 1,
+      startSlotIDX: startSlotIDX,
+      endSlotIDX: endSlotIDX,
+    };
   });
 
-  return { slotDict, slotList };
+  return { slotDict, slotList, slotByGroupDict };
 };

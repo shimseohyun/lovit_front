@@ -27,9 +27,9 @@ const useBoardStep = (parms: Parms) => {
     if (next === final) {
       setIsFin(true);
     } else {
-      setCurrentItemIDX(currentItemIDX + 1);
       setCurrentStep("EVALUATION_TOUCH");
     }
+    setCurrentItemIDX(currentItemIDX + 1);
   };
 
   const setIsFinTrue = () => {

@@ -5,18 +5,59 @@ import { type AxisType, type SlotDict } from "@interfacesV02/type";
 import {
   useBoardSlotContext,
   useBoardStaticContext,
-  useBoardStepContext,
 } from "@hooksV02/board/context/context";
 
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
 import type { AxisData } from "@interfacesV02/type";
+import { useEffect, useState } from "react";
 
 const SwipeEvaluationBoard = () => {
   const { vertical, horizontal, boardInformation } = useBoardStaticContext();
   const { evaluationSlot, setEvaluationSlot } = useBoardSlotContext();
-  const { currentItemID } = useBoardStepContext();
+
+  const [onboarding, setOnBoarding] = useState<AxisType | undefined>(undefined);
+
+  const ONBOARDING_STEP_MS = 1100;
+
+  useEffect(() => {
+    let timerID: number | null = null;
+    let isCanceled = false;
+
+    const onboardingAxisList: AxisType[] = [];
+    if (!evaluationSlot) return;
+
+    if (
+      horizontal.slotDict[evaluationSlot.HORIZONTAL].userAxisBundleID !==
+      undefined
+    ) {
+      onboardingAxisList.push("HORIZONTAL");
+    }
+
+    if (
+      vertical.slotDict[evaluationSlot.VERTICAL].userAxisBundleID !== undefined
+    ) {
+      onboardingAxisList.push("VERTICAL");
+    }
+
+    const run = (idx: number) => {
+      if (isCanceled) return;
+      if (idx >= onboardingAxisList.length) {
+        setOnBoarding(undefined);
+        return;
+      }
+      setOnBoarding(onboardingAxisList[idx]);
+      timerID = window.setTimeout(() => run(idx + 1), ONBOARDING_STEP_MS);
+    };
+
+    run(0);
+
+    return () => {
+      isCanceled = true;
+      if (timerID !== null) window.clearTimeout(timerID);
+    };
+  }, []);
 
   if (evaluationSlot === undefined) return;
 
@@ -28,7 +69,7 @@ const SwipeEvaluationBoard = () => {
   const {
     dragDirection: direction,
     swipeBoardProps,
-    dragAxis,
+    dragAxis: realDragAxis,
   } = useSwipeBoard({
     slot: evaluationSlot,
     getSlot: getSlot,
@@ -38,8 +79,7 @@ const SwipeEvaluationBoard = () => {
     },
   });
 
-  const isFirst = direction.HORIZONTAL === null && direction.VERTICAL === null;
-
+  const dragAxis = onboarding === undefined ? realDragAxis : onboarding;
   const getSubTitle = (axis: AxisType, data: AxisData) => {
     const slotIDX = evaluationSlot[axis];
 
@@ -58,7 +98,6 @@ const SwipeEvaluationBoard = () => {
 
     // 그룹 라벨만 출력
     if (
-      isFirst ||
       slotType === "CENTER_LABEL" ||
       (dragDirection === "END" && slotType === "START_LABEL") ||
       (dragDirection === "START" && slotType === "END_LABEL")
@@ -102,15 +141,10 @@ const SwipeEvaluationBoard = () => {
     }
   };
 
-  const item = getItemSummary(currentItemID);
-
   const Title = () => {
     return (
       <S.BoardTitleContainer>
-        <S.BoardTitleItemSection>
-          <h6>{item.category}</h6>
-          <h3>{item.name}</h3>
-        </S.BoardTitleItemSection>
+        <S.BoardTitleMain>적절한 위치에 놓아주세요!</S.BoardTitleMain>
         <S.BoardTitleSubContainer>
           {/* 상하 */}
           <S.BoardTitleSubWrapper
@@ -133,11 +167,13 @@ const SwipeEvaluationBoard = () => {
   return (
     <>
       <Title />
+
+      <S.SwipeBoardContainer>
+        <SwipeBoard onboarding={onboarding} {...swipeBoardProps} />
+      </S.SwipeBoardContainer>
       <S.BoardTitleDescription>
         상하좌우로 드래그해서 세부적인 분류를 할 수 있어요.
       </S.BoardTitleDescription>
-
-      <SwipeBoard {...swipeBoardProps} />
     </>
   );
 };

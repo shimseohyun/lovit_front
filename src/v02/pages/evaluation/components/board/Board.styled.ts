@@ -7,7 +7,7 @@ export const BoardTitleContainer = styled.div`
   align-items: center;
 
   width: 100%;
-  padding: 10px 16px 0 16px;
+  padding: 10px 16px 0px 16px;
 
   ${(p) => css`
     ${p.theme.fonts.head1}
@@ -17,9 +17,10 @@ export const BoardTitleContainer = styled.div`
 
 export const BoardTitleMain = styled.div`
   padding-top: 4px;
+  padding-bottom: 8px;
   ${(p) => css`
-    ${p.theme.fonts.head1}
-    color:${p.theme.fontColors.titleStrongest};
+    ${p.theme.fonts.head3}
+    color:${p.theme.fontColors.textLighter};
   `}
 `;
 
@@ -31,6 +32,8 @@ export const BoardTitleDescription = styled.div`
   width: 100%;
   padding-top: 4px;
   padding-bottom: 12px;
+
+  flex-shrink: 0;
 
   ${(p) => css`
     ${p.theme.fonts.body2}
@@ -59,8 +62,8 @@ export const BoardTitleItemSection = styled.div`
 `;
 
 export const BoardTitleItemImg = styled.img`
-  width: 150px;
-  height: 200px;
+  width: calc(3 * 45px);
+  height: calc(4 * 45px);
   border-radius: 8px;
   aspect-ratio: 3/4;
   margin-bottom: 12px;
@@ -76,7 +79,7 @@ export const BoardTitleSubContainer = styled.h1`
   align-items: center;
 
   padding: 8px 0 4px 0;
-  gap: 4px;
+  gap: 8px;
 `;
 
 export const BoardTitleSubWrapper = styled.div<{ $isSelected: boolean }>`
@@ -94,7 +97,7 @@ export const BoardTitleSubWrapper = styled.div<{ $isSelected: boolean }>`
   ${({ $isSelected }) =>
     !$isSelected &&
     css`
-      opacity: 30%;
+      opacity: 15%;
     `}
 `;
 
@@ -113,6 +116,7 @@ export const BoardRateContaienr = styled.div`
   width: 100%;
   padding: 10px 24px 20px 24px;
 
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -123,4 +127,28 @@ export const BoardRateContaienr = styled.div`
     ${p.theme.fonts.body2B}
     color: ${p.theme.fontColors.textLight};
   `}
+`;
+
+export const SwipePreferenceBoardContainer = styled.div`
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding-top: 20px;
+  overflow: visible;
+`;
+
+export const SwipeBoardContainer = styled.div`
+  width: 100%;
+  height: auto;
+
+  margin-top: 10px;
+
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
 `;

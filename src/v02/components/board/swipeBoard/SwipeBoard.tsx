@@ -20,6 +20,7 @@ import { getItemSummary } from "@dataV02/itemSummary";
 import type { AxisData } from "@interfacesV02/type";
 
 type Parms = {
+  onboarding?: AxisType;
   boardSize: number;
   stepPX: number;
   slot: SlotDict;
@@ -35,11 +36,12 @@ type Parms = {
 
 const SwipeBoard = (parms: Parms) => {
   const {
+    onboarding,
     boardSize,
     stepPX,
 
-    dragAxis,
-    bind,
+    dragAxis: realDragAxis,
+    bind: realBind,
     onPointerDown,
     onTransitionEnd,
 
@@ -63,6 +65,37 @@ const SwipeBoard = (parms: Parms) => {
     );
   };
 
+  const dragAxis = onboarding === undefined ? realDragAxis : onboarding;
+  const bind = onboarding === undefined ? realBind : {};
+
+  const renderAxisLabel = (axis: AxisType, data: AxisData) => {
+    return (
+      <S.LabelConatiner $axis={axis} $size={stepPX}>
+        {Object.keys(data.groupDict).map((groupID) => {
+          const groupSummary =
+            boardInformation.axisDict[data.type].groupSummary[Number(groupID)];
+
+          const slotCount = data.slotByGroupDict[Number(groupID)].slotCount;
+
+          return (
+            <S.LabelWrapper
+              key={groupID}
+              $axis={axis}
+              $size={stepPX * (slotCount - 1)}
+              style={{ opacity: isSolo || dragAxis === axis ? 100 : 0 }}
+            >
+              {slotCount === 1 || (
+                <S.Label $axis={axis}>
+                  {groupSummary.groupIcon} {groupSummary.intensityLabel}{" "}
+                  {groupSummary.groupLabel}
+                </S.Label>
+              )}
+            </S.LabelWrapper>
+          );
+        })}
+      </S.LabelConatiner>
+    );
+  };
   const renderAxisMarker = (
     axis: AxisType,
     v: UserAxisSlot,
@@ -144,6 +177,7 @@ const SwipeBoard = (parms: Parms) => {
             $position={getTranslate(currentSlot, axis)}
             $axis={axis}
           >
+            {renderAxisLabel(axis, data)}
             {data.slotList.map((slotID, vIDX) => (
               <S.BoardAxisItem
                 key={`${axis}-${vIDX}`}

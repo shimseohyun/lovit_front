@@ -43,6 +43,13 @@ export interface UserAxisSlot {
   userAxisBundle?: number[];
 }
 
+export interface UserAxisSlotByGroup {
+  groupID: number;
+  startSlotIDX: number;
+  endSlotIDX: number;
+  slotCount: number;
+}
+
 export interface UserAxisPoint {
   percentage: number;
   groupID: number;
@@ -59,3 +66,8 @@ export type UserAxisPointDict = Record<ItemSummaryID, UserAxisPoint>;
 
 export type UserAxisSlotList = number[];
 export type UserAxisSlotDict = Record<UserAxisSlotID, UserAxisSlot>;
+
+export type UserAxisSlotByGroupDict = Record<
+  UserAxisGroupID,
+  UserAxisSlotByGroup
+>;

@@ -2,6 +2,7 @@ import type {
   UserAxisBundleDict,
   UserAxisGroupDict,
   UserAxisItemPositionDict,
+  UserAxisSlotByGroupDict,
   UserAxisSlotDict,
   UserAxisSlotList,
 } from "./data/user";
@@ -13,6 +14,7 @@ export type AxisData = {
   itemPositionDict: UserAxisItemPositionDict;
   slotList: UserAxisSlotList;
   slotDict: UserAxisSlotDict;
+  slotByGroupDict: UserAxisSlotByGroupDict;
 };
 
 export type AxisType = "HORIZONTAL" | "VERTICAL";

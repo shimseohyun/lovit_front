@@ -45,7 +45,7 @@ const EvaluationBoard = (parms: Parms) => {
 
   return (
     <>
-      <S.BoardContainer $size={boardSize - 24}>
+      <S.BoardContainer $size={boardSize - 48}>
         <S.BoardGrid $cols={6} $rows={6} $holePx={20}>
           {[0, 1, 2, -1, 3, 4, 5].map((r, rIDX) => {
             const rowInfo = boardInformation.axisDict["VERTICAL"];

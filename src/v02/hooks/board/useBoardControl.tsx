@@ -5,6 +5,7 @@ import {
   useBoardStepContext,
 } from "./context/context";
 import { addItemToCheckedItemList } from "@hooksV02/data/localStorage";
+import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 
 const useBoardControl = () => {
   const { preference, vertical, horizontal } = useBoardStaticContext();
@@ -34,8 +35,19 @@ const useBoardControl = () => {
 
   // 평가 스와이프로 이동
   const navigateEvaluationSwipe = (v: number, h: number) => {
-    navigateStep("EVALUATION_SWIPE");
-    setEvaluationSlot({ VERTICAL: v, HORIZONTAL: h });
+    const vIsFirst = vertical.slotByGroupDict[v].slotCount === 1;
+    const hIsFirst = horizontal.slotByGroupDict[h].slotCount === 1;
+
+    const vSlotIDX = getSlotCenterIDX(v, vertical.slotByGroupDict);
+    const hSlotIDX = getSlotCenterIDX(h, horizontal.slotByGroupDict);
+
+    setEvaluationSlot({ VERTICAL: vSlotIDX, HORIZONTAL: hSlotIDX });
+
+    if (vIsFirst && hIsFirst) {
+      navigateStep("PREFERENCE");
+    } else {
+      navigateStep("EVALUATION_SWIPE");
+    }
   };
 
   // 선호 스와이프로 이동

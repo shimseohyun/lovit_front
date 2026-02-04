@@ -10,17 +10,16 @@ const Spot = styled.div<{ $isCurrent: boolean }>`
   top: 50%;
 
   border-radius: 6px;
+  width: 6px;
+  height: 6px;
+
   ${(p) => {
     if (p.$isCurrent) {
       return css`
-        width: 8px;
-        height: 8px;
         background-color: ${p.theme.strokeColors.strokeStorngest};
       `;
     } else {
       return css`
-        width: 4px;
-        height: 4px;
         background-color: ${p.theme.strokeColors.strokeLight};
       `;
     }
@@ -32,6 +31,8 @@ const MarkerCotainer = styled.div<{
   $axis: AxisType;
   $isVisible: boolean;
 }>`
+  transition: opacity ease-out 120ms;
+
   opacity: 100%;
   ${({ $isVisible }) =>
     $isVisible ||
@@ -39,7 +40,6 @@ const MarkerCotainer = styled.div<{
       opacity: 0%;
     `}
 
-  transition: opacity ease-out 120ms;
   pointer-events: none;
   position: relative;
 
@@ -76,10 +76,14 @@ const Marker = styled.div<{
   $isLabel: boolean;
   $imgURL?: string;
 }>`
+  transition:
+    border 300ms ease-out,
+    margin ease-out 120ms;
+
   flex-shrink: 0;
   position: relative;
 
-  border-radius: 24px;
+  border-radius: 52px;
 
   display: flex;
   justify-content: center;
@@ -95,33 +99,34 @@ const Marker = styled.div<{
           background-image: url(${p.$imgURL});
           background-size: cover;
           background-position: center center;
-          box-shadow: 0 0 0 1px ${p.theme.strokeColors.strokeLighter};
+          border: solid 1px ${p.theme.strokeColors.strokeLighter};
         `}
   `}
 
   ${({ $isSelected, $axis, $isCurrent, ...p }) => {
     if ($isSelected) {
       return css`
-        margin-top: ${$axis === "HORIZONTAL" ? 24 : 0}px;
-        margin-left: ${$axis === "HORIZONTAL" ? 0 : 24}px;
-        width: 48px;
-        height: 48px;
+        margin-top: ${$axis === "HORIZONTAL" ? 40 : 0}px;
+        margin-left: ${$axis === "HORIZONTAL" ? 0 : 32}px;
+        width: 52px;
+        height: 52px;
         ${$isCurrent &&
         css`
-          box-shadow: 0 0 0 2px ${p.theme.strokeColors.strokeStorngest};
+          border: solid 2px ${p.theme.strokeColors.strokeStorngest};
         `}
       `;
     } else {
       return css`
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
       `;
     }
   }}
-  transition: margin ease-out 120ms;
 `;
 
 const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
+  transition: background-color 100ms ease-out;
+
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -150,9 +155,17 @@ const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
           background-color: ${p.theme.foregroundColors.foregroundStrongest};
         `
       : css`
-          color: ${p.theme.fontColors.textDisable};
-          background-color: ${p.theme.foregroundColors.foregroundLighter};
+          color: ${p.theme.fontColors.textLightest};
+          background-color: ${p.theme.foregroundColors.foregroundLight};
         `}
+  `}
+`;
+
+const IconLabel = styled.div<{ $isSelected: boolean; $iconIntensity: number }>`
+  ${({ $isSelected, $iconIntensity }) => css`
+    font-size: ${$isSelected ? 24 : 20}px;
+    line-height: 32px;
+    opacity: ${$iconIntensity}%;
   `}
 `;
 
@@ -167,14 +180,6 @@ type Parms = {
   icon?: string;
   iconIntensity?: number;
 };
-
-const IconLabel = styled.div<{ $isSelected: boolean; $iconIntensity: number }>`
-  ${({ $isSelected, $iconIntensity }) => css`
-    font-size: ${$isSelected ? 28 : 20}px;
-    line-height: 32px;
-    opacity: ${$iconIntensity}%;
-  `}
-`;
 
 const AxisMarker = (parms: Parms) => {
   const {
@@ -207,9 +212,12 @@ const AxisMarker = (parms: Parms) => {
           $isLabel={isLabel}
           $imgURL={imgURL}
         >
-          <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
-            {label}
-          </MarkerLabel>
+          {(!isSelected || !isLabel) && (
+            <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
+              {label}
+            </MarkerLabel>
+          )}
+
           {isLabel && (
             <IconLabel $isSelected={isSelected} $iconIntensity={iconIntensity}>
               {icon}

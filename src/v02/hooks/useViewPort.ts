@@ -15,7 +15,7 @@ const getViewportSize = (): ViewportSize => {
 
 const clampWidth = (width: number, height: number) => {
   let newW = width > 500 ? 500 : width;
-  let newH = height - 270;
+  let newH = height;
   return newW < newH ? newW : newH;
 };
 

@@ -7,7 +7,6 @@ import { type SlotDict } from "@interfacesV02/type";
 import {
   useBoardSlotContext,
   useBoardStaticContext,
-  useBoardStepContext,
 } from "@hooksV02/board/context/context";
 
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
@@ -21,9 +20,12 @@ import type { AxisData } from "@interfacesV02/type";
 const SwipePreferenceBoard = () => {
   const { preference, boardInformation } = useBoardStaticContext();
   const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
-  const { currentItemID } = useBoardStepContext();
 
-  const centerIDX = getSlotCenterIDX(5, preference.groupDict);
+  const centerIDX = getSlotCenterIDX(5, preference.slotByGroupDict);
+  useEffect(() => {
+    setPreferenceSlot({ preference: centerIDX });
+  }, []);
+
   const getSlot = (s: SlotDict) => {
     if (s.HORIZONTAL === undefined) return;
     setPreferenceSlot({ preference: s.HORIZONTAL });
@@ -35,18 +37,9 @@ const SwipePreferenceBoard = () => {
     dataDict: { HORIZONTAL: preference },
   });
 
-  const [isFirst, setIsFirst] = useState<boolean>(
-    direction.HORIZONTAL === null && direction.VERTICAL === null,
-  );
-
-  useEffect(() => {
-    setPreferenceSlot({ preference: centerIDX });
-  }, []);
-
   const onClickStar = (num: number) => {
-    const slotIDX = getSlotCenterIDX(num, preference.groupDict);
+    const slotIDX = getSlotCenterIDX(num, preference.slotByGroupDict);
     setPreferenceSlot({ preference: slotIDX });
-    setIsFirst(true);
   };
 
   const slotID = preference.slotList[preferenceSlot?.preference ?? centerIDX];
@@ -60,17 +53,12 @@ const SwipePreferenceBoard = () => {
   const groupLabel = groupSummary.groupLabel;
   const intensity = groupSummary.intensityLabel;
 
-  useEffect(() => {
-    setIsFirst(direction.HORIZONTAL === null && direction.VERTICAL === null);
-  }, [direction]);
-
   const getSubTitle = () => {
     const slotIDX = preferenceSlot?.preference ?? 0;
     const dragDirection = direction["HORIZONTAL"];
 
     // 그룹 라벨만 출력
     if (
-      isFirst ||
       slotType === "CENTER_LABEL" ||
       (dragDirection === "END" && slotType === "START_LABEL") ||
       (dragDirection === "START" && slotType === "END_LABEL")
@@ -112,14 +100,9 @@ const SwipePreferenceBoard = () => {
     }
   };
 
-  const item = getItemSummary(currentItemID);
   const Title = () => {
     return (
       <S.BoardTitleContainer>
-        <S.BoardTitleItemSection>
-          <h6>{item.category}</h6>
-          <h3>{item.name}</h3>
-        </S.BoardTitleItemSection>
         <S.BoardTitleMain>얼마나 취향인가요?</S.BoardTitleMain>
         <S.BoardTitleSubContainer>
           <S.BoardTitleSubWrapper $isSelected={true}>
@@ -133,11 +116,10 @@ const SwipePreferenceBoard = () => {
   return (
     <>
       <Title />
-      <S.BoardTitleDescription>
-        좌우로 드래그 하거나, 하트를 터치해주세요!
-      </S.BoardTitleDescription>
 
-      <SwipeBoard {...swipeBoardProps} />
+      <S.SwipeBoardContainer>
+        <SwipeBoard {...swipeBoardProps} />
+      </S.SwipeBoardContainer>
 
       <S.BoardRateContaienr>
         <span>{groupSummary.groupDescription}</span>

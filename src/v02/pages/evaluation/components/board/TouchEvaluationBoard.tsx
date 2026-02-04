@@ -1,18 +1,12 @@
 import * as S from "./Board.styled";
 
-import {
-  useBoardStaticContext,
-  useBoardStepContext,
-} from "@hooksV02/board/context/context";
+import { useBoardStepContext } from "@hooksV02/board/context/context";
 
-import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
 import useBoardControl from "@hooksV02/board/useBoardControl";
 
 const TouchEvaluationBoard = () => {
-  const { vertical, horizontal } = useBoardStaticContext();
-
   const { currentItemID } = useBoardStepContext();
   const { navigateEvaluationSwipe } = useBoardControl();
 
@@ -30,10 +24,7 @@ const TouchEvaluationBoard = () => {
   };
 
   const onClickBoardGrid = (v: number, h: number) => {
-    const vSlotIDX = getSlotCenterIDX(v, vertical.groupDict);
-    const hSlotIDX = getSlotCenterIDX(h, horizontal.groupDict);
-
-    navigateEvaluationSwipe(vSlotIDX, hSlotIDX);
+    navigateEvaluationSwipe(v, h);
   };
 
   return (

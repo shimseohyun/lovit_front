@@ -3,8 +3,9 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   width: 100%;
-  height: 100svh;
-  max-width: 100svh;
+  min-height: 100svh;
+  max-height: 100svh;
+
   display: flex;
 
   position: fixed;
@@ -21,10 +22,11 @@ export const Container = styled.div`
 export const ViewPort = styled.div`
   width: 100%;
   flex-grow: 1;
-
-  overflow: scroll;
+  flex-shrink: 1;
 
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  overflow: hidden;
 `;
