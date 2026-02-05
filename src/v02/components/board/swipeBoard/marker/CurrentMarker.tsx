@@ -14,9 +14,9 @@ const CurrentMarker = (parms: Parms) => {
 
   return (
     <MarkerContainer $axis={axis}>
-      <Marker $imgURL={imgURL} $isDragging={isDragging} $axis={axis} />
       {isDragging &&
         (axis === "HORIZONTAL" ? <HorizontalPoint /> : <VerticalPoint />)}
+      <Marker $imgURL={imgURL} $isDragging={isDragging} $axis={axis} />
     </MarkerContainer>
   );
 };
@@ -57,6 +57,9 @@ const Marker = styled.div<{
   $isDragging: boolean;
   $axis: AxisType | null;
 }>`
+  z-index: 1;
+  transition: margin 220ms ease-out;
+
   flex-shrink: 0;
 
   border-radius: 48px;
@@ -71,8 +74,8 @@ const Marker = styled.div<{
         width: 72px;
         height: 72px;
 
-        margin-bottom: ${$axis === "VERTICAL" ? "0px" : "16px"};
-        margin-right: ${$axis === "VERTICAL" ? "16px" : "0px"};
+        margin-bottom: ${$axis === "VERTICAL" ? "0px" : "64px"};
+        margin-right: ${$axis === "VERTICAL" ? "64px" : "0px"};
       `;
     }
   }}
@@ -93,7 +96,7 @@ const PointContainerVertical = styled.div`
   transform: translateY(-50%);
   top: 50%;
 
-  right: 6px;
+  right: 54px;
   width: 12px;
   height: 12px;
   flex-shrink: 0;
@@ -107,7 +110,7 @@ const PointContainerHorizontal = styled.div`
   transform: translateX(-50%);
   left: 50%;
 
-  bottom: 6px;
+  bottom: 54px;
   width: 12px;
   height: 12px;
   flex-shrink: 0;

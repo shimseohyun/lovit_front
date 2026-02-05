@@ -60,9 +60,7 @@ const SwipeBoard = (parms: Parms) => {
   const isSolo = !(isHorizontal && isVertical);
 
   const getTranslate = (slotIDX: number, axis: AxisType) => {
-    return (
-      boardSize / 2 + (slotCount[axis] / 2 - slotIDX) * stepPX - stepPX / 2
-    );
+    return (slotCount[axis] / 2 - slotIDX) * stepPX - stepPX / 2;
   };
 
   const dragAxis = onboarding === undefined ? realDragAxis : onboarding;
@@ -154,16 +152,6 @@ const SwipeBoard = (parms: Parms) => {
 
   return (
     <S.BoardContaienr {...bind} onPointerDown={onPointerDown} $size={boardSize}>
-      <S.BoardAxisContainer>
-        {isHorizontal && dragAxis !== "VERTICAL" && (
-          <S.BoardAxis $axis="HORIZONTAL" />
-        )}
-
-        {isVertical && dragAxis !== "HORIZONTAL" && (
-          <S.BoardAxis $axis="VERTICAL" />
-        )}
-      </S.BoardAxisContainer>
-
       {axisList.map((axis, axisID) => {
         const data = dataDict[axis];
         if (data === undefined) return;
@@ -176,7 +164,11 @@ const SwipeBoard = (parms: Parms) => {
             onTransitionEnd={onTransitionEnd}
             $position={getTranslate(currentSlot, axis)}
             $axis={axis}
+            $isCurrent={isSolo || axis == dragAxis}
           >
+            {(dragAxis === axis || dragAxis === null) && (
+              <S.BoardAxis $axis={axis} />
+            )}
             {renderAxisLabel(axis, data)}
             {data.slotList.map((slotID, vIDX) => (
               <S.BoardAxisItem

@@ -5,6 +5,7 @@ import { useBoardStepContext } from "@hooksV02/board/context/context";
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
 import useBoardControl from "@hooksV02/board/useBoardControl";
+import Spacing from "@componentsV02/spacing/Spacing";
 
 const TouchEvaluationBoard = () => {
   const { currentItemID } = useBoardStepContext();
@@ -30,9 +31,11 @@ const TouchEvaluationBoard = () => {
   return (
     <>
       <Title />
+      <Spacing size={8} />
       <S.BoardTitleDescription>
         어디에 속하는지 사분면에서 선택해주세요!
       </S.BoardTitleDescription>
+      <Spacing size={12} />
 
       <EvaluationBoard onClickGridItem={onClickBoardGrid} />
     </>

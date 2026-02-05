@@ -77,8 +77,10 @@ const Marker = styled.div<{
   $imgURL?: string;
 }>`
   transition:
-    border 300ms ease-out,
-    margin ease-out 120ms;
+    border 120ms ease-out,
+    margin ease-out 220ms,
+    width 220ms ease-out,
+    height 220ms ease-out;
 
   flex-shrink: 0;
   position: relative;
@@ -103,29 +105,34 @@ const Marker = styled.div<{
         `}
   `}
 
+  width: 40px;
+  height: 40px;
+
   ${({ $isSelected, $axis, $isCurrent, ...p }) => {
     if ($isSelected) {
       return css`
-        margin-top: ${$axis === "HORIZONTAL" ? 40 : 0}px;
-        margin-left: ${$axis === "HORIZONTAL" ? 0 : 32}px;
-        width: 52px;
-        height: 52px;
+        ${$isCurrent ||
+        css`
+          margin-top: ${$axis === "HORIZONTAL" ? 40 : 0}px;
+          margin-left: ${$axis === "HORIZONTAL" ? 0 : 40}px;
+        `}
+
         ${$isCurrent &&
         css`
+          width: 56px;
+          height: 56px;
           border: solid 2px ${p.theme.strokeColors.strokeStorngest};
+
+          margin-top: ${$axis === "HORIZONTAL" ? 32 : 0}px;
+          margin-left: ${$axis === "HORIZONTAL" ? 0 : 32}px;
         `}
-      `;
-    } else {
-      return css`
-        width: 40px;
-        height: 40px;
       `;
     }
   }}
 `;
 
 const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
-  transition: background-color 100ms ease-out;
+  transition: background-color 120ms ease-out;
 
   display: block;
   white-space: nowrap;
@@ -212,11 +219,9 @@ const AxisMarker = (parms: Parms) => {
           $isLabel={isLabel}
           $imgURL={imgURL}
         >
-          {(!isSelected || !isLabel) && (
-            <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
-              {label}
-            </MarkerLabel>
-          )}
+          <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
+            {label}
+          </MarkerLabel>
 
           {isLabel && (
             <IconLabel $isSelected={isSelected} $iconIntensity={iconIntensity}>

@@ -12,6 +12,7 @@ import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
 import type { AxisData } from "@interfacesV02/type";
 import { useEffect, useState } from "react";
+import Spacing from "@componentsV02/spacing/Spacing";
 
 const SwipeEvaluationBoard = () => {
   const { vertical, horizontal, boardInformation } = useBoardStaticContext();
@@ -19,7 +20,7 @@ const SwipeEvaluationBoard = () => {
 
   const [onboarding, setOnBoarding] = useState<AxisType | undefined>(undefined);
 
-  const ONBOARDING_STEP_MS = 1100;
+  const ONBOARDING_STEP_MS = 1400;
 
   useEffect(() => {
     let timerID: number | null = null;
@@ -28,18 +29,13 @@ const SwipeEvaluationBoard = () => {
     const onboardingAxisList: AxisType[] = [];
     if (!evaluationSlot) return;
 
-    if (
-      horizontal.slotDict[evaluationSlot.HORIZONTAL].userAxisBundleID !==
-      undefined
-    ) {
-      onboardingAxisList.push("HORIZONTAL");
-    }
+    if (vertical.slotDict[evaluationSlot.VERTICAL].slotType !== "CENTER_LABEL")
+      onboardingAxisList.push("VERTICAL");
 
     if (
-      vertical.slotDict[evaluationSlot.VERTICAL].userAxisBundleID !== undefined
-    ) {
-      onboardingAxisList.push("VERTICAL");
-    }
+      horizontal.slotDict[evaluationSlot.HORIZONTAL].slotType !== "CENTER_LABEL"
+    )
+      onboardingAxisList.push("HORIZONTAL");
 
     const run = (idx: number) => {
       if (isCanceled) return;
@@ -144,36 +140,41 @@ const SwipeEvaluationBoard = () => {
   const Title = () => {
     return (
       <S.BoardTitleContainer>
-        <S.BoardTitleMain>적절한 위치에 놓아주세요!</S.BoardTitleMain>
-        <S.BoardTitleSubContainer>
-          {/* 상하 */}
-          <S.BoardTitleSubWrapper
-            $isSelected={dragAxis === "VERTICAL" || dragAxis === null}
-          >
-            {getSubTitle("VERTICAL", vertical)}
-          </S.BoardTitleSubWrapper>
-
-          {/* 좌우 */}
-          <S.BoardTitleSubWrapper
-            $isSelected={dragAxis === "HORIZONTAL" || dragAxis === null}
-          >
-            {getSubTitle("HORIZONTAL", horizontal)}
-          </S.BoardTitleSubWrapper>
-        </S.BoardTitleSubContainer>
+        <S.BoardTitleDescription>
+          {`드래그해서 비교할 수 있어요.`}
+        </S.BoardTitleDescription>
+        <S.BoardTitleMain>같은 그룹에 속한 사람이 있어요</S.BoardTitleMain>
       </S.BoardTitleContainer>
     );
   };
 
+  const BoardTitle = () => {
+    return (
+      <S.BoardTitleSubContainer>
+        {/* 상하 */}
+        <S.BoardTitleSubWrapper
+          $isSelected={dragAxis === "VERTICAL" || dragAxis === null}
+        >
+          {getSubTitle("VERTICAL", vertical)}
+        </S.BoardTitleSubWrapper>
+        <Spacing size={8} />
+        {/* 좌우 */}
+        <S.BoardTitleSubWrapper
+          $isSelected={dragAxis === "HORIZONTAL" || dragAxis === null}
+        >
+          {getSubTitle("HORIZONTAL", horizontal)}
+        </S.BoardTitleSubWrapper>
+      </S.BoardTitleSubContainer>
+    );
+  };
   return (
     <>
       <Title />
 
       <S.SwipeBoardContainer>
+        <BoardTitle />
         <SwipeBoard onboarding={onboarding} {...swipeBoardProps} />
       </S.SwipeBoardContainer>
-      <S.BoardTitleDescription>
-        상하좌우로 드래그해서 세부적인 분류를 할 수 있어요.
-      </S.BoardTitleDescription>
     </>
   );
 };

@@ -14,6 +14,14 @@ export const BottomButtonContainer = styled.div`
 
   width: 100%;
   padding: 10px 12px;
+
+  white-space: pre-wrap;
+  text-align: center;
+
+  ${(p) => css`
+    ${p.theme.fonts.body2}
+    color: ${p.theme.fontColors.textLighter};
+  `}
 `;
 
 export const Button = styled.button<{

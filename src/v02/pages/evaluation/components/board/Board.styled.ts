@@ -7,7 +7,7 @@ export const BoardTitleContainer = styled.div`
   align-items: center;
 
   width: 100%;
-  padding: 10px 16px 0px 16px;
+  padding: 10px 16px 10px 16px;
 
   ${(p) => css`
     ${p.theme.fonts.head1}
@@ -17,10 +17,10 @@ export const BoardTitleContainer = styled.div`
 
 export const BoardTitleMain = styled.div`
   padding-top: 4px;
-  padding-bottom: 8px;
+  padding-bottom: 4px;
   ${(p) => css`
-    ${p.theme.fonts.head3}
-    color:${p.theme.fontColors.textLighter};
+    ${p.theme.fonts.head1}
+    color:${p.theme.fontColors.textStrongest};
   `}
 `;
 
@@ -28,6 +28,27 @@ export const BoardTitleDescription = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
+
+  white-space: pre-wrap;
+
+  width: 100%;
+
+  flex-shrink: 0;
+
+  ${(p) => css`
+    ${p.theme.fonts.body1}
+    color:${p.theme.fontColors.textLightest};
+  `}
+`;
+
+export const BoardTitleInformation = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  white-space: pre-wrap;
 
   width: 100%;
   padding-top: 4px;
@@ -78,8 +99,7 @@ export const BoardTitleSubContainer = styled.h1`
   flex-direction: column;
   align-items: center;
 
-  padding: 8px 0 4px 0;
-  gap: 8px;
+  padding: 12px 0 12px 0;
 `;
 
 export const BoardTitleSubWrapper = styled.div<{ $isSelected: boolean }>`
@@ -137,17 +157,15 @@ export const SwipePreferenceBoardContainer = styled.div`
   overflow: visible;
 `;
 
-export const SwipeBoardContainer = styled.div`
+export const SwipeBoardContainer = styled.section`
   width: 100%;
-  height: auto;
-
-  margin-top: 10px;
 
   flex-grow: 1;
   flex-shrink: 1;
 
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: start;
   align-items: center;
 
   overflow: hidden;

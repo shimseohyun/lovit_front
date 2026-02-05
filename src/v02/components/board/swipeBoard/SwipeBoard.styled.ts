@@ -2,15 +2,17 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { AxisType } from "@interfacesV02/type";
 
-export const BoardContaienr = styled.div<{ $size: number }>`
+export const BoardContaienr = styled.div<{
+  $size: number;
+}>`
   touch-action: none;
-  ${({ $size }) => css`
-    width: ${$size}px;
-    height: ${$size}px;
-  `}
-  position:relative;
-  overflow: visible;
-  flex-shrink: 0;
+
+  width: 100%;
+
+  position: relative;
+  overflow: hidden;
+
+  flex-grow: 1;
 `;
 
 export const BoardAxisContainer = styled.div`
@@ -46,12 +48,16 @@ export const BoardAxis = styled.div<{
 export const BoardAxisWrpper = styled.div<{
   $position: number;
   $axis: AxisType;
+  $isCurrent: boolean;
 }>`
   transition:
     top 220ms ease-out,
     left 220ms ease-out;
 
   pointer-events: none;
+
+  display: flex;
+  flex-shrink: 0;
 
   position: absolute;
 
@@ -60,7 +66,7 @@ export const BoardAxisWrpper = styled.div<{
       return css`
         transform: translateX(-50%);
         top: 0px;
-        left: ${$position}px;
+        left: calc(50% + ${$position}px);
         width: auto;
         height: 100%;
         flex-direction: row;
@@ -69,7 +75,7 @@ export const BoardAxisWrpper = styled.div<{
       return css`
         transform: translateY(-50%);
         left: 0px;
-        top: ${$position}px;
+        top: calc(50% + ${$position}px);
         width: 100%;
         height: auto;
         flex-direction: column;
@@ -77,9 +83,18 @@ export const BoardAxisWrpper = styled.div<{
     }
   }}
 
-  display: flex;
-
-  flex-shrink: 0;
+  ${({ $isCurrent, $axis }) => {
+    if ($isCurrent) {
+      if ($axis === "HORIZONTAL")
+        return css`
+          top: -48px;
+        `;
+      else if ($axis === "VERTICAL")
+        return css`
+          left: -48px;
+        `;
+    }
+  }}
 `;
 
 export const LabelConatiner = styled.div<{

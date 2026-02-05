@@ -32,16 +32,18 @@ const EvaluationButton = () => {
           buttonType={"PRIMARY"}
           onClick={onClickNavigateNextIDX}
         >
-          확인
+          완료하기
         </FillButton>
       ) : (
-        <FillButton
-          type="button"
-          buttonType={"ASSISTIVE"}
-          onClick={onClickNavigatePreference}
-        >
-          다음
-        </FillButton>
+        <>
+          <FillButton
+            type="button"
+            buttonType={"ASSISTIVE"}
+            onClick={onClickNavigatePreference}
+          >
+            이렇게 할게요!
+          </FillButton>
+        </>
       )}
     </BottomButton>
   );

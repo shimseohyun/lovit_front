@@ -7,6 +7,7 @@ import { type SlotDict } from "@interfacesV02/type";
 import {
   useBoardSlotContext,
   useBoardStaticContext,
+  useBoardStepContext,
 } from "@hooksV02/board/context/context";
 
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
@@ -16,8 +17,10 @@ import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
 import type { AxisData } from "@interfacesV02/type";
+import Spacing from "@componentsV02/spacing/Spacing";
 
 const SwipePreferenceBoard = () => {
+  const { currentItemID } = useBoardStepContext();
   const { preference, boardInformation } = useBoardStaticContext();
   const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
 
@@ -103,26 +106,34 @@ const SwipePreferenceBoard = () => {
   const Title = () => {
     return (
       <S.BoardTitleContainer>
+        <S.BoardTitleDescription>
+          드래그하거나 터치해주세요
+        </S.BoardTitleDescription>
         <S.BoardTitleMain>얼마나 취향인가요?</S.BoardTitleMain>
-        <S.BoardTitleSubContainer>
-          <S.BoardTitleSubWrapper $isSelected={true}>
-            {getSubTitle()}
-          </S.BoardTitleSubWrapper>
-        </S.BoardTitleSubContainer>
       </S.BoardTitleContainer>
     );
   };
 
+  const BoardTitle = () => {
+    return (
+      <S.BoardTitleSubContainer>
+        <S.BoardTitleSubWrapper $isSelected={true}>
+          {getSubTitle()}
+        </S.BoardTitleSubWrapper>
+      </S.BoardTitleSubContainer>
+    );
+  };
   return (
     <>
       <Title />
 
       <S.SwipeBoardContainer>
+        <BoardTitle />
+        <Spacing size={20} />
         <SwipeBoard {...swipeBoardProps} />
       </S.SwipeBoardContainer>
 
       <S.BoardRateContaienr>
-        <span>{groupSummary.groupDescription}</span>
         <HeartRateInput value={gorupID} onChange={onClickStar} />
       </S.BoardRateContaienr>
     </>
