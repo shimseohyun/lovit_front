@@ -8,8 +8,16 @@ import Board from "./components/board/Board";
 import TestTool from "@componentsV02/test/TestTool";
 import useGetPendingItemIDList from "@hooksV02/data/useGetPendingItemIDList";
 import Navigation from "@componentsV02/navigation/Navigation";
+import { useGetUserBoardData } from "@hooksV02/apis/user/user";
 
 const EvaluationPage = () => {
+  const { isLoading, data } = useGetUserBoardData();
+
+  if (isLoading) {
+    console.log(data);
+    return <div>로딩중</div>;
+  }
+
   const { pendingItemIDList } = useGetPendingItemIDList();
   return (
     <BoardDataProvider

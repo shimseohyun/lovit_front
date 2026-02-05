@@ -109,12 +109,7 @@ export const setCheckedItemList = (list: ItemIDList) => {
   setValueToLocalStorage("CHECKED_ITEM_LIST", list);
 };
 
-/**  Group */
-export const getGroupDict = (
-  type: BoardAxisType,
-  groupSize: number,
-): UserAxisGroupDict => {
-  const key = groupKeyMap[type];
+export const getGroupInitialValue = (groupSize: number) => {
   const initalValue: UserAxisGroupDict = {};
   for (let i = 0; i < groupSize; i++) {
     initalValue[i] = {
@@ -122,8 +117,19 @@ export const getGroupDict = (
       bundleList: [],
     };
   }
+  return initalValue;
+};
+/**  Group */
+export const getGroupDict = (
+  type: BoardAxisType,
+  groupSize: number,
+): UserAxisGroupDict => {
+  const key = groupKeyMap[type];
 
-  return getDictFromLocalStorage<UserAxisGroupDict>(key, initalValue);
+  return getDictFromLocalStorage<UserAxisGroupDict>(
+    key,
+    getGroupInitialValue(groupSize),
+  );
 };
 
 export const setGroupDict = (type: BoardAxisType, dict: UserAxisGroupDict) => {
