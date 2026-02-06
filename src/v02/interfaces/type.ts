@@ -1,4 +1,5 @@
 import type {
+  RoughAxisData,
   UserAxisBundleDict,
   UserAxisGroupDict,
   UserAxisItemPositionDict,
@@ -9,6 +10,7 @@ import type {
 
 export type AxisData = {
   type: BoardAxisType;
+  roughData: RoughAxisData;
   groupDict: UserAxisGroupDict;
   bundleDict: UserAxisBundleDict;
   itemPositionDict: UserAxisItemPositionDict;

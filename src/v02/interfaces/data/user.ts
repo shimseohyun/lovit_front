@@ -40,6 +40,7 @@ export interface UserAxisSlot {
 
   userAxisGroupID: UserAxisGroupID;
   userAxisBundleID?: UserAxisBundleID; // "ITEM_LIST" 에서만 존재
+  uesrAxisBundleIDX: UserAxisBundleID;
   userAxisBundle?: number[];
 }
 

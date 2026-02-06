@@ -12,28 +12,17 @@ import useBoardData from "@hooksV02/board/context/useBoardData";
 import useBoardSlot from "@hooksV02/board/context/useBoardSlot";
 import useBoardStep from "@hooksV02/board/context/useBoardStep";
 
-import useViewport from "@hooksV02/useViewPort";
-
 export const BoardDataProvider = (props: ProviderProps) => {
-  const { children, boardInformation, pendingItemIDList = [] } = props;
+  const { children, boardInformation } = props;
 
   const boardSlot = useBoardSlot();
-
-  const boardStep = useBoardStep({
-    pendingItemIDList: pendingItemIDList,
-  });
-
+  const boardStep = useBoardStep({});
   const boardData = useBoardData(boardStep.currentItemID);
-
-  const size = useViewport();
 
   const staticValue: BoardStaticValue = useMemo(
     () => ({
       boardInformation,
-
-      boardSize: size.width,
       stepPX: defaultStepPx,
-
       ...boardData,
     }),
     [boardInformation, boardData],

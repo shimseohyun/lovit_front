@@ -1,147 +1,29 @@
 // useBoardData.ts
 export type UseBoardDataReturn = ReturnType<typeof useBoardData>;
 
-import { useMemo } from "react";
-import { useGetAxisData } from "@hooksV02/data/useGetAxisData";
+import { useGetUserBoardData } from "@apisV02/firebase/domain/user";
+import { convertRoughToAxisData } from "@utilsV02/convertRoughToAxisData";
 
-import type {
-  UserAxisBundleDict,
-  UserAxisGroupDict,
-  UserAxisSlot,
-  UserAxisSlotByGroupDict,
-  UserAxisSlotDict,
-  UserAxisSlotList,
-} from "@interfacesV02/data/user";
-import createAxisSlot from "@utilsV02/createAxisSlot";
-import type { AxisData } from "@interfacesV02/type";
+const initialEvaluation = [[], [], [], [], [], []];
+const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
-/**
- * ✅ calcKey(= currentItemID 같은 키)가 바뀔 때만
- * slotList/slotDict 같은 “무거운 계산”이 다시 돌게 만들기
- */
-const useBoardData = (calcKey?: unknown) => {
-  return useMemo(() => {
-    const h = useGetAxisData("HORIZONTAL", 6);
-    const v = useGetAxisData("VERTICAL", 6);
-    const p = useGetAxisData("PREFERENCE", 11);
-
-    const hSlot = getSlotData(h.group, h.bundle);
-    const vSlot = getSlotData(v.group, v.bundle);
-    const pSlot = getSlotData(p.group, p.bundle);
-
-    const horizontal: AxisData = {
-      type: "HORIZONTAL",
-      groupDict: h.group,
-      bundleDict: h.bundle,
-      itemPositionDict: h.itemPosition,
-      slotList: hSlot.slotList,
-      slotDict: hSlot.slotDict,
-      slotByGroupDict: hSlot.slotByGroupDict,
-    };
-
-    const vertical: AxisData = {
-      type: "VERTICAL",
-      groupDict: v.group,
-      bundleDict: v.bundle,
-      itemPositionDict: v.itemPosition,
-      slotList: vSlot.slotList,
-      slotDict: vSlot.slotDict,
-      slotByGroupDict: vSlot.slotByGroupDict,
-    };
-
-    const preference: AxisData = {
-      type: "PREFERENCE",
-      groupDict: p.group,
-      bundleDict: p.bundle,
-      itemPositionDict: p.itemPosition,
-      slotList: pSlot.slotList,
-      slotDict: pSlot.slotDict,
-      slotByGroupDict: pSlot.slotByGroupDict,
-    };
-
-    const itemList: number[] = Object.keys(vertical.itemPositionDict).map(
-      Number,
-    );
-
+const useBoardData = (currentStep?: number) => {
+  const { data, isLoading } = useGetUserBoardData(currentStep);
+  if (data === undefined || data === null)
     return {
-      horizontal,
-      vertical,
-      preference,
-      itemList,
+      itemList: [],
+      horizontal: convertRoughToAxisData("HORIZONTAL", initialEvaluation),
+      vertical: convertRoughToAxisData("VERTICAL", initialEvaluation),
+      preference: convertRoughToAxisData("PREFERENCE", initialPreference),
     };
-  }, [calcKey]);
+  else {
+    const horizontal = data.axis.HORIZONTAL;
+    const vertical = data.axis.VERTICAL;
+    const preference = data.axis.PREFERENCE;
+    const itemList = data.itemList;
+
+    return { horizontal, vertical, preference, itemList, isLoading };
+  }
 };
 
 export default useBoardData;
-
-const getSlotData = (
-  groupDict: UserAxisGroupDict,
-  bundleDict: UserAxisBundleDict,
-) => {
-  const groupList = Object.keys(groupDict).map(Number);
-
-  const slotList: UserAxisSlotList = [];
-  const slotDict: UserAxisSlotDict = {};
-  const slotByGroupDict: UserAxisSlotByGroupDict = {};
-
-  let slotCursor = 0;
-
-  groupList.forEach((groupID) => {
-    const group = groupDict[groupID];
-    const bundleCount = group.bundleList.length;
-
-    let startSlotIDX = slotCursor;
-    const pushSlots = (slots: UserAxisSlot[]) => {
-      slots.forEach((slot) => {
-        slotDict[slot.slotID] = slot;
-        slotList.push(slot.slotID);
-      });
-
-      slotCursor += slots.length;
-    };
-
-    if (bundleCount === 0) {
-      const slots = createAxisSlot(
-        slotCursor,
-        ["CENTER_LABEL"],
-        groupID,
-        undefined,
-        [],
-      );
-      pushSlots(slots);
-    } else if (bundleCount === 1) {
-      const bundleID = group.bundleList[0];
-
-      const slots = createAxisSlot(
-        slotCursor,
-        ["START_LABEL", "ITEM_LIST", "END_LABEL"],
-        groupID,
-        bundleID,
-        bundleDict[bundleID].itemList,
-      );
-      pushSlots(slots);
-    } else {
-      group.bundleList.forEach((bundleID, bundleIDX) => {
-        const slots = createAxisSlot(
-          slotCursor,
-          [bundleIDX === 0 ? "START_LABEL" : "BETWEEN", "ITEM_LIST"],
-          groupID,
-          bundleID,
-          bundleDict[bundleID].itemList,
-        );
-        pushSlots(slots);
-      });
-    }
-
-    let endSlotIDX = slotCursor - 1;
-
-    slotByGroupDict[groupID] = {
-      groupID: groupID,
-      slotCount: endSlotIDX - startSlotIDX + 1,
-      startSlotIDX: startSlotIDX,
-      endSlotIDX: endSlotIDX,
-    };
-  });
-
-  return { slotDict, slotList, slotByGroupDict };
-};

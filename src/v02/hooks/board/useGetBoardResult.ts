@@ -1,18 +1,5 @@
-import { useMemo } from "react";
-import { useBoardStaticContext } from "./context/context";
-import type { ResultType } from "@interfacesV02/type";
-
-type ItemPosition = { userAxisGroupID: number };
-type ItemPositionDict = Record<number, ItemPosition | undefined>;
-
-type AxisDataLike = { itemPositionDict: ItemPositionDict };
-
-type BoardStaticContextLike = {
-  itemList: number[];
-  vertical: AxisDataLike;
-  horizontal: AxisDataLike;
-  preference: AxisDataLike;
-};
+import type { ItemIDList } from "@interfacesV02/data/user";
+import type { AxisData, ResultType } from "@interfacesV02/type";
 
 type AxisProfile = "FOCUSED" | "WIDE";
 
@@ -96,111 +83,106 @@ const calcProfile = (params: {
     : "WIDE";
 };
 
-const useGetBoardResult = (): BoardResult => {
-  const { itemList, vertical, horizontal, preference } =
-    useBoardStaticContext() as unknown as BoardStaticContextLike;
+type Parms = {
+  vertical: AxisData;
+  horizontal: AxisData;
+  preference: AxisData;
+  itemList: ItemIDList;
+};
 
-  return useMemo(() => {
-    const pDict = preference.itemPositionDict;
-    const hDict = horizontal.itemPositionDict;
-    const vDict = vertical.itemPositionDict;
+const useGetBoardResult = (parms: Parms): BoardResult => {
+  const { vertical, horizontal, preference, itemList } = parms;
 
-    // 그룹별 likeWeight 누적 (profile의 mass 계산용)
-    const hGroupLikeWeight = Array<number>(groupSize).fill(0);
-    const vGroupLikeWeight = Array<number>(groupSize).fill(0);
+  const pDict = preference.itemPositionDict;
+  const hDict = horizontal.itemPositionDict;
+  const vDict = vertical.itemPositionDict;
 
-    // 전체 likeWeight (분모)
-    let totalLikeWeight = 0;
+  const hGroupLikeWeight = Array<number>(groupSize).fill(0);
+  const vGroupLikeWeight = Array<number>(groupSize).fill(0);
 
-    // 축별 가중합 / 제곱가중합 (분산/표준편차)
-    let hSumWX = 0;
-    let hSumWX2 = 0;
-    let vSumWX = 0;
-    let vSumWX2 = 0;
+  let totalLikeWeight = 0;
 
-    for (const itemId of itemList) {
-      const p = pDict[itemId];
-      const h = hDict[itemId];
-      const v = vDict[itemId];
-      if (!p || !h || !v) continue;
+  let hSumWX = 0;
+  let hSumWX2 = 0;
+  let vSumWX = 0;
+  let vSumWX2 = 0;
 
-      const pGroupId = p.userAxisGroupID;
-      const hGroupId = h.userAxisGroupID;
-      const vGroupId = v.userAxisGroupID;
+  for (const itemId of itemList) {
+    const p = pDict[itemId];
+    const h = hDict[itemId];
+    const v = vDict[itemId];
+    if (!p || !h || !v) continue;
 
-      if (!isValidGroupId(hGroupId) || !isValidGroupId(vGroupId)) continue;
+    const pGroupId = p.userAxisGroupID;
+    const hGroupId = h.userAxisGroupID;
+    const vGroupId = v.userAxisGroupID;
 
-      const likeWeight = preferenceGroupIdToLikeWeight(pGroupId);
-      if (likeWeight <= 0) continue;
+    if (!isValidGroupId(hGroupId) || !isValidGroupId(vGroupId)) continue;
 
-      totalLikeWeight += likeWeight;
+    const likeWeight = preferenceGroupIdToLikeWeight(pGroupId);
+    if (likeWeight <= 0) continue;
 
-      // groupId가 0~5니까 그대로 index로 사용 가능
-      hGroupLikeWeight[hGroupId] += likeWeight;
-      vGroupLikeWeight[vGroupId] += likeWeight;
+    totalLikeWeight += likeWeight;
 
-      const hPos = groupIdToPositionPct(hGroupId);
-      const vPos = groupIdToPositionPct(vGroupId);
+    // groupId가 0~5니까 그대로 index로 사용 가능
+    hGroupLikeWeight[hGroupId] += likeWeight;
+    vGroupLikeWeight[vGroupId] += likeWeight;
 
-      hSumWX += likeWeight * hPos;
-      hSumWX2 += likeWeight * hPos * hPos;
+    const hPos = groupIdToPositionPct(hGroupId);
+    const vPos = groupIdToPositionPct(vGroupId);
 
-      vSumWX += likeWeight * vPos;
-      vSumWX2 += likeWeight * vPos * vPos;
-    }
+    hSumWX += likeWeight * hPos;
+    hSumWX2 += likeWeight * hPos * hPos;
 
-    // ✅ 위치(평균): shrinkage 적용
-    const denomPos = totalLikeWeight + shrinkageK;
+    vSumWX += likeWeight * vPos;
+    vSumWX2 += likeWeight * vPos * vPos;
+  }
 
-    const hPositionPct = clamp(
-      denomPos === 0 ? 0 : hSumWX / denomPos,
-      positionMinPct,
-      positionMaxPct,
-    );
-    const vPositionPct = clamp(
-      denomPos === 0 ? 0 : vSumWX / denomPos,
-      positionMinPct,
-      positionMaxPct,
-    );
+  const denomPos = totalLikeWeight + shrinkageK;
 
-    const horizontalZone = positionPctToZone(hPositionPct);
-    const verticalZone = positionPctToZone(vPositionPct);
+  const hPositionPct = clamp(
+    denomPos === 0 ? 0 : hSumWX / denomPos,
+    positionMinPct,
+    positionMaxPct,
+  );
+  const vPositionPct = clamp(
+    denomPos === 0 ? 0 : vSumWX / denomPos,
+    positionMinPct,
+    positionMaxPct,
+  );
 
-    // ✅ 분산/표준편차: likeWeight 데이터만(=shrinkage 미적용)
-    const denomVar = totalLikeWeight;
+  const horizontalZone = positionPctToZone(hPositionPct);
+  const verticalZone = positionPctToZone(vPositionPct);
 
-    const hEX = denomVar === 0 ? 0 : hSumWX / denomVar;
-    const hEX2 = denomVar === 0 ? 0 : hSumWX2 / denomVar;
-    const hVar = Math.max(0, hEX2 - hEX * hEX);
-    const hStd = Math.sqrt(hVar);
+  // ✅ 분산/표준편차: likeWeight 데이터만(=shrinkage 미적용)
+  const denomVar = totalLikeWeight;
 
-    const vEX = denomVar === 0 ? 0 : vSumWX / denomVar;
-    const vEX2 = denomVar === 0 ? 0 : vSumWX2 / denomVar;
-    const vVar = Math.max(0, vEX2 - vEX * vEX);
-    const vStd = Math.sqrt(vVar);
+  const hEX = denomVar === 0 ? 0 : hSumWX / denomVar;
+  const hEX2 = denomVar === 0 ? 0 : hSumWX2 / denomVar;
+  const hVar = Math.max(0, hEX2 - hEX * hEX);
+  const hStd = Math.sqrt(hVar);
 
-    const horizontalProfile = calcProfile({
-      totalLikeWeight,
-      stdPct: hStd,
-      groupLikeWeight: hGroupLikeWeight,
-    });
+  const vEX = denomVar === 0 ? 0 : vSumWX / denomVar;
+  const vEX2 = denomVar === 0 ? 0 : vSumWX2 / denomVar;
+  const vVar = Math.max(0, vEX2 - vEX * vEX);
+  const vStd = Math.sqrt(vVar);
 
-    const verticalProfile = calcProfile({
-      totalLikeWeight,
-      stdPct: vStd,
-      groupLikeWeight: vGroupLikeWeight,
-    });
+  const horizontalProfile = calcProfile({
+    totalLikeWeight,
+    stdPct: hStd,
+    groupLikeWeight: hGroupLikeWeight,
+  });
 
-    return {
-      horizontal: { zone: horizontalZone, profile: horizontalProfile },
-      vertical: { zone: verticalZone, profile: verticalProfile },
-    };
-  }, [
-    itemList,
-    vertical.itemPositionDict,
-    horizontal.itemPositionDict,
-    preference.itemPositionDict,
-  ]);
+  const verticalProfile = calcProfile({
+    totalLikeWeight,
+    stdPct: vStd,
+    groupLikeWeight: vGroupLikeWeight,
+  });
+
+  return {
+    horizontal: { zone: horizontalZone, profile: horizontalProfile },
+    vertical: { zone: verticalZone, profile: verticalProfile },
+  };
 };
 
 export default useGetBoardResult;

@@ -24,7 +24,7 @@ const useSwipeBoard = (parms: Parms) => {
   const isHorizontal = horizontal !== undefined;
   const isVertical = vertical !== undefined;
 
-  const { boardSize, stepPX } = useBoardStaticContext();
+  const { stepPX } = useBoardStaticContext();
 
   const { bind, onPointerDown, onTransitionEnd, dragAxis, dragDirection } =
     useBoardSwipe({
@@ -38,7 +38,6 @@ const useSwipeBoard = (parms: Parms) => {
 
   const swipeBoardProps = useMemo(
     () => ({
-      boardSize,
       stepPX,
       slotCount,
       dataDict,
@@ -49,7 +48,6 @@ const useSwipeBoard = (parms: Parms) => {
       onTransitionEnd,
     }),
     [
-      boardSize,
       stepPX,
       slotCount,
       dataDict,

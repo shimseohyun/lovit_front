@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import * as S from "./Board.styled";
 
@@ -7,7 +7,6 @@ import { type SlotDict } from "@interfacesV02/type";
 import {
   useBoardSlotContext,
   useBoardStaticContext,
-  useBoardStepContext,
 } from "@hooksV02/board/context/context";
 
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
@@ -20,7 +19,6 @@ import type { AxisData } from "@interfacesV02/type";
 import Spacing from "@componentsV02/spacing/Spacing";
 
 const SwipePreferenceBoard = () => {
-  const { currentItemID } = useBoardStepContext();
   const { preference, boardInformation } = useBoardStaticContext();
   const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
 

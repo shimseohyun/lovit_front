@@ -21,7 +21,7 @@ import type { AxisData } from "@interfacesV02/type";
 
 type Parms = {
   onboarding?: AxisType;
-  boardSize: number;
+
   stepPX: number;
   slot: SlotDict;
   slotCount: SlotCount;
@@ -37,7 +37,7 @@ type Parms = {
 const SwipeBoard = (parms: Parms) => {
   const {
     onboarding,
-    boardSize,
+
     stepPX,
 
     dragAxis: realDragAxis,
@@ -151,7 +151,7 @@ const SwipeBoard = (parms: Parms) => {
   const axisList: AxisType[] = ["HORIZONTAL", "VERTICAL"];
 
   return (
-    <S.BoardContaienr {...bind} onPointerDown={onPointerDown} $size={boardSize}>
+    <S.BoardContaienr {...bind} onPointerDown={onPointerDown}>
       {axisList.map((axis, axisID) => {
         const data = dataDict[axis];
         if (data === undefined) return;

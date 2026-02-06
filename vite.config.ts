@@ -16,6 +16,7 @@ export default defineConfig({
       "@pagesV01": path.resolve(__dirname, "src/v01/pages"),
 
       "@apisV02": path.resolve(__dirname, "src/v02/apis"),
+      "@routersV02": path.resolve(__dirname, "src/v02/routers"),
       "@componentsV02": path.resolve(__dirname, "src/v02/components"),
       "@dataV02": path.resolve(__dirname, "src/v02/data"),
       "@hooksV02": path.resolve(__dirname, "src/v02/hooks"),

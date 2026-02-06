@@ -1,3 +1,4 @@
+import { useResetUserBoardData } from "@apisV02/firebase/domain/user";
 import styled from "@emotion/styled";
 
 const Container = styled.div`
@@ -14,8 +15,9 @@ const Container = styled.div`
 
 const TestTool = () => {
   return (
-    <Container>
+    <Container className="test-tool">
       <ResetLocalSorage />
+      <ResetDatabase />
     </Container>
   );
 };
@@ -28,4 +30,12 @@ const ResetLocalSorage = () => {
     console.log("모든 로컬 스토리지를 삭제합니다.");
   };
   return <button onClick={onClick}>로컬 스토리지 삭제</button>;
+};
+
+const ResetDatabase = () => {
+  const { mutate } = useResetUserBoardData();
+  const onClick = () => {
+    mutate();
+  };
+  return <button onClick={onClick}>디비 초기화</button>;
 };

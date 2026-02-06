@@ -1,6 +1,9 @@
 import * as S from "./Board.styled";
 
-import { useBoardStepContext } from "@hooksV02/board/context/context";
+import {
+  useBoardStaticContext,
+  useBoardStepContext,
+} from "@hooksV02/board/context/context";
 
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
 import { getItemSummary } from "@dataV02/itemSummary";
@@ -8,6 +11,8 @@ import useBoardControl from "@hooksV02/board/useBoardControl";
 import Spacing from "@componentsV02/spacing/Spacing";
 
 const TouchEvaluationBoard = () => {
+  const { vertical, horizontal, preference, itemList, boardInformation } =
+    useBoardStaticContext();
   const { currentItemID } = useBoardStepContext();
   const { navigateEvaluationSwipe } = useBoardControl();
 
@@ -37,7 +42,14 @@ const TouchEvaluationBoard = () => {
       </S.BoardTitleDescription>
       <Spacing size={12} />
 
-      <EvaluationBoard onClickGridItem={onClickBoardGrid} />
+      <EvaluationBoard
+        onClickGridItem={onClickBoardGrid}
+        vertical={vertical}
+        horizontal={horizontal}
+        preference={preference}
+        itemList={itemList}
+        boardInformation={boardInformation}
+      />
     </>
   );
 };

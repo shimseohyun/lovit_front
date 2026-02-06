@@ -4,27 +4,41 @@ import * as S from "./EvaluationBoard.styled";
 
 import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 
-import { useBoardStaticContext } from "@hooksV02/board/context/context";
 import BoardMarker from "./marker/BoardMarker";
 
 import { getItemSummary } from "@dataV02/itemSummary";
-import type { AxisType } from "@interfacesV02/type";
+import type { AxisData, AxisType } from "@interfacesV02/type";
+import type { ItemIDList } from "@interfacesV02/data/user";
+import type { BoardInformation } from "@interfacesV02/data/system";
 
 type Parms = {
+  vertical: AxisData;
+  horizontal: AxisData;
+  preference: AxisData;
+  itemList: ItemIDList;
+  boardInformation: BoardInformation;
+
   type?: "RESULT" | "BOARD";
   onClickGridItem?: (r: number, c: number) => void;
 } & PropsWithChildren;
 
 const EvaluationBoard = (parms: Parms) => {
-  const { children, onClickGridItem, type = "BOARD" } = parms;
-
-  const { itemList, boardSize, boardInformation } = useBoardStaticContext();
+  const {
+    vertical,
+    horizontal,
+    preference,
+    itemList,
+    boardInformation,
+    children,
+    onClickGridItem,
+    type = "BOARD",
+  } = parms;
 
   const { verticalPoints, horizontalPoints, preferncePoints } =
-    useGetBoardPoint();
+    useGetBoardPoint({ vertical, horizontal, preference, itemList });
 
   const CENTER_SIZE = 20;
-  const BOARD_SIZE = boardSize - 32;
+  const BOARD_SIZE = 400 - 32;
 
   const getPercentWithCenter = (originalPercent: number) => {
     const clampedPercent = Math.max(0, Math.min(100, originalPercent)); // 0~100
@@ -45,7 +59,7 @@ const EvaluationBoard = (parms: Parms) => {
 
   return (
     <>
-      <S.BoardContainer $size={boardSize - 48}>
+      <S.BoardContainer $size={BOARD_SIZE}>
         <S.BoardGrid $cols={6} $rows={6} $holePx={20}>
           {[0, 1, 2, -1, 3, 4, 5].map((r, rIDX) => {
             const rowInfo = boardInformation.axisDict["VERTICAL"];

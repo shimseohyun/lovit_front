@@ -7,13 +7,11 @@ import type { UseBoardSlotReturn } from "@hooksV02/board/context/useBoardSlot";
 import type { UseBoardStepReturn } from "@hooksV02/board/context/useBoardStep";
 
 export type ProviderParams = {
-  pendingItemIDList: number[];
   boardInformation: BoardInformation;
 };
 
 export type BoardStaticValue = {
   boardInformation: BoardInformation;
-  boardSize: number;
   stepPX: number;
 } & UseBoardDataReturn;
 

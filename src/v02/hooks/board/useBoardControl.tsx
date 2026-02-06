@@ -1,20 +1,30 @@
-import pushItemToAxis from "@utilsV02/pushItemToAxis";
 import {
   useBoardSlotContext,
   useBoardStaticContext,
   useBoardStepContext,
 } from "./context/context";
-import { addItemToCheckedItemList } from "@hooksV02/data/localStorage";
+
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
+import getNewRoughData from "@utilsV02/getNewRoughData";
+import { usePostUserBoardData } from "@apisV02/firebase/domain/user";
+import { useNavigate } from "react-router-dom";
 
 const useBoardControl = () => {
-  const { preference, vertical, horizontal } = useBoardStaticContext();
+  const { preference, vertical, horizontal, itemList } =
+    useBoardStaticContext();
   const { evaluationSlot, preferenceSlot, setEvaluationSlot, resetSlot } =
     useBoardSlotContext();
-  const { currentItemID, setIsFinTrue, navigateNextItemIDX, navigateStep } =
-    useBoardStepContext();
+  const {
+    currentItemID,
+    setIsFinTrue,
+    navigateNextItemIDX,
+    navigateStep,
+    reset,
+  } = useBoardStepContext();
 
-  const pushItem = () => {
+  const { mutateAsync } = usePostUserBoardData();
+
+  const pushItem = async () => {
     if (
       preferenceSlot?.preference === undefined ||
       evaluationSlot === undefined
@@ -27,10 +37,21 @@ const useBoardControl = () => {
 
     const itemID = currentItemID;
 
-    addItemToCheckedItemList(itemID);
-    pushItemToAxis(itemID, p, "PREFERENCE", preference);
-    pushItemToAxis(itemID, v, "VERTICAL", vertical);
-    pushItemToAxis(itemID, h, "HORIZONTAL", horizontal);
+    const newV = getNewRoughData(itemID, v, vertical);
+    const newH = getNewRoughData(itemID, h, horizontal);
+    const newP = getNewRoughData(itemID, p, preference);
+
+    const newItemList: number[] = itemList;
+    newItemList.push(itemID);
+
+    await mutateAsync({
+      itemList: JSON.stringify(newItemList),
+      axis: {
+        HORIZONTAL: JSON.stringify(newH),
+        VERTICAL: JSON.stringify(newV),
+        PREFERENCE: JSON.stringify(newP),
+      },
+    });
   };
 
   // 평가 스와이프로 이동
@@ -55,16 +76,26 @@ const useBoardControl = () => {
     navigateStep("PREFERENCE");
   };
 
-  // 현재 ITEM IDX 완료하기
-  const confrimCurrentItem = () => {
-    pushItem();
-    resetSlot();
-    navigateNextItemIDX();
+  const navigate = useNavigate();
+  // 결과 페이지로 이동
+  const navigateResult = () => {
+    navigate("/result", { replace: true });
   };
 
-  const navigateResult = () => {
-    resetSlot();
-    setIsFinTrue();
+  const navigateMore = () => {
+    reset();
+    navigateStep("EVALUATION_TOUCH");
+  };
+
+  // 현재 ITEM IDX 완료하기
+  const confrimCurrentItem = async () => {
+    try {
+      await pushItem();
+      resetSlot();
+      navigateNextItemIDX();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const skipCurrentItem = () => {
@@ -75,8 +106,10 @@ const useBoardControl = () => {
   return {
     navigateEvaluationSwipe,
     navigatePreferenceSwipe,
-    confrimCurrentItem,
     navigateResult,
+    confrimCurrentItem,
+
+    navigateMore,
     skipCurrentItem,
   };
 };

@@ -36,6 +36,7 @@
       "@interfacesV01/*": ["src/v01/interfaces/*"],
 
       "@apisV02/*": ["src/v02/apis/*"],
+      "@routersV02/*": ["src/v02/routers/*"],
       "@componentsV02/*": ["src/v02/components/*"],
       "@dataV02/*": ["src/v02/data/*"],
       "@hooksV02/*": ["src/v02/hooks/*"],

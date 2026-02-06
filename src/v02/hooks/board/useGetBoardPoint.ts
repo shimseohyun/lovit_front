@@ -1,13 +1,20 @@
-import { useBoardStaticContext } from "@hooksV02/board/context/context";
 import type {
+  ItemIDList,
   UserAxisGroupDict,
   UserAxisItemPositionDict,
   UserAxisPointDict,
 } from "@interfacesV02/data/user";
+import type { AxisData } from "@interfacesV02/type";
 
-const useGetBoardPoint = () => {
-  const { vertical, horizontal, preference, itemList } =
-    useBoardStaticContext();
+type Parms = {
+  vertical: AxisData;
+  horizontal: AxisData;
+  preference: AxisData;
+  itemList: ItemIDList;
+};
+
+const useGetBoardPoint = (parms: Parms) => {
+  const { vertical, horizontal, preference, itemList } = parms;
 
   const getPoints = (
     positionDict: UserAxisItemPositionDict,

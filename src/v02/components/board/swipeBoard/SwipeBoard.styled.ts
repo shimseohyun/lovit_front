@@ -2,9 +2,7 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { AxisType } from "@interfacesV02/type";
 
-export const BoardContaienr = styled.div<{
-  $size: number;
-}>`
+export const BoardContaienr = styled.div`
   touch-action: none;
 
   width: 100%;

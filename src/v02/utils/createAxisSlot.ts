@@ -4,6 +4,7 @@ const createAxisSlot = (
   startID: number,
   typeList: AxisSlotType[],
   groupID: number,
+  bundleIDX: number,
   bundleID?: number,
   bundle?: number[],
 ): UserAxisSlot[] => {
@@ -13,6 +14,7 @@ const createAxisSlot = (
       slotType: type,
       userAxisGroupID: groupID,
       userAxisBundleID: type === "ITEM_LIST" ? bundleID : undefined,
+      uesrAxisBundleIDX: bundleIDX,
       userAxisBundle: type === "ITEM_LIST" ? bundle : [],
     };
   });
