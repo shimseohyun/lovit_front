@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 
 type Parms = {
   preferencePercent?: number;
+  isLiked: boolean;
   img: string;
 
   left: number;
@@ -10,14 +11,22 @@ type Parms = {
 };
 
 const BoardMarker = (parms: Parms) => {
-  const { preferencePercent, img, left, top } = parms;
+  const { preferencePercent, img, left, top, isLiked } = parms;
 
   const size =
     preferencePercent === undefined ? 12 : (preferencePercent / 100) * 24;
   const opacity =
     preferencePercent === undefined ? 100 : preferencePercent + 10;
+
   return (
-    <Marker src={img} $top={top} $left={left} $size={size} $opacity={opacity} />
+    <Marker
+      src={img}
+      $top={top}
+      $left={left}
+      $size={size}
+      $opacity={opacity}
+      $isLiked={isLiked}
+    />
   );
 };
 
@@ -28,6 +37,7 @@ export const Marker = styled.img<{
   $left: number;
   $size: number;
   $opacity: number;
+  $isLiked: boolean;
 }>`
   touch-action: none;
 
@@ -44,7 +54,10 @@ export const Marker = styled.img<{
 
   ${(p) => {
     return css`
-      box-shadow: 0 0 0 1px ${p.theme.strokeColors.strokeLight};
+      border: solid ${p.$isLiked ? 2 : 1}px;
+      border-color: ${p.$isLiked
+        ? p.theme.foregroundColors.mainLight
+        : p.theme.strokeColors.strokeLight};
     `;
   }}
 

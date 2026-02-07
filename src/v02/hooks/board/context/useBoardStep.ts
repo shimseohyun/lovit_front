@@ -1,6 +1,7 @@
 export type UseBoardStepReturn = ReturnType<typeof useBoardStep>;
-
-import { useGetPendingItemList } from "@apisV02/firebase/domain/user";
+import { getItemSummary } from "@dataV02/itemSummary";
+import { useGetPendingItemList } from "@hooksV02/api/userBoardData";
+import { useAuth } from "@hooksV02/auth/useAuth";
 import { useEffect, useState } from "react";
 
 type BoardStep = "EVALUATION_TOUCH" | "EVALUATION_SWIPE" | "PREFERENCE";
@@ -10,10 +11,15 @@ type Parms = {
 };
 
 const useBoardStep = (parms: Parms) => {
-  const { maxCount = 2 } = parms;
+  const { maxCount = 8 } = parms;
   const [isFin, setIsFin] = useState<boolean>(true);
 
-  const { data, refetch: refetchPendingList } = useGetPendingItemList(maxCount);
+  const { user } = useAuth();
+  const {
+    data,
+    isFetching,
+    refetch: refetchPendingList,
+  } = useGetPendingItemList(user?.uid, maxCount);
 
   const pendingItemIDList = data?.list ?? [];
   const isLast = data?.isLast ?? true;
@@ -36,6 +42,7 @@ const useBoardStep = (parms: Parms) => {
 
     if (next === final) {
       setIsFin(true);
+      setCurrentItemIDX(next);
     } else {
       setCurrentItemIDX(next);
       setCurrentStep("EVALUATION_TOUCH");
@@ -58,13 +65,15 @@ const useBoardStep = (parms: Parms) => {
     isLast,
 
     currentStep,
+    currentItem: getItemSummary(currentItemID),
     currentItemID: currentItemID,
     currentItemIDX: currentItemIDX,
+    totalStepIDX: pendingItemIDList.length,
 
     navigateStep,
     navigateNextItemIDX,
     setIsFinTrue,
-
+    isFetching,
     reset,
   };
 };

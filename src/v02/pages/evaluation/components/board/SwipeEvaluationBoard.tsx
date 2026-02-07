@@ -1,4 +1,5 @@
 import * as S from "./Board.styled";
+import * as Title from "@componentsV02/title/Title.styled";
 
 import { type AxisType, type SlotDict } from "@interfacesV02/type";
 
@@ -137,39 +138,41 @@ const SwipeEvaluationBoard = () => {
     }
   };
 
-  const Title = () => {
+  const CurrentTitle = () => {
     return (
-      <S.BoardTitleContainer>
-        <S.BoardTitleDescription>
+      <Title.BoardTitleContainer>
+        <Title.BoardTitleDescription>
           {`드래그해서 비교할 수 있어요.`}
-        </S.BoardTitleDescription>
-        <S.BoardTitleMain>같은 그룹에 속한 사람이 있어요</S.BoardTitleMain>
-      </S.BoardTitleContainer>
+        </Title.BoardTitleDescription>
+        <Title.BoardTitleMain>
+          같은 그룹에 속한 사람이 있어요
+        </Title.BoardTitleMain>
+      </Title.BoardTitleContainer>
     );
   };
 
   const BoardTitle = () => {
     return (
-      <S.BoardTitleSubContainer>
+      <Title.BoardTitleSubContainer>
         {/* 상하 */}
-        <S.BoardTitleSubWrapper
+        <Title.BoardTitleSubWrapper
           $isSelected={dragAxis === "VERTICAL" || dragAxis === null}
         >
           {getSubTitle("VERTICAL", vertical)}
-        </S.BoardTitleSubWrapper>
+        </Title.BoardTitleSubWrapper>
         <Spacing size={8} />
         {/* 좌우 */}
-        <S.BoardTitleSubWrapper
+        <Title.BoardTitleSubWrapper
           $isSelected={dragAxis === "HORIZONTAL" || dragAxis === null}
         >
           {getSubTitle("HORIZONTAL", horizontal)}
-        </S.BoardTitleSubWrapper>
-      </S.BoardTitleSubContainer>
+        </Title.BoardTitleSubWrapper>
+      </Title.BoardTitleSubContainer>
     );
   };
   return (
     <>
-      <Title />
+      <CurrentTitle />
 
       <S.SwipeBoardContainer>
         <BoardTitle />
@@ -204,9 +207,9 @@ const renderGroupTitle = (parms: {
   const { icon, intensity, group } = parms;
   return (
     <>
-      <S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>
         {icon} {intensity} {group}
-      </S.BoardTitleSubChip>
+      </Title.BoardTitleSubChip>
     </>
   );
 };
@@ -221,11 +224,11 @@ const renderComparisonTitle = (parms: {
   const { comparison, icon, abs, group } = parms;
   return (
     <>
-      <S.BoardTitleSubChip>{comparison}</S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>{comparison}</Title.BoardTitleSubChip>
       <span>보다</span>
-      <S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>
         {icon} {abs} {group}
-      </S.BoardTitleSubChip>
+      </Title.BoardTitleSubChip>
     </>
   );
 };
@@ -240,11 +243,11 @@ const renderSameTitle = (parms: {
 
   return (
     <>
-      <S.BoardTitleSubChip>{comparison}</S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>{comparison}</Title.BoardTitleSubChip>
       <span>만큼</span>
-      <S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>
         {icon} {group}
-      </S.BoardTitleSubChip>
+      </Title.BoardTitleSubChip>
     </>
   );
 };

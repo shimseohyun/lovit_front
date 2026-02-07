@@ -1,19 +1,17 @@
-import { signInAnonymously } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { firestoreAuth, firestoreDb } from "../core";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { firestoreDb } from "../core";
+
 import type { AxisData, BoardAxisType } from "@interfacesV02/type";
 import type { ItemIDList } from "@interfacesV02/data/user";
 
 import { convertRoughToAxisData } from "@utilsV02/convertRoughToAxisData";
-import { getItemIDList } from "@dataV02/itemSummary";
 
-type GetUserBoardDataReturn = {
+export type GetUserBoardDataReturn = {
   itemList: ItemIDList;
   axis: Record<BoardAxisType, AxisData>;
 };
 
-type PostUserBoardDataBody = {
+export type PostUserBoardDataBody = {
   itemList: string;
   axis: Record<BoardAxisType, string>;
 };
@@ -23,17 +21,18 @@ const parsingData = (data: string) => {
   return JSON.parse(data);
 };
 
-const getUserBoardData = async (): Promise<
-  GetUserBoardDataReturn | undefined
-> => {
-  try {
-    await signInAnonymously(firestoreAuth);
+const initialEvaluation = [[], [], [], [], [], []];
+const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
-    const docRef = doc(firestoreDb, "userBoardData", "1234");
+export const getUserBoardData = async (
+  uid: string,
+): Promise<GetUserBoardDataReturn> => {
+  try {
+    const docRef = doc(firestoreDb, "userBoardData", uid);
     const snap = await getDoc(docRef);
     const data = snap.data();
 
-    if (data === undefined) throw "값이 없습니다.";
+    if (!data) throw "NO_DATA";
 
     const itemList = parsingData(data["itemList"]);
     const horizontal = parsingData(data["axis"]["HORIZONTAL"]);
@@ -41,7 +40,7 @@ const getUserBoardData = async (): Promise<
     const preference = parsingData(data["axis"]["PREFERENCE"]);
 
     return {
-      itemList: itemList,
+      itemList,
       axis: {
         HORIZONTAL: convertRoughToAxisData("HORIZONTAL", horizontal),
         VERTICAL: convertRoughToAxisData("VERTICAL", vertical),
@@ -49,82 +48,36 @@ const getUserBoardData = async (): Promise<
       },
     };
   } catch (err) {
-    console.log(err);
+    throw err;
   }
 };
 
-const initialEvaluationRoughData = [[], [], [], [], [], []];
-const initialPreferenceRoughData = [[], [], [], [], [], [], [], [], [], [], []];
-
-const postUserBoardData = async (body: PostUserBoardDataBody) => {
+export const postUserBoardData = async (
+  uid: string,
+  body: PostUserBoardDataBody,
+) => {
   try {
-    await signInAnonymously(firestoreAuth);
-    const docRef = doc(firestoreDb, "userBoardData", "1234");
+    const docRef = doc(firestoreDb, "userBoardData", uid);
     await setDoc(docRef, body);
   } catch (err) {
     console.log(err);
   }
 };
 
-export const resetUserBoardData = async () => {
+export const resetUserBoardData = async (uid: string) => {
   const initialData: PostUserBoardDataBody = {
     itemList: "[]",
     axis: {
-      HORIZONTAL: JSON.stringify(initialEvaluationRoughData),
-      VERTICAL: JSON.stringify(initialEvaluationRoughData),
-      PREFERENCE: JSON.stringify(initialPreferenceRoughData),
+      HORIZONTAL: JSON.stringify(initialEvaluation),
+      VERTICAL: JSON.stringify(initialEvaluation),
+      PREFERENCE: JSON.stringify(initialPreference),
     },
   };
   try {
-    await signInAnonymously(firestoreAuth);
-    const docRef = doc(firestoreDb, "userBoardData", "1234");
+    const docRef = doc(firestoreDb, "userBoardData", uid);
     await setDoc(docRef, initialData);
     console.log("데이터베이스가 초기화되었습니다.");
   } catch (err) {
     console.log(err);
   }
-};
-
-export const useResetUserBoardData = () => {
-  return useMutation({
-    mutationKey: ["POST_BOARD_DATA"],
-    mutationFn: () => resetUserBoardData(),
-  });
-};
-
-export const usePostUserBoardData = () => {
-  return useMutation({
-    mutationKey: ["POST_BOARD_DATA"],
-    mutationFn: (body: PostUserBoardDataBody) => postUserBoardData(body),
-  });
-};
-
-export const useGetUserBoardData = (id?: number) => {
-  return useQuery({
-    queryKey: ["USER_BOARD", id],
-    queryFn: getUserBoardData,
-  });
-};
-
-export const useGetPendingItemList = (maxCount: number) => {
-  return useQuery({
-    queryKey: ["PENDLING_ITEM_LIST"],
-
-    queryFn: async () => {
-      const data = await getUserBoardData();
-      const checkedItemList = data?.itemList ?? [];
-
-      const itemIDList = getItemIDList();
-
-      const checkedItemIDSet = new Set(checkedItemList);
-
-      const pendingItemIDAllList = itemIDList.filter(
-        (id) => !checkedItemIDSet.has(id),
-      );
-
-      const pendingItemIDList = pendingItemIDAllList.slice(0, maxCount);
-      const isLast = pendingItemIDAllList.length <= maxCount;
-      return { list: pendingItemIDList, isLast };
-    },
-  });
 };

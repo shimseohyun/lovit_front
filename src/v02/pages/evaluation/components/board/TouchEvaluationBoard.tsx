@@ -1,4 +1,4 @@
-import * as S from "./Board.styled";
+import * as Title from "@componentsV02/title/Title.styled";
 
 import {
   useBoardStaticContext,
@@ -6,26 +6,33 @@ import {
 } from "@hooksV02/board/context/context";
 
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
-import { getItemSummary } from "@dataV02/itemSummary";
+
 import useBoardControl from "@hooksV02/board/useBoardControl";
 import Spacing from "@componentsV02/spacing/Spacing";
+import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 
 const TouchEvaluationBoard = () => {
   const { vertical, horizontal, preference, itemList, boardInformation } =
     useBoardStaticContext();
-  const { currentItemID } = useBoardStepContext();
+
+  const { points } = useGetBoardPoint({
+    vertical,
+    horizontal,
+    preference,
+    itemList,
+  });
+  const { currentItem } = useBoardStepContext();
   const { navigateEvaluationSwipe } = useBoardControl();
 
-  const item = getItemSummary(currentItemID);
-  const Title = () => {
+  const CurrentTitle = () => {
     return (
-      <S.BoardTitleContainer>
-        <S.BoardTitleItemSection>
-          <h6>{item.category}</h6>
-          <h3>{item.name}</h3>
-        </S.BoardTitleItemSection>
-        <S.BoardTitleItemImg src={item.thumbnailURL} />
-      </S.BoardTitleContainer>
+      <Title.BoardTitleContainer>
+        <Title.BoardTitleItemSection>
+          <h6>{currentItem.category}</h6>
+          <h3>{currentItem.name}</h3>
+        </Title.BoardTitleItemSection>
+        <Title.BoardTitleItemImg src={currentItem.thumbnailURL} />
+      </Title.BoardTitleContainer>
     );
   };
 
@@ -35,19 +42,17 @@ const TouchEvaluationBoard = () => {
 
   return (
     <>
-      <Title />
+      <CurrentTitle />
       <Spacing size={8} />
-      <S.BoardTitleDescription>
+      <Title.BoardTitleDescription>
         어디에 속하는지 사분면에서 선택해주세요!
-      </S.BoardTitleDescription>
+      </Title.BoardTitleDescription>
       <Spacing size={12} />
 
       <EvaluationBoard
         onClickGridItem={onClickBoardGrid}
-        vertical={vertical}
-        horizontal={horizontal}
-        preference={preference}
         itemList={itemList}
+        itemPointDict={points}
         boardInformation={boardInformation}
       />
     </>

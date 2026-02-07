@@ -1,22 +1,32 @@
-import * as S from "@pagesV02/evaluation/components/board/Board.styled";
+import * as Title from "@componentsV02/title/Title.styled";
 
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
 import useGetBoardResult from "@hooksV02/board/useGetBoardResult";
 
-import { useGetUserBoardData } from "@apisV02/firebase/domain/user";
 import { FACE_BOARD_INFO } from "@dataV02/boardInfoDummy";
+import { useGetUserBoardData } from "@hooksV02/api/userBoardData";
+import { useAuth } from "@hooksV02/auth/useAuth";
+import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
+import ResultPoly from "./ResultPoly";
 
 const Result = () => {
-  const { data } = useGetUserBoardData();
-  console.log(data);
+  const { user } = useAuth();
+  const { data, isFetching } = useGetUserBoardData(user?.uid);
 
-  if (data === undefined) return;
+  const { horizontal, vertical, hasNoCalcData, topLikedItemIdList } =
+    useGetBoardResult({
+      vertical: data.axis.VERTICAL,
+      horizontal: data.axis.HORIZONTAL,
+      preference: data.axis.PREFERENCE,
+      itemList: data.itemList,
+    });
 
-  const { horizontal, vertical } = useGetBoardResult({
+  const { points, likedPointsList } = useGetBoardPoint({
     vertical: data.axis.VERTICAL,
     horizontal: data.axis.HORIZONTAL,
     preference: data.axis.PREFERENCE,
     itemList: data.itemList,
+    likedItemList: topLikedItemIdList,
   });
 
   const verticalZone = vertical.zone;
@@ -35,31 +45,38 @@ const Result = () => {
   const result =
     FACE_BOARD_INFO.resultDict[verticalZone][horizontalZone][focus];
 
-  const Title = () => {
+  const CurrentTitle = () => {
+    if (hasNoCalcData) return <div>없어요!</div>;
     return (
       <>
-        <S.BoardTitleContainer>
-          <S.BoardTitleItemImg src={result.img} />
+        <Title.BoardTitleContainer>
+          <Title.BoardTitleItemImg src={result.img} />
           <span>{result.label}</span>
-        </S.BoardTitleContainer>
+        </Title.BoardTitleContainer>
 
-        <S.BoardTitleDescription>
+        <Title.BoardTitleDescription>
           사분면을 토대로 취향을 분석했어요!
-        </S.BoardTitleDescription>
+        </Title.BoardTitleDescription>
       </>
     );
   };
+
+  if (isFetching) {
+    return <div>결과를 로딩중</div>;
+  }
+  if (data.itemList.length === 0) {
+    return <div>아직 결과가 없어요</div>;
+  }
   return (
     <>
-      <Title />
+      <CurrentTitle />
       <EvaluationBoard
-        type="RESULT"
-        vertical={data.axis.VERTICAL}
-        horizontal={data.axis.HORIZONTAL}
-        preference={data.axis.PREFERENCE}
-        itemList={data.itemList}
         boardInformation={FACE_BOARD_INFO}
-      />
+        itemList={data.itemList}
+        itemPointDict={points}
+      >
+        <ResultPoly points={likedPointsList} />
+      </EvaluationBoard>
       <div style={{ width: "100%", height: "40px", flexShrink: 0 }} />
     </>
   );

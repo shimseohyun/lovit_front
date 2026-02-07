@@ -2,65 +2,42 @@ import type { PropsWithChildren } from "react";
 
 import * as S from "./EvaluationBoard.styled";
 
-import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
-
 import BoardMarker from "./marker/BoardMarker";
 
-import { getItemSummary } from "@dataV02/itemSummary";
-import type { AxisData, AxisType } from "@interfacesV02/type";
-import type { ItemIDList } from "@interfacesV02/data/user";
+import type { AxisType } from "@interfacesV02/type";
+import type { ItemIDList, UserPointDict } from "@interfacesV02/data/user";
 import type { BoardInformation } from "@interfacesV02/data/system";
 
+import { getItemSummary } from "@dataV02/itemSummary";
+
+import useViewport from "@hooksV02/useViewPort";
+
 type Parms = {
-  vertical: AxisData;
-  horizontal: AxisData;
-  preference: AxisData;
-  itemList: ItemIDList;
+  onClickGridItem?: (r: number, c: number) => void;
   boardInformation: BoardInformation;
 
-  type?: "RESULT" | "BOARD";
-  onClickGridItem?: (r: number, c: number) => void;
+  itemList: ItemIDList;
+  itemPointDict: UserPointDict;
 } & PropsWithChildren;
 
 const EvaluationBoard = (parms: Parms) => {
   const {
-    vertical,
-    horizontal,
-    preference,
-    itemList,
-    boardInformation,
-    children,
     onClickGridItem,
-    type = "BOARD",
+    boardInformation,
+
+    itemList,
+    itemPointDict,
+    children,
   } = parms;
 
-  const { verticalPoints, horizontalPoints, preferncePoints } =
-    useGetBoardPoint({ vertical, horizontal, preference, itemList });
-
+  const { width } = useViewport();
   const CENTER_SIZE = 20;
-  const BOARD_SIZE = 400 - 32;
-
-  const getPercentWithCenter = (originalPercent: number) => {
-    const clampedPercent = Math.max(0, Math.min(100, originalPercent)); // 0~100
-    const originalRatio = clampedPercent / 100; // 0~1
-
-    const centerGapPx = Math.max(0, Math.min(CENTER_SIZE, BOARD_SIZE - 1e-6));
-    const shrinkRatio = (BOARD_SIZE - centerGapPx) / BOARD_SIZE;
-
-    if (originalRatio < 0.5) {
-      return originalRatio * shrinkRatio * 100;
-    } else {
-      const centerGapHalfRatio = centerGapPx / (2 * BOARD_SIZE);
-      return (
-        (0.5 + centerGapHalfRatio + (originalRatio - 0.5) * shrinkRatio) * 100
-      );
-    }
-  };
+  const BOARD_SIZE = width - 32;
 
   return (
     <>
       <S.BoardContainer $size={BOARD_SIZE}>
-        <S.BoardGrid $cols={6} $rows={6} $holePx={20}>
+        <S.BoardGrid $cols={6} $rows={6} $holePx={CENTER_SIZE}>
           {[0, 1, 2, -1, 3, 4, 5].map((r, rIDX) => {
             const rowInfo = boardInformation.axisDict["VERTICAL"];
 
@@ -100,22 +77,23 @@ const EvaluationBoard = (parms: Parms) => {
             });
           })}
         </S.BoardGrid>
-
+        {children}
         {itemList.map((itemID, i) => {
           return (
             <BoardMarker
               key={i}
-              left={getPercentWithCenter(horizontalPoints[itemID].percentage)}
-              top={getPercentWithCenter(verticalPoints[itemID].percentage)}
+              left={itemPointDict[itemID].horizontaPos}
+              top={itemPointDict[itemID].verticalPos}
               preferencePercent={
-                type === "RESULT" ? preferncePoints[i].percentage : undefined
+                itemPointDict[itemID].isLiked
+                  ? 100
+                  : itemPointDict[itemID].preferenceSize
               }
+              isLiked={itemPointDict[itemID].isLiked}
               img={getItemSummary(itemID).thumbnailURL}
             />
           );
         })}
-
-        {children}
       </S.BoardContainer>
     </>
   );

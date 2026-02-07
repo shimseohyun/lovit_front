@@ -1,5 +1,13 @@
+import { useAuth } from "@hooksV02/auth/useAuth";
+
 const HomePage = () => {
-  return <div>홈</div>;
+  const { user } = useAuth();
+
+  return (
+    <>
+      <div>{user?.name}홈</div>
+    </>
+  );
 };
 
 export default HomePage;

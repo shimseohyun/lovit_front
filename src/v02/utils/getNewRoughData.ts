@@ -39,6 +39,7 @@ const getNewRoughData = (
   }
 
   nextRoughData[groupID] = nextBundleList;
+
   return nextRoughData;
 };
 

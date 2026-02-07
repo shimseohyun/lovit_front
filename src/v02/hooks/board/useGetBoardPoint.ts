@@ -1,8 +1,9 @@
+import { useMemo } from "react";
+import useViewport from "@hooksV02/useViewPort";
 import type {
   ItemIDList,
-  UserAxisGroupDict,
-  UserAxisItemPositionDict,
-  UserAxisPointDict,
+  UserPoint,
+  UserPointDict,
 } from "@interfacesV02/data/user";
 import type { AxisData } from "@interfacesV02/type";
 
@@ -11,51 +12,119 @@ type Parms = {
   horizontal: AxisData;
   preference: AxisData;
   itemList: ItemIDList;
+  likedItemList?: ItemIDList;
 };
 
+const EVALUATION_GROUP_COUNT = 6;
+const PREFERENCE_GROUP_COUNT = 11;
+
+const CENTER_SIZE = 20;
+const BOARD_PADDING_PX = 32;
+
 const useGetBoardPoint = (parms: Parms) => {
-  const { vertical, horizontal, preference, itemList } = parms;
+  const { vertical, horizontal, preference, itemList, likedItemList } = parms;
 
-  const getPoints = (
-    positionDict: UserAxisItemPositionDict,
-    groupDict: UserAxisGroupDict,
-  ) => {
-    const pointDict: UserAxisPointDict = {};
-    const TOTAL_GROUP_COUNT = Object.keys(groupDict).length;
+  const { width } = useViewport();
+  const BOARD_SIZE = Math.max(0, width - BOARD_PADDING_PX);
 
-    const gap = 1 / TOTAL_GROUP_COUNT;
-    itemList.forEach((item) => {
-      const position = positionDict[item];
-      const groupID = position.userAxisGroupID;
-      const bundleID = position.userAxisBundleID;
-      const group = groupDict[groupID];
-      const bundleList = group.bundleList;
-      const bundleCount = bundleList.length;
-      const bundleIDX = bundleList.findIndex((i) => i === bundleID);
+  const result = useMemo(() => {
+    const points: UserPointDict = {};
+    const likedPointsList: UserPoint[] = [];
 
-      const start = groupID / TOTAL_GROUP_COUNT;
-      const percent = start + (gap * (bundleIDX + 1)) / (bundleCount + 1);
+    const isResult = likedItemList !== undefined;
 
-      pointDict[item] = {
-        percentage: Math.round(percent * 10000) / 100,
-        groupID: groupID,
+    const get_bundle_count = (axis: AxisData, group_id: number) =>
+      axis.groupDict[group_id]?.bundleList.length ?? 0;
+
+    // group + bundle -> ratio(0~1)
+    const get_ratio = (
+      group_id: number,
+      totalGroupCount: number,
+      bundle_idx: number,
+      total_bundle_count: number,
+    ) => {
+      const start = group_id / totalGroupCount;
+      const gap = 1 / totalGroupCount;
+      const inside = (bundle_idx + 1) / (total_bundle_count + 1);
+      return start + gap * inside;
+    };
+
+    // axis + item -> percent(0~100)
+    const getAxisPercent = (
+      axis: AxisData,
+      itemID: number,
+      totalGroupCount: number,
+      isCenterGap: boolean,
+    ) => {
+      const pos = axis.itemPositionDict[itemID];
+      if (!pos) return null;
+
+      const bundle_count = get_bundle_count(axis, pos.userAxisGroupID);
+      const ratio = get_ratio(
+        pos.userAxisGroupID,
+        totalGroupCount,
+        pos.userAxisBundleID,
+        bundle_count,
+      );
+
+      const adjustedRatio = isCenterGap
+        ? getRatioWithCenterGap(ratio, BOARD_SIZE, CENTER_SIZE)
+        : ratio;
+
+      return adjustedRatio * 100;
+    };
+
+    itemList.forEach((itemID) => {
+      const x = getAxisPercent(
+        horizontal,
+        itemID,
+        EVALUATION_GROUP_COUNT,
+        true,
+      );
+      const y = getAxisPercent(vertical, itemID, EVALUATION_GROUP_COUNT, true);
+      const pre = isResult
+        ? getAxisPercent(preference, itemID, PREFERENCE_GROUP_COUNT, false)
+        : null;
+
+      if (x === null || y === null || (isResult && pre === null)) return;
+
+      const isLiked = likedItemList?.includes(itemID) ?? false;
+
+      const point: UserPoint = {
+        id: itemID,
+        horizontaPos: x,
+        verticalPos: y,
+        isLiked: isLiked,
+        ...(isResult ? { preferenceSize: pre! } : {}),
       };
+
+      points[itemID] = point;
+      if (isLiked) likedPointsList.push(point);
     });
 
-    return pointDict;
-  };
+    return { points, likedPointsList };
+  }, [vertical, horizontal, preference, itemList, likedItemList, BOARD_SIZE]);
 
-  return {
-    verticalPoints: getPoints(vertical.itemPositionDict, vertical.groupDict),
-    horizontalPoints: getPoints(
-      horizontal.itemPositionDict,
-      horizontal.groupDict,
-    ),
-    preferncePoints: getPoints(
-      preference.itemPositionDict,
-      preference.groupDict,
-    ),
-  };
+  return result;
 };
 
 export default useGetBoardPoint;
+
+const getRatioWithCenterGap = (
+  origin: number,
+  BOARD_SIZE: number,
+  CENTER_SIZE: number,
+) => {
+  const clamped_ratio = Math.max(0, Math.min(1, origin)); // 0~1
+  const CENTER_GAP_PX = Math.max(0, Math.min(CENTER_SIZE, BOARD_SIZE - 1e-6));
+  const shrink_ratio =
+    BOARD_SIZE > 0 ? (BOARD_SIZE - CENTER_GAP_PX) / BOARD_SIZE : 0;
+
+  if (clamped_ratio < 0.5) {
+    return clamped_ratio * shrink_ratio;
+  }
+
+  const center_half_ratio =
+    BOARD_SIZE > 0 ? CENTER_GAP_PX / (2 * BOARD_SIZE) : 0;
+  return 0.5 + center_half_ratio + (clamped_ratio - 0.5) * shrink_ratio;
+};

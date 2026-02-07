@@ -1,5 +1,9 @@
-import { useResetUserBoardData } from "@apisV02/firebase/domain/user";
+import { postGoogleLogin, postLogout } from "@apisV02/firebase/domain/auth";
 import styled from "@emotion/styled";
+import { useResetUserBoardData } from "@hooksV02/api/userBoardData";
+import { useAuth } from "@hooksV02/auth/useAuth";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 10px;
@@ -8,16 +12,38 @@ const Container = styled.div`
 
   position: fixed;
   z-index: 20;
+  opacity: 40%;
 
   display: flex;
   flex-direction: column;
+  justify-content: start;
+  > button {
+    cursor: pointer;
+    width: auto;
+    text-align: start;
+    padding: 4px;
+  }
+  > button:hover {
+    background-color: aliceblue;
+  }
 `;
 
 const TestTool = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   return (
     <Container className="test-tool">
+      <ReactQueryDevtools />
+      {user ? (
+        <span>{user?.name} 님 안녕하세요!</span>
+      ) : (
+        <span>게스트 로그인</span>
+      )}
+      {user ? <Logout /> : <Login />}
       <ResetLocalSorage />
       <ResetDatabase />
+      <button onClick={() => navigate("/evaluate")}> 평가보드</button>
+      <button onClick={() => navigate("/result")}> 결과</button>
     </Container>
   );
 };
@@ -33,9 +59,24 @@ const ResetLocalSorage = () => {
 };
 
 const ResetDatabase = () => {
-  const { mutate } = useResetUserBoardData();
+  const { user } = useAuth();
+  const { mutate } = useResetUserBoardData(user?.uid);
   const onClick = () => {
     mutate();
   };
   return <button onClick={onClick}>디비 초기화</button>;
+};
+
+const Login = () => {
+  const onClick = () => {
+    postGoogleLogin();
+  };
+  return <button onClick={onClick}>로그인</button>;
+};
+
+const Logout = () => {
+  const onClick = () => {
+    postLogout();
+  };
+  return <button onClick={onClick}>로그아웃</button>;
 };

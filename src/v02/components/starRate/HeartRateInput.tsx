@@ -14,7 +14,9 @@ const HeartRateInput = (props: Props) => {
   const theme = useTheme();
 
   const getFill = (isActive: boolean) =>
-    isActive ? "#F42572" : theme.foregroundColors.foregroundLighter;
+    isActive
+      ? theme.foregroundColors.mainLight
+      : theme.foregroundColors.foregroundLighter;
 
   const getOpacity = (isActive: boolean) =>
     isActive ? (100 - (STEPS - value) * 8) / 100 : 1;

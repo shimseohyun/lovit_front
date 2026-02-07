@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import * as S from "./Board.styled";
+import * as Title from "@componentsV02/title/Title.styled";
 
 import { type SlotDict } from "@interfacesV02/type";
 
@@ -101,29 +102,29 @@ const SwipePreferenceBoard = () => {
     }
   };
 
-  const Title = () => {
+  const CurrentTitle = () => {
     return (
-      <S.BoardTitleContainer>
-        <S.BoardTitleDescription>
+      <Title.BoardTitleContainer>
+        <Title.BoardTitleDescription>
           드래그하거나 터치해주세요
-        </S.BoardTitleDescription>
-        <S.BoardTitleMain>얼마나 취향인가요?</S.BoardTitleMain>
-      </S.BoardTitleContainer>
+        </Title.BoardTitleDescription>
+        <Title.BoardTitleMain>얼마나 취향인가요?</Title.BoardTitleMain>
+      </Title.BoardTitleContainer>
     );
   };
 
   const BoardTitle = () => {
     return (
-      <S.BoardTitleSubContainer>
-        <S.BoardTitleSubWrapper $isSelected={true}>
+      <Title.BoardTitleSubContainer>
+        <Title.BoardTitleSubWrapper $isSelected={true}>
           {getSubTitle()}
-        </S.BoardTitleSubWrapper>
-      </S.BoardTitleSubContainer>
+        </Title.BoardTitleSubWrapper>
+      </Title.BoardTitleSubContainer>
     );
   };
   return (
     <>
-      <Title />
+      <CurrentTitle />
 
       <S.SwipeBoardContainer>
         <BoardTitle />
@@ -158,9 +159,9 @@ const renderGroupTitle = (parms: { icon: string; intensity: string }) => {
   const { icon, intensity } = parms;
   return (
     <>
-      <S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>
         {icon} {intensity}
-      </S.BoardTitleSubChip>
+      </Title.BoardTitleSubChip>
     </>
   );
 };
@@ -175,11 +176,11 @@ const renderComparisonTitle = (parms: {
   const { comparison, icon, abs, group } = parms;
   return (
     <>
-      <S.BoardTitleSubChip>{comparison}</S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>{comparison}</Title.BoardTitleSubChip>
       <span>보다</span>
-      <S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>
         {icon} {abs} {group}
-      </S.BoardTitleSubChip>
+      </Title.BoardTitleSubChip>
     </>
   );
 };
@@ -194,11 +195,11 @@ const renderSameTitle = (parms: {
 
   return (
     <>
-      <S.BoardTitleSubChip>{comparison}</S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>{comparison}</Title.BoardTitleSubChip>
       <span>만큼</span>
-      <S.BoardTitleSubChip>
+      <Title.BoardTitleSubChip>
         {icon} {group}
-      </S.BoardTitleSubChip>
+      </Title.BoardTitleSubChip>
     </>
   );
 };

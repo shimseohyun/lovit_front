@@ -1,12 +1,10 @@
-import styled from "@emotion/styled";
-
-const Container = styled.nav`
-  width: 100%;
-  min-height: 44px;
-`;
-
+import * as S from "./Navigateion.styled";
 const Navigation = () => {
-  return <Container>네비</Container>;
+  return (
+    <S.Container>
+      <S.Content />
+    </S.Container>
+  );
 };
 
 export default Navigation;

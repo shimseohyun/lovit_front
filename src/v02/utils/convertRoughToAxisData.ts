@@ -54,7 +54,7 @@ export const convertRoughToAxisData = (
         userAxisItemPosition[itemID] = {
           itemSummaryID: itemID,
           userAxisGroupID: currentAxisGroupID,
-          userAxisBundleID: currentAxisBundleID,
+          userAxisBundleID: bundleIDX,
         };
         currentItemList.push(itemID);
       });

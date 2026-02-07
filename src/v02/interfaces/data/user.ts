@@ -65,6 +65,15 @@ export type UserAxisItemPositionDict = Record<
 
 export type UserAxisPointDict = Record<ItemSummaryID, UserAxisPoint>;
 
+export type UserPoint = {
+  id: number;
+  verticalPos: number;
+  horizontaPos: number;
+  preferenceSize?: number;
+  isLiked: boolean;
+};
+export type UserPointDict = Record<ItemSummaryID, UserPoint>;
+
 export type UserAxisSlotList = number[];
 export type UserAxisSlotDict = Record<UserAxisSlotID, UserAxisSlot>;
 

@@ -6,23 +6,21 @@ import {
 
 import { getSlotCenterIDX } from "@utilsV02/getSlotIDX";
 import getNewRoughData from "@utilsV02/getNewRoughData";
-import { usePostUserBoardData } from "@apisV02/firebase/domain/user";
+
 import { useNavigate } from "react-router-dom";
+import { usePostUserBoardData } from "@hooksV02/api/userBoardData";
+import { useAuth } from "@hooksV02/auth/useAuth";
 
 const useBoardControl = () => {
   const { preference, vertical, horizontal, itemList } =
     useBoardStaticContext();
   const { evaluationSlot, preferenceSlot, setEvaluationSlot, resetSlot } =
     useBoardSlotContext();
-  const {
-    currentItemID,
-    setIsFinTrue,
-    navigateNextItemIDX,
-    navigateStep,
-    reset,
-  } = useBoardStepContext();
+  const { currentItemID, navigateNextItemIDX, navigateStep, reset } =
+    useBoardStepContext();
 
-  const { mutateAsync } = usePostUserBoardData();
+  const { user } = useAuth();
+  const { mutateAsync } = usePostUserBoardData(user?.uid);
 
   const pushItem = async () => {
     if (

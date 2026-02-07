@@ -51,7 +51,7 @@ const SwipeBoard = (parms: Parms) => {
   } = parms;
 
   const { boardInformation } = useBoardStaticContext();
-  const { currentItemID } = useBoardStepContext();
+  const { currentItem } = useBoardStepContext();
 
   const isHorizontal = dataDict.HORIZONTAL !== undefined;
   const isVertical = dataDict.VERTICAL !== undefined;
@@ -184,7 +184,7 @@ const SwipeBoard = (parms: Parms) => {
       })}
 
       <CurrentMarker
-        imgURL={getItemSummary(currentItemID).thumbnailURL}
+        imgURL={currentItem.thumbnailURL}
         axis={isSolo ? (isHorizontal ? "HORIZONTAL" : "VERTICAL") : dragAxis}
       />
     </S.BoardContaienr>

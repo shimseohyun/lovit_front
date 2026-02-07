@@ -1,11 +1,14 @@
-import Navigation from "@componentsV02/navigation/Navigation";
+import { PageContainer } from "@componentsV02/layout/DefaultLayout";
 import Result from "./components/Result";
+import Navigation from "@componentsV02/navigation/Navigation";
 
 const ResultPage = () => {
   return (
     <>
-      <Navigation />
-      <Result />
+      <PageContainer>
+        <Navigation />
+        <Result />
+      </PageContainer>
     </>
   );
 };

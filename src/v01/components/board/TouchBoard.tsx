@@ -24,7 +24,6 @@ const TouchBoard = (parms: Parms) => {
   const { likeDic } = useBoardState();
   const {
     summaryData,
-
     verticalSeparatedData,
     horizontalSeparatedData,
     points,
