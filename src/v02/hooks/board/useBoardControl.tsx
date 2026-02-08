@@ -14,8 +14,14 @@ import { useAuth } from "@hooksV02/auth/useAuth";
 const useBoardControl = () => {
   const { preference, vertical, horizontal, itemList } =
     useBoardStaticContext();
-  const { evaluationSlot, preferenceSlot, setEvaluationSlot, resetSlot } =
-    useBoardSlotContext();
+  const {
+    evaluationGroup,
+    getEvaluationGroup,
+    evaluationSlot,
+    preferenceSlot,
+    setEvaluationSlot,
+    resetSlot,
+  } = useBoardSlotContext();
   const { currentItemID, navigateNextItemIDX, navigateStep, reset } =
     useBoardStepContext();
 
@@ -25,13 +31,20 @@ const useBoardControl = () => {
   const pushItem = async () => {
     if (
       preferenceSlot?.preference === undefined ||
-      evaluationSlot === undefined
+      evaluationSlot === undefined ||
+      evaluationGroup === undefined
     )
       return;
 
     const p = preferenceSlot.preference;
-    const v = evaluationSlot.VERTICAL;
-    const h = evaluationSlot.HORIZONTAL;
+    let v = evaluationSlot.VERTICAL;
+    let h = evaluationSlot.HORIZONTAL;
+
+    if (v === undefined)
+      v = vertical.slotByGroupDict[evaluationGroup.VERTICAL].startSlotIDX;
+
+    if (h === undefined)
+      h = horizontal.slotByGroupDict[evaluationGroup.HORIZONTAL].startSlotIDX;
 
     const itemID = currentItemID;
 
@@ -60,7 +73,11 @@ const useBoardControl = () => {
     const vSlotIDX = getSlotCenterIDX(v, vertical.slotByGroupDict);
     const hSlotIDX = getSlotCenterIDX(h, horizontal.slotByGroupDict);
 
-    setEvaluationSlot({ VERTICAL: vSlotIDX, HORIZONTAL: hSlotIDX });
+    getEvaluationGroup({ VERTICAL: v, HORIZONTAL: h });
+    setEvaluationSlot({
+      VERTICAL: vIsFirst ? undefined : vSlotIDX,
+      HORIZONTAL: hIsFirst ? undefined : hSlotIDX,
+    });
 
     if (vIsFirst && hIsFirst) {
       navigateStep("PREFERENCE");

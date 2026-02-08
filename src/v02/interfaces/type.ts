@@ -31,10 +31,14 @@ export const emptyDirection: BoardDirection = {
 
 export type BoardDirection = Record<AxisType, DirectionType | null>;
 
-export type EvaluationSlot = Record<AxisType, number>;
+export type EvaluationSlot = Partial<Record<AxisType, number>>;
 
 export type PreferenceSlot = { preference: number };
 
-export type BoardAxisDict = Partial<Record<AxisType, AxisData>>;
+export type BoardAixs = {
+  startIDX: number;
+  endIDX: number;
+} & AxisData;
+export type BoardAxisDict = Partial<Record<AxisType, BoardAixs>>;
 export type SlotCount = Record<AxisType, number>;
 export type SlotDict = Partial<Record<AxisType, number>>;

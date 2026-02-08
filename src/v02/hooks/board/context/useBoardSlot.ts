@@ -1,9 +1,19 @@
 export type UseBoardSlotReturn = ReturnType<typeof useBoardSlot>;
 
-import { type PreferenceSlot, type EvaluationSlot } from "@interfacesV02/type";
+import {
+  type PreferenceSlot,
+  type EvaluationSlot,
+  type AxisType,
+} from "@interfacesV02/type";
 import { useState } from "react";
 
+type GroupDict = Record<AxisType, number>;
+
 const useBoardSlot = () => {
+  const [evaluationGroup, setEvaluationGroup] = useState<GroupDict>();
+  const getEvaluationGroup = (s: GroupDict) => {
+    setEvaluationGroup(s);
+  };
   const [evaluationSlot, setEvaluationSlotState] = useState<
     EvaluationSlot | undefined
   >();
@@ -24,6 +34,8 @@ const useBoardSlot = () => {
   };
 
   return {
+    evaluationGroup,
+    getEvaluationGroup,
     evaluationSlot,
     setEvaluationSlot,
     preferenceSlot,
