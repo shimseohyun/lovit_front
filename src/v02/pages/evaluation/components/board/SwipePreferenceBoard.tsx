@@ -16,7 +16,6 @@ import HeartRateInput from "@componentsV02/starRate/HeartRateInput";
 import useSwipeBoard from "@componentsV02/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 
-import Spacing from "@componentsV02/spacing/Spacing";
 import { getSwipeBoardSubTitle } from "@componentsV02/board/swipeBoard/getSwipeBoardTitle";
 
 const SwipePreferenceBoard = () => {
@@ -53,11 +52,10 @@ const SwipePreferenceBoard = () => {
   const slot = preference.slotDict[slotID];
 
   const gorupID = slot.userAxisGroupID;
+  const groupSummary =
+    boardInformation.axisDict["PREFERENCE"].groupSummary[gorupID];
 
   const getSubTitle = () => {
-    const groupSummary =
-      boardInformation.axisDict["PREFERENCE"].groupSummary[gorupID];
-
     return getSwipeBoardSubTitle({
       data: preference,
       slotIDX: preferenceSlot?.preference ?? centerIDX,
@@ -66,23 +64,18 @@ const SwipePreferenceBoard = () => {
       intensity: groupSummary.intensityLabel,
       groupLabel: groupSummary.groupLabel,
       showGroupLabelInGroupTitle: false,
+      labelColorLight: groupSummary.labelColorLight,
+      labelColorLighter: groupSummary.labelColorLightest,
     });
-  };
-
-  const CurrentTitle = () => {
-    return (
-      <Title.BoardTitleContainer>
-        <Title.BoardTitleDescription>
-          드래그하거나 터치해주세요
-        </Title.BoardTitleDescription>
-        <Title.BoardTitleMain>얼마나 취향인가요?</Title.BoardTitleMain>
-      </Title.BoardTitleContainer>
-    );
   };
 
   const BoardTitle = () => {
     return (
       <Title.BoardTitleSubContainer>
+        <Title.BoardTitelGroupChip>
+          {groupSummary.groupDescription}
+        </Title.BoardTitelGroupChip>
+
         <Title.BoardTitleSubWrapper $isSelected={true}>
           {getSubTitle()}
         </Title.BoardTitleSubWrapper>
@@ -91,11 +84,14 @@ const SwipePreferenceBoard = () => {
   };
   return (
     <>
-      <CurrentTitle />
+      <Title.BoardTitleContainer>
+        <h6>드래그하거나 터치해주세요</h6>
+        <h1>얼마나 취향인가요?</h1>
+      </Title.BoardTitleContainer>
 
       <S.SwipeBoardContainer>
         <BoardTitle />
-        <Spacing size={20} />
+
         <SwipeBoard {...swipeBoardProps} />
       </S.SwipeBoardContainer>
 

@@ -7,6 +7,7 @@ import type { ItemIDList } from "@interfacesV02/data/user";
 import { convertRoughToAxisData } from "@utilsV02/convertRoughToAxisData";
 
 export type GetUserBoardDataReturn = {
+  // cusor: number;
   itemList: ItemIDList;
   axis: Record<BoardAxisType, AxisData>;
 };
@@ -34,6 +35,7 @@ export const getUserBoardData = async (
 
     if (!data) throw "NO_DATA";
 
+    // const itemCusor = data["cusor"];
     const itemList = parsingData(data["itemList"]);
     const horizontal = parsingData(data["axis"]["HORIZONTAL"]);
     const vertical = parsingData(data["axis"]["VERTICAL"]);
@@ -76,7 +78,6 @@ export const resetUserBoardData = async (uid: string) => {
   try {
     const docRef = doc(firestoreDb, "userBoardData", uid);
     await setDoc(docRef, initialData);
-    console.log("데이터베이스가 초기화되었습니다.");
   } catch (err) {
     console.log(err);
   }

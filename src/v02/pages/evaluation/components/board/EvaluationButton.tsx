@@ -4,10 +4,11 @@ import { useBoardStepContext } from "@hooksV02/board/context/context";
 import useBoardControl from "@hooksV02/board/useBoardControl";
 
 const EvaluationButton = () => {
-  const { isFin, isLast, currentStep } = useBoardStepContext();
+  const { isFin, isLast, currentStep, currentItem } = useBoardStepContext();
   const {
     navigatePreferenceSwipe,
     navigateResult,
+    isPushingItem,
     confrimCurrentItem,
     navigateMore,
   } = useBoardControl();
@@ -46,9 +47,10 @@ const EvaluationButton = () => {
         <FillButton
           type="button"
           buttonType={"PRIMARY"}
+          disabled={isPushingItem}
           onClick={onClickNavigateNextIDX}
         >
-          완료하기
+          이렇게 할게요!
         </FillButton>
       ) : (
         <>

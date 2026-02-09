@@ -77,8 +77,8 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
   options: SwipeOptions,
 ) => {
   const {
-    minDistancePx = 10,
-    lockDirectionPx = 10,
+    minDistancePx = 1,
+    lockDirectionPx = 1,
     draggingMode = "down",
     onProgress,
     onEnd,

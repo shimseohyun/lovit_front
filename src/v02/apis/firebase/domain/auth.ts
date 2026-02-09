@@ -50,5 +50,4 @@ export const postGoogleLogin = async () => {
 
 export const postLogout = async () => {
   await signOut(firestoreAuth);
-  console.log("로그아웃되었습니다.");
 };

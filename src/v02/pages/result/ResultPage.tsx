@@ -1,4 +1,7 @@
-import { PageContainer } from "@componentsV02/layout/DefaultLayout";
+import {
+  PageContainer,
+  PageViewPortScroll,
+} from "@componentsV02/layout/DefaultLayout";
 import Result from "./components/Result";
 import Navigation from "@componentsV02/navigation/Navigation";
 
@@ -7,7 +10,9 @@ const ResultPage = () => {
     <>
       <PageContainer>
         <Navigation />
-        <Result />
+        <PageViewPortScroll>
+          <Result />
+        </PageViewPortScroll>
       </PageContainer>
     </>
   );

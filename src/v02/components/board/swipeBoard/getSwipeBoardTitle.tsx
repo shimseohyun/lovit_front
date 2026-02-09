@@ -13,6 +13,8 @@ type Params = {
   intensity: string;
   groupLabel: string;
 
+  labelColorLight: string;
+  labelColorLighter: string;
   // evaluation 축에서만 필요 (축 방향에 따라 더/덜 뒤집힘)
   axisSide?: DirectionType;
 
@@ -30,6 +32,8 @@ export const getSwipeBoardSubTitle = (params: Params): ReactNode => {
     groupLabel,
     axisSide,
     showGroupLabelInGroupTitle = true,
+    labelColorLight,
+    labelColorLighter,
   } = params;
 
   // 아직 slot이 없으면 그룹 타이틀
@@ -39,6 +43,8 @@ export const getSwipeBoardSubTitle = (params: Params): ReactNode => {
       intensity,
       groupLabel,
       showGroupLabelInGroupTitle,
+      labelColorLighter,
+      labelColorLight,
     });
   }
 
@@ -50,6 +56,8 @@ export const getSwipeBoardSubTitle = (params: Params): ReactNode => {
       intensity,
       groupLabel,
       showGroupLabelInGroupTitle,
+      labelColorLighter,
+      labelColorLight,
     });
   }
 
@@ -67,6 +75,8 @@ export const getSwipeBoardSubTitle = (params: Params): ReactNode => {
       intensity,
       groupLabel,
       showGroupLabelInGroupTitle,
+      labelColorLighter,
+      labelColorLight,
     });
   }
 
@@ -92,6 +102,8 @@ export const getSwipeBoardSubTitle = (params: Params): ReactNode => {
       icon,
       abs,
       groupLabel,
+      labelColorLighter,
+      labelColorLight,
     });
   }
 
@@ -103,6 +115,8 @@ export const getSwipeBoardSubTitle = (params: Params): ReactNode => {
       comparison: getItemSummary(comparisonItemID).name,
       icon,
       groupLabel,
+      labelColorLighter,
+      labelColorLight,
     });
   }
 
@@ -112,6 +126,8 @@ export const getSwipeBoardSubTitle = (params: Params): ReactNode => {
     intensity,
     groupLabel,
     showGroupLabelInGroupTitle,
+    labelColorLighter,
+    labelColorLight,
   });
 };
 
@@ -136,10 +152,22 @@ const renderGroupTitle = (p: {
   intensity: string;
   groupLabel: string;
   showGroupLabelInGroupTitle: boolean;
+  labelColorLight: string;
+  labelColorLighter: string;
 }) => {
-  const { icon, intensity, groupLabel, showGroupLabelInGroupTitle } = p;
+  const {
+    icon,
+    intensity,
+    groupLabel,
+    showGroupLabelInGroupTitle,
+    labelColorLighter,
+    labelColorLight,
+  } = p;
   return (
-    <Title.BoardTitleSubChip>
+    <Title.BoardTitleSubChip
+      $lightColor={labelColorLight}
+      $lighterColor={labelColorLighter}
+    >
       {icon} {intensity}
       {showGroupLabelInGroupTitle && <> {groupLabel}</>}
     </Title.BoardTitleSubChip>
@@ -151,13 +179,26 @@ const renderComparisonTitle = (p: {
   icon: string;
   abs: string;
   groupLabel: string;
+  labelColorLight: string;
+  labelColorLighter: string;
 }) => {
-  const { comparison, icon, abs, groupLabel } = p;
+  const {
+    comparison,
+    icon,
+    abs,
+    groupLabel,
+    labelColorLighter,
+    labelColorLight,
+  } = p;
   return (
     <>
       <Title.BoardTitleSubChip>{comparison}</Title.BoardTitleSubChip>
       <span>보다</span>
-      <Title.BoardTitleSubChip>
+      <Title.BoardTitleSubChip
+        $isMinus={abs === "덜"}
+        $lightColor={labelColorLight}
+        $lighterColor={labelColorLighter}
+      >
         {icon} {abs} {groupLabel}
       </Title.BoardTitleSubChip>
     </>
@@ -168,13 +209,19 @@ const renderSameTitle = (p: {
   comparison: string;
   icon: string;
   groupLabel: string;
+  labelColorLight: string;
+  labelColorLighter: string;
 }) => {
-  const { comparison, icon, groupLabel } = p;
+  const { comparison, icon, groupLabel, labelColorLighter, labelColorLight } =
+    p;
   return (
     <>
       <Title.BoardTitleSubChip>{comparison}</Title.BoardTitleSubChip>
       <span>만큼</span>
-      <Title.BoardTitleSubChip>
+      <Title.BoardTitleSubChip
+        $lightColor={labelColorLight}
+        $lighterColor={labelColorLighter}
+      >
         {icon} {groupLabel}
       </Title.BoardTitleSubChip>
     </>

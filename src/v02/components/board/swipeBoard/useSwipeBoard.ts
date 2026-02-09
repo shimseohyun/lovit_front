@@ -39,7 +39,7 @@ const useSwipeBoard = (parms: Parms) => {
     onPointerDown,
     onTransitionEnd,
     bind,
-    dragAxis: controlDragAxis, // ✅ 실제 드래그 축
+    dragAxis: controlDragAxis,
     dragDirection,
   } = useSwipeBoardControl({
     min: {
@@ -57,11 +57,6 @@ const useSwipeBoard = (parms: Parms) => {
     isVertical,
   });
 
-  /**
-   * ✅ 온보딩용 "포커스 축"
-   * - isSolo가 아닐 때: V -> H -> null 순으로 자동 포커스
-   * - 사용자가 실제 드래그 시작하면 즉시 중단
-   */
   const [onboardingAxis, setOnboardingAxis] = useState<AxisType | null>(null);
   const timersRef = useRef<number[]>([]);
 
@@ -113,6 +108,7 @@ const useSwipeBoard = (parms: Parms) => {
     slot,
     isSolo,
     dragAxis: focusAxis, // ✅ 여기서 UI 포커스 축을 내려줌
+    dragDirection: dragDirection,
     bind,
     onPointerDown,
     onTransitionEnd,

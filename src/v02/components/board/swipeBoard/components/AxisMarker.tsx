@@ -113,8 +113,8 @@ const Marker = styled.div<{
       return css`
         ${$isCurrent ||
         css`
-          margin-top: ${$axis === "HORIZONTAL" ? 40 : 0}px;
-          margin-left: ${$axis === "HORIZONTAL" ? 0 : 40}px;
+          margin-top: ${$axis === "HORIZONTAL" ? 16 : 0}px;
+          margin-left: ${$axis === "HORIZONTAL" ? 0 : 16}px;
         `}
 
         ${$isCurrent &&
@@ -123,8 +123,8 @@ const Marker = styled.div<{
           height: 56px;
           border: solid 2px ${p.theme.strokeColors.strokeStorngest};
 
-          margin-top: ${$axis === "HORIZONTAL" ? 32 : 0}px;
-          margin-left: ${$axis === "HORIZONTAL" ? 0 : 32}px;
+          margin-top: ${$axis === "HORIZONTAL" ? 12 : 0}px;
+          margin-left: ${$axis === "HORIZONTAL" ? 0 : 12}px;
         `}
       `;
     }
@@ -144,7 +144,7 @@ const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
 
   transform: translateX(-50%);
   left: 50%;
-  top: -11px;
+  bottom: -10px;
 
   box-sizing: border-box;
   max-width: calc(100% + 10px);
@@ -182,7 +182,7 @@ type Parms = {
   isCurrent: boolean;
   axis: AxisType;
   type: AxisSlotType;
-  label: string;
+  label?: string;
   imgURL?: string;
   icon?: string;
   iconIntensity?: number;
@@ -219,9 +219,11 @@ const AxisMarker = (parms: Parms) => {
           $isLabel={isLabel}
           $imgURL={imgURL}
         >
-          <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
-            {label}
-          </MarkerLabel>
+          {label !== undefined && (
+            <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
+              {label}
+            </MarkerLabel>
+          )}
 
           {isLabel && (
             <IconLabel $isSelected={isSelected} $iconIntensity={iconIntensity}>

@@ -4,9 +4,8 @@ import Progress from "./Progress";
 import useBoardControl from "@hooksV02/board/useBoardControl";
 
 const EvaluationNavigation = () => {
-  const { currentItemIDX, currentItem, totalStepIDX, currentStep } =
-    useBoardStepContext();
-  const { skipCurrentItem } = useBoardControl();
+  const { currentItemIDX, totalStepIDX, currentStep } = useBoardStepContext();
+  const { skipCurrentItem, navigateEvaluationTouch } = useBoardControl();
   return (
     <>
       <S.Container>
@@ -14,8 +13,9 @@ const EvaluationNavigation = () => {
         <S.Content>
           <div>
             {(currentStep === "EVALUATION_SWIPE" ||
-              currentStep === "PREFERENCE") &&
-              currentItem && <span>{currentItem.name}</span>}
+              currentStep === "PREFERENCE") && (
+              <button onClick={navigateEvaluationTouch}>뒤로가기</button>
+            )}
           </div>
           <div>
             {currentStep === "EVALUATION_TOUCH" && (

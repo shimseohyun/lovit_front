@@ -40,8 +40,8 @@ const useSwipeBoardControl = (params: Params) => {
     stepPX,
     isHorizontal = true,
     isVertical = true,
-    minDistancePx = 10,
-    lockDirectionPx = 10,
+    minDistancePx = 1,
+    lockDirectionPx = 1,
     draggingMode = "down",
   } = params;
 

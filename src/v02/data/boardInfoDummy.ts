@@ -3,6 +3,20 @@ import type { Axis, BoardInformation } from "@interfacesV02/data/system";
 const DOBOO_BUTTER_AXIS: Axis = {
   axisID: 0,
   stepCount: 6,
+  axisSide: {
+    START: {
+      icon: "🍚",
+      label: "두부",
+      labelColor: "#AEAEAE",
+      groupColor: "#F9F8F8",
+    },
+    END: {
+      icon: "🥞",
+      label: "버터",
+      labelColor: "#FFA500",
+      groupColor: "#FFF8E1",
+    },
+  },
   groupSummary: [
     {
       axisSide: "START",
@@ -10,7 +24,9 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "완전",
       groupLabel: "두부",
       groupDescription: "",
-      iconIntensity: 100,
+
+      labelColorLight: "#AEAEAE",
+      labelColorLightest: "#F9F8F8",
     },
     {
       axisSide: "START",
@@ -18,7 +34,9 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "제법",
       groupLabel: "두부",
       groupDescription: "",
-      iconIntensity: 50,
+
+      labelColorLight: "#AEAEAE",
+      labelColorLightest: "#F9F8F8",
     },
     {
       axisSide: "START",
@@ -26,7 +44,9 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "약간",
       groupLabel: "두부",
       groupDescription: "",
-      iconIntensity: 20,
+
+      labelColorLight: "#AEAEAE",
+      labelColorLightest: "#F9F8F8",
     },
 
     {
@@ -35,7 +55,9 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "약간",
       groupLabel: "버터",
       groupDescription: "",
-      iconIntensity: 20,
+
+      labelColorLight: "#FFA500",
+      labelColorLightest: "#FFF8E1",
     },
     {
       axisSide: "END",
@@ -43,7 +65,9 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "제법",
       groupLabel: "버터",
       groupDescription: "",
-      iconIntensity: 50,
+
+      labelColorLight: "#FFA500",
+      labelColorLightest: "#FFF8E1",
     },
     {
       axisSide: "END",
@@ -51,7 +75,9 @@ const DOBOO_BUTTER_AXIS: Axis = {
       intensityLabel: "완전",
       groupLabel: "버터",
       groupDescription: "",
-      iconIntensity: 100,
+
+      labelColorLight: "#FFA500",
+      labelColorLightest: "#FFF8E1",
     },
   ],
 };
@@ -59,6 +85,21 @@ const DOBOO_BUTTER_AXIS: Axis = {
 const CAT_DOG_AXIS: Axis = {
   axisID: 0,
   stepCount: 6,
+  axisSide: {
+    START: {
+      icon: "🐱",
+      label: "고양이",
+      groupColor: "#F3F7FF",
+      labelColor: "#8899FF",
+    },
+    END: {
+      icon: "🐶",
+      label: "강아지",
+      groupColor: "#FFF4EE",
+      labelColor: "#F38159",
+    },
+  },
+
   groupSummary: [
     {
       axisSide: "START",
@@ -66,7 +107,9 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "완전",
       groupLabel: "고양이",
       groupDescription: "",
-      iconIntensity: 100,
+
+      labelColorLight: "#8899FF",
+      labelColorLightest: "#F3F7FF",
     },
     {
       axisSide: "START",
@@ -74,7 +117,9 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "제법",
       groupLabel: "고양이",
       groupDescription: "",
-      iconIntensity: 50,
+
+      labelColorLight: "#8899FF",
+      labelColorLightest: "#F3F7FF",
     },
     {
       axisSide: "START",
@@ -82,7 +127,9 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "약간",
       groupLabel: "고양이",
       groupDescription: "",
-      iconIntensity: 20,
+
+      labelColorLight: "#8899FF",
+      labelColorLightest: "#F3F7FF",
     },
     {
       axisSide: "END",
@@ -90,7 +137,9 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "약간",
       groupLabel: "강아지",
       groupDescription: "",
-      iconIntensity: 20,
+
+      labelColorLight: "#F38159",
+      labelColorLightest: "#FFF4EE",
     },
     {
       axisSide: "END",
@@ -98,7 +147,9 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "제법",
       groupLabel: "강아지",
       groupDescription: "",
-      iconIntensity: 50,
+
+      labelColorLight: "#F38159",
+      labelColorLightest: "#FFF4EE",
     },
     {
       axisSide: "END",
@@ -106,7 +157,9 @@ const CAT_DOG_AXIS: Axis = {
       intensityLabel: "완전",
       groupLabel: "강아지",
       groupDescription: "",
-      iconIntensity: 100,
+
+      labelColorLight: "#F38159",
+      labelColorLightest: "#FFF4EE",
     },
   ],
 };
@@ -114,94 +167,130 @@ const CAT_DOG_AXIS: Axis = {
 const FACE_AXIS: Axis = {
   axisID: 0,
   stepCount: 11,
+  axisSide: {
+    START: {
+      icon: "🩶",
+      label: "취향",
+      labelColor: "#9d9d9d",
+      groupColor: "#f0f0f0",
+    },
+    END: {
+      icon: "💖",
+      label: "취향",
+      labelColor: "#F42572",
+      groupColor: "#FEF4F8",
+    },
+  },
   groupSummary: [
     {
       axisSide: "END",
       groupIcon: "💖",
       intensityLabel: "0",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "취향이 아니에요",
       iconIntensity: 10,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "🩷",
       intensityLabel: "0.5",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "취향과 완전 멀어요",
       iconIntensity: 19,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "💖",
       intensityLabel: "1",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "취향과 제법 멀어요",
       iconIntensity: 28,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "🩷",
       intensityLabel: "1.5",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "취향과 약간 멀어요",
       iconIntensity: 37,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "💖",
       intensityLabel: "2",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "약간 취향에서 벗어났어요",
       iconIntensity: 46,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "🩷",
       intensityLabel: "2.5",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "보통이에요",
       iconIntensity: 55,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "💖",
       intensityLabel: "3",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "약간 취향이에요",
       iconIntensity: 64,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "🩷",
       intensityLabel: "3.5",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "제법 취향이에요",
       iconIntensity: 73,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "💖",
       intensityLabel: "4",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "완전 취향이에요",
       iconIntensity: 82,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "🩷",
       intensityLabel: "4.5",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "거의 완전 취향이에요",
       iconIntensity: 91,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
     {
       axisSide: "END",
       groupIcon: "💖",
       intensityLabel: "5",
-      groupLabel: "마음에 들어요",
+      groupLabel: "취향",
       groupDescription: "완전 마음을 울려요!",
       iconIntensity: 100,
+      labelColorLight: "#F42572",
+      labelColorLightest: "#FEF4F8",
     },
   ],
 };
@@ -271,7 +360,60 @@ export const FACE_BOARD_INFO: BoardInformation = {
       END: [
         {
           img: "/assets/result/idol/END_ENDpng",
-          label: "강아지 콜렉터",
+          label: "버터 강아지 콜렉터",
+        },
+      ],
+    },
+  },
+
+  avgResultDict: {
+    START: {
+      START: [
+        {
+          img: "",
+          label: "두부 고양이",
+        },
+      ],
+      MIDDLE: [{ img: "", label: "두부" }],
+      END: [
+        {
+          img: "",
+          label: "두부 강아지",
+        },
+      ],
+    },
+    MIDDLE: {
+      START: [
+        {
+          img: "",
+          label: "고양이",
+        },
+      ],
+      MIDDLE: [
+        {
+          img: "",
+          label: "균형 잡힌 미녀",
+        },
+      ],
+      END: [
+        {
+          img: "",
+          label: "강아지",
+        },
+      ],
+    },
+    END: {
+      START: [
+        {
+          img: "",
+          label: "버터 고양이",
+        },
+      ],
+      MIDDLE: [{ img: "", label: "버터" }],
+      END: [
+        {
+          img: "",
+          label: "버터 강아지",
         },
       ],
     },

@@ -8,7 +8,7 @@ import {
 import EvaluationBoard from "@componentsV02/board/evaluationBoard/EvaluationBoard";
 
 import useBoardControl from "@hooksV02/board/useBoardControl";
-import Spacing from "@componentsV02/spacing/Spacing";
+
 import useGetBoardPoint from "@hooksV02/board/useGetBoardPoint";
 
 const TouchEvaluationBoard = () => {
@@ -24,30 +24,17 @@ const TouchEvaluationBoard = () => {
   const { currentItem } = useBoardStepContext();
   const { navigateEvaluationSwipe } = useBoardControl();
 
-  const CurrentTitle = () => {
-    return (
-      <Title.BoardTitleContainer>
-        <Title.BoardTitleItemSection>
-          <h6>{currentItem.category}</h6>
-          <h3>{currentItem.name}</h3>
-        </Title.BoardTitleItemSection>
-        <Title.BoardTitleItemImg src={currentItem.thumbnailURL} />
-      </Title.BoardTitleContainer>
-    );
-  };
-
   const onClickBoardGrid = (v: number, h: number) => {
     navigateEvaluationSwipe(v, h);
   };
 
   return (
     <>
-      <CurrentTitle />
-      <Spacing size={8} />
-      <Title.BoardTitleDescription>
-        어디에 속하는지 사분면에서 선택해주세요!
-      </Title.BoardTitleDescription>
-      <Spacing size={12} />
+      <Title.BoardTitleContainer>
+        <img src={currentItem.thumbnailURL} />
+        <span className="category">{currentItem.category}</span>
+        <span className="name">{currentItem.name}</span>
+      </Title.BoardTitleContainer>
 
       <EvaluationBoard
         onClickGridItem={onClickBoardGrid}

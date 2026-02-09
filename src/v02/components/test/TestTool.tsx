@@ -14,6 +14,8 @@ const Container = styled.div`
   z-index: 20;
   opacity: 40%;
 
+  top: 44px;
+
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -53,7 +55,6 @@ export default TestTool;
 const ResetLocalSorage = () => {
   const onClick = () => {
     localStorage.clear();
-    console.log("모든 로컬 스토리지를 삭제합니다.");
   };
   return <button onClick={onClick}>로컬 스토리지 삭제</button>;
 };

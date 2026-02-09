@@ -5,9 +5,17 @@ import type {
 } from "@interfacesV02/type";
 import type { PrimaryKey } from ".";
 
+type AxisSideSummary = {
+  icon: string;
+  label: string;
+  groupColor: string;
+  labelColor: string;
+};
+
 export type Axis = {
   axisID: number;
 
+  axisSide: Record<DirectionType, AxisSideSummary>;
   stepCount: number;
 
   groupSummary: AxisGroupSummary[];
@@ -19,8 +27,11 @@ export type AxisGroupSummary = {
   groupIcon: string;
   intensityLabel: string;
   groupLabel: string;
+
+  labelColorLight: string;
+  labelColorLightest: string;
   groupDescription: string;
-  iconIntensity: number;
+  iconIntensity?: number;
 };
 
 export type BoardInformation = {
@@ -28,6 +39,7 @@ export type BoardInformation = {
   axisDict: Record<BoardAxisType, Axis>;
 
   resultDict: BoardResultDict;
+  avgResultDict: BoardResultDict;
 };
 export type ResultData = {
   label: string;

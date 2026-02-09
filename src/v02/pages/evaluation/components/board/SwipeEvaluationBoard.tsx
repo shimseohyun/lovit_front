@@ -13,7 +13,6 @@ import SwipeBoard from "@componentsV02/board/swipeBoard/SwipeBoard";
 
 import type { AxisData, BoardAxisDict } from "@interfacesV02/type";
 
-import Spacing from "@componentsV02/spacing/Spacing";
 import { getSwipeBoardSubTitle } from "@componentsV02/board/swipeBoard/getSwipeBoardTitle";
 import { useMemo } from "react";
 
@@ -78,25 +77,25 @@ const SwipeEvaluationBoard = () => {
       groupLabel: groupSummary.groupLabel,
       axisSide: groupSummary.axisSide, // evaluation만
       showGroupLabelInGroupTitle: true,
+      labelColorLight: groupSummary.labelColorLight,
+      labelColorLighter: groupSummary.labelColorLightest,
     });
   };
 
-  const CurrentTitle = () => {
-    return (
-      <Title.BoardTitleContainer>
-        <Title.BoardTitleDescription>
-          {`드래그해서 비교할 수 있어요.`}
-        </Title.BoardTitleDescription>
-        <Title.BoardTitleMain>
-          같은 그룹에 속한 사람이 있어요
-        </Title.BoardTitleMain>
-      </Title.BoardTitleContainer>
-    );
-  };
-
   const BoardTitle = () => {
+    const vGroup = evaluationGroup.VERTICAL;
+    const hGroup = evaluationGroup.HORIZONTAL;
+
+    const vSummary = boardInformation.axisDict.VERTICAL.groupSummary[vGroup];
+    const hSummary = boardInformation.axisDict.HORIZONTAL.groupSummary[hGroup];
     return (
       <Title.BoardTitleSubContainer>
+        <Title.BoardTitelGroupChip>
+          {vSummary.intensityLabel} {vSummary.groupLabel}
+          {" · "}
+          {hSummary.intensityLabel} {hSummary.groupLabel}
+        </Title.BoardTitelGroupChip>
+
         {/* 상하 */}
         <Title.BoardTitleSubWrapper
           $isSelected={
@@ -106,7 +105,7 @@ const SwipeEvaluationBoard = () => {
         >
           {getSubTitle("VERTICAL", vertical)}
         </Title.BoardTitleSubWrapper>
-        <Spacing size={8} />
+
         {/* 좌우 */}
         <Title.BoardTitleSubWrapper
           $isSelected={
@@ -121,7 +120,10 @@ const SwipeEvaluationBoard = () => {
   };
   return (
     <>
-      <CurrentTitle />
+      <Title.BoardTitleContainer>
+        <h6>드래그해서 비교할 수 있어요.</h6>
+        <h1>같은 그룹에 속한 사람이 있어요</h1>
+      </Title.BoardTitleContainer>
 
       <S.SwipeBoardContainer>
         <BoardTitle />

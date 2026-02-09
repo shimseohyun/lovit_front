@@ -40,7 +40,7 @@ const fontGenerator = (
 
 export const fonts = {
   // head
-  narrative: fontGenerator(23, 24, "head", -1),
+  narrative: fontGenerator(19, 24, "head", -1),
   head1: fontGenerator(28, 36, "head", -1),
   head2: fontGenerator(22, 32, "head", -1),
   head3: fontGenerator(19, 28, "head", -1),

@@ -21,7 +21,6 @@ export const useResetUserBoardData = (uid: string | undefined) => {
       if (uid) {
         return resetUserBoardData(uid);
       } else {
-        console.log("유저 정보가 없어요!");
         return;
       }
     },
@@ -35,7 +34,6 @@ export const usePostUserBoardData = (uid: string | undefined) => {
       if (uid) {
         return postUserBoardData(uid!, body);
       } else {
-        console.log("유저 정보가 없어요!");
         return postUseBoardDataLocal(body);
       }
     },

@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import type { AxisType } from "@interfacesV02/type";
+import type { AxisType, DirectionType } from "@interfacesV02/type";
 
 export const BoardContaienr = styled.div`
   touch-action: none;
@@ -43,6 +43,68 @@ export const BoardAxis = styled.div<{
   }}
 `;
 
+export const BoardBlur = styled.div<{
+  $axis: AxisType | null;
+  $direction: DirectionType | null;
+  $color: string;
+}>`
+  transition: opacity 220ms ease-out;
+  position: absolute;
+  transform: translate(-50%, -50%);
+
+  width: 500px;
+  height: 500px;
+  /* border-radius: 400px; */
+
+  opacity: 0.1;
+
+  ${({ $color }) => css`
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      ${hexToRgba($color, 0.1)} 0%,
+      ${hexToRgba($color, 0)} 100%
+    );
+  `}
+
+  ${({ $axis, $direction }) => {
+    if ($axis === "HORIZONTAL" && $direction === "START")
+      return css`
+        left: 0%;
+        top: 50%;
+      `;
+    else if ($axis === "VERTICAL" && $direction === "START")
+      return css`
+        left: 50%;
+        top: 0%;
+      `;
+    else if ($axis === "HORIZONTAL" && $direction === "END")
+      return css`
+        left: 100%;
+        top: 50%;
+      `;
+    else if ($axis === "VERTICAL" && $direction === "END")
+      return css`
+        left: 50%;
+        top: 100%;
+      `;
+  }}
+`;
+
+const hexToRgba = (hex: string, a: number) => {
+  const h = hex.replace("#", "");
+  const v =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
+  const r = parseInt(v.slice(0, 2), 16);
+  const g = parseInt(v.slice(2, 4), 16);
+  const b = parseInt(v.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+
 export const BoardAxisWrpper = styled.div<{
   $position: number;
   $axis: AxisType;
@@ -78,19 +140,6 @@ export const BoardAxisWrpper = styled.div<{
         height: auto;
         flex-direction: column;
       `;
-    }
-  }}
-
-  ${({ $isCurrent, $axis }) => {
-    if ($isCurrent) {
-      if ($axis === "HORIZONTAL")
-        return css`
-          top: -48px;
-        `;
-      else if ($axis === "VERTICAL")
-        return css`
-          left: -48px;
-        `;
     }
   }}
 `;

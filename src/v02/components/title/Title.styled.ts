@@ -7,82 +7,50 @@ export const BoardTitleContainer = styled.div`
   align-items: center;
   white-space: pre-wrap;
 
+  padding: 10px 16px 0 16px;
+
   width: 100%;
 
   ${(p) => css`
     ${p.theme.fonts.head1}
     color:${p.theme.fontColors.titleStrongest};
   `}
-`;
-
-export const BoardTitleMain = styled.div`
-  ${(p) => css`
-    ${p.theme.fonts.head1}
-    color:${p.theme.fontColors.textStrongest};
-  `}
-`;
-
-export const BoardTitleDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-
-  white-space: pre-wrap;
-
-  width: 100%;
-
-  flex-shrink: 0;
-
-  ${(p) => css`
-    ${p.theme.fonts.body1}
-    color:${p.theme.fontColors.textLightest};
-  `}
-`;
-
-export const BoardTitleInformation = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-
-  width: 100%;
-
-  flex-shrink: 0;
-
-  ${(p) => css`
-    ${p.theme.fonts.body2}
-    color:${p.theme.fontColors.textLightest};
-  `}
-`;
-
-export const BoardTitleItemSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  > h6 {
+  > h1 {
     ${(p) => css`
-      ${p.theme.fonts.body3}
+      ${p.theme.fonts.head1}
+      color:${p.theme.fontColors.textStrongest};
+    `}
+  }
+  > h6 {
+    padding-bottom: 4px;
+    ${(p) => css`
+      ${p.theme.fonts.body1}
       color:${p.theme.fontColors.textLighter};
     `}
   }
 
-  > h3 {
+  > img {
+    width: calc(3 * 40px);
+    height: calc(4 * 40px);
+    border-radius: 8px;
+    aspect-ratio: 3/4;
+
+    margin-bottom: 12px;
+    object-fit: cover;
+  }
+
+  > .name {
     ${(p) => css`
       ${p.theme.fonts.head2}
       color:${p.theme.fontColors.titleStrongest};
     `}
   }
-`;
-
-export const BoardTitleItemImg = styled.img`
-  width: calc(3 * 40px);
-  height: calc(4 * 40px);
-  border-radius: 8px;
-  aspect-ratio: 3/4;
-
-  object-fit: cover;
+  > .category {
+    ${(p) => css`
+      ${p.theme.fonts.body3}
+      color:${p.theme.fontColors.textLighter};
+    `}
+  }
 `;
 
 export const BoardTitleSubContainer = styled.h1`
@@ -91,6 +59,8 @@ export const BoardTitleSubContainer = styled.h1`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 24px 16px;
+  gap: 4px;
 `;
 
 export const BoardTitleSubWrapper = styled.div<{ $isSelected: boolean }>`
@@ -103,20 +73,59 @@ export const BoardTitleSubWrapper = styled.div<{ $isSelected: boolean }>`
 
   ${(p) => css`
     ${p.theme.fonts.narrative}
-    color: ${p.theme.fontColors.titleStronger};
+    color: ${p.theme.fontColors.textLightest};
   `}
-  ${({ $isSelected }) =>
-    !$isSelected &&
-    css`
-      opacity: 15%;
-    `}
+
+  ${({ $isSelected }) => css`
+    opacity: ${$isSelected ? 100 : 15}%;
+  `}
 `;
 
-export const BoardTitleSubChip = styled.div`
-  border-radius: 80px;
+export const BoardTitleGroupWrapper = styled.div`
+  display: flex;
+  padding-bottom: 12px;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+`;
+
+export const BoardTitelGroupChip = styled.div`
+  display: flex;
+  padding-bottom: 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
 
   ${(p) => css`
-    ${p.theme.fonts.narrative}
-    background-color:${p.theme.foregroundColors.foregroundLighter};
+    ${p.theme.fonts.body3}
+    color: ${p.theme.fontColors.textLightest};
   `}
+`;
+
+export const BoardTitleSubChip = styled.div<{
+  $lightColor?: string;
+  $lighterColor?: string;
+  $isMinus?: boolean;
+}>`
+  border-radius: 80px;
+  padding: 4px 10px;
+  ${({ $isMinus }) => css`
+    opacity: ${$isMinus === true ? 50 : 100}%;
+  `}
+
+  ${(p) => {
+    if (p.$lightColor && p.$lighterColor)
+      return css`
+        ${p.theme.fonts.narrative}
+        color: ${p.$lightColor};
+        background-color: ${p.$lighterColor};
+      `;
+
+    return css`
+      ${p.theme.fonts.narrative}
+      color: ${p.theme.fontColors.titleStronger};
+      background-color: ${p.theme.foregroundColors.foregroundLighter};
+    `;
+  }}
 `;

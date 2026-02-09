@@ -10,10 +10,12 @@ import getNewRoughData from "@utilsV02/getNewRoughData";
 import { useNavigate } from "react-router-dom";
 import { usePostUserBoardData } from "@hooksV02/api/userBoardData";
 import { useAuth } from "@hooksV02/auth/useAuth";
+import { usePostUserDataToTotalBoardData } from "@hooksV02/api/userTotalData";
 
 const useBoardControl = () => {
   const { preference, vertical, horizontal, itemList } =
     useBoardStaticContext();
+
   const {
     evaluationGroup,
     getEvaluationGroup,
@@ -26,8 +28,12 @@ const useBoardControl = () => {
     useBoardStepContext();
 
   const { user } = useAuth();
-  const { mutateAsync } = usePostUserBoardData(user?.uid);
+  const { mutateAsync: postUserData, isPending: isUserDataPending } =
+    usePostUserBoardData(user?.uid);
+  const { mutateAsync: postTotalData, isPending: isTotalDataPending } =
+    usePostUserDataToTotalBoardData();
 
+  const isPushingItem = isUserDataPending || isTotalDataPending;
   const pushItem = async () => {
     if (
       preferenceSlot?.preference === undefined ||
@@ -55,13 +61,20 @@ const useBoardControl = () => {
     const newItemList: number[] = itemList;
     newItemList.push(itemID);
 
-    await mutateAsync({
+    await postUserData({
       itemList: JSON.stringify(newItemList),
       axis: {
         HORIZONTAL: JSON.stringify(newH),
         VERTICAL: JSON.stringify(newV),
         PREFERENCE: JSON.stringify(newP),
       },
+    });
+
+    await postTotalData({
+      itemID: itemID,
+      HORIZONTAL: horizontal.slotDict[h].userAxisGroupID,
+      VERTICAL: vertical.slotDict[v].userAxisGroupID,
+      PREFERENCE: preference.slotDict[p].userAxisGroupID,
     });
   };
 
@@ -84,6 +97,11 @@ const useBoardControl = () => {
     } else {
       navigateStep("EVALUATION_SWIPE");
     }
+  };
+  // 이전단계로 이동
+  const navigateEvaluationTouch = () => {
+    navigateStep("EVALUATION_TOUCH");
+    resetSlot();
   };
 
   // 선호 스와이프로 이동
@@ -120,8 +138,10 @@ const useBoardControl = () => {
 
   return {
     navigateEvaluationSwipe,
+    navigateEvaluationTouch,
     navigatePreferenceSwipe,
     navigateResult,
+    isPushingItem,
     confrimCurrentItem,
 
     navigateMore,

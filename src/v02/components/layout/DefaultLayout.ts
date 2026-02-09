@@ -30,3 +30,15 @@ export const PageViewPort = styled.div`
 
   overflow: hidden;
 `;
+
+export const PageViewPortScroll = styled.div`
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  overflow: scroll;
+`;
