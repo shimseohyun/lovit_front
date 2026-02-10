@@ -1,4 +1,5 @@
 export type UseBoardStepReturn = ReturnType<typeof useBoardStep>;
+import { maxItemCount } from "@constantsV02/auth";
 import { getItemSummary } from "@dataV02/itemSummary";
 import { useGetPendingItemList } from "@hooksV02/api/userBoardData";
 import { useAuth } from "@hooksV02/auth/useAuth";
@@ -11,18 +12,16 @@ type Parms = {
 };
 
 const useBoardStep = (parms: Parms) => {
-  const { maxCount = 8 } = parms;
+  const { maxCount = maxItemCount } = parms;
+
   const [isFin, setIsFin] = useState<boolean>(true);
 
   const { user } = useAuth();
-  const {
-    data,
-    isFetching,
-    refetch: refetchPendingList,
-  } = useGetPendingItemList(user?.uid, maxCount);
 
-  const pendingItemIDList = data?.list ?? [];
-  const isLast = data?.isLast ?? true;
+  const { data, isFetching } = useGetPendingItemList(user?.uid, maxCount);
+
+  const pendingItemIDList = data.list;
+  const isLast = data.isLast;
 
   const [currentItemIDX, setCurrentItemIDX] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<BoardStep>("EVALUATION_TOUCH");
@@ -49,15 +48,6 @@ const useBoardStep = (parms: Parms) => {
     }
   };
 
-  const setIsFinTrue = () => {
-    setIsFin(true);
-  };
-
-  const reset = () => {
-    setCurrentItemIDX(0);
-    refetchPendingList();
-  };
-
   const currentItemID = pendingItemIDList[currentItemIDX] ?? 0;
 
   return {
@@ -72,9 +62,8 @@ const useBoardStep = (parms: Parms) => {
 
     navigateStep,
     navigateNextItemIDX,
-    setIsFinTrue,
+
     isFetching,
-    reset,
   };
 };
 

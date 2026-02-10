@@ -5,9 +5,11 @@ import type { AxisData, BoardAxisType } from "@interfacesV02/type";
 import type { ItemIDList } from "@interfacesV02/data/user";
 
 import { convertRoughToAxisData } from "@utilsV02/convertRoughToAxisData";
+import { getItemCount } from "@dataV02/itemSummary";
 
 export type GetUserBoardDataReturn = {
   // cusor: number;
+  isMore: boolean;
   itemList: ItemIDList;
   axis: Record<BoardAxisType, AxisData>;
 };
@@ -41,7 +43,9 @@ export const getUserBoardData = async (
     const vertical = parsingData(data["axis"]["VERTICAL"]);
     const preference = parsingData(data["axis"]["PREFERENCE"]);
 
+    const isMore = getItemCount() > itemList.length;
     return {
+      isMore,
       itemList,
       axis: {
         HORIZONTAL: convertRoughToAxisData("HORIZONTAL", horizontal),

@@ -43,6 +43,7 @@ const initialEvaluation = [[], [], [], [], [], []];
 const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
 const initialData: GetUserBoardDataReturn = {
+  isMore: true,
   itemList: [],
   axis: {
     HORIZONTAL: convertRoughToAxisData("HORIZONTAL", [...initialEvaluation]),
@@ -65,15 +66,20 @@ export const useGetPendingItemList = (
   maxCount: number,
 ) => {
   return useQuery({
-    queryKey: ["PENDLING_ITEM_LIST", maxCount, uid],
+    initialData: { list: [], isLast: false },
+    queryKey: ["PENDLING_ITEM_LIST", uid],
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     queryFn: async () => {
       let data: number[];
       if (uid) {
         const userData = await getUserBoardData(uid);
-        data = userData?.itemList ?? [];
+        data = userData.itemList ?? [];
       } else {
         data = getUserBoardDataLocal().itemList;
+        if (data.length >= maxCount) return { list: [], isLast: true };
       }
+
       const checkedItemList = data;
 
       const itemIDList = getItemIDList();

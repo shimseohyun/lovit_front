@@ -23,6 +23,7 @@ export default defineConfig({
       "@interfacesV02": path.resolve(__dirname, "src/v02/interfaces"),
       "@pagesV02": path.resolve(__dirname, "src/v02/pages"),
       "@utilsV02": path.resolve(__dirname, "src/v02/utils"),
+      "@constantsV02": path.resolve(__dirname, "src/v02/constants"),
     },
   },
 });

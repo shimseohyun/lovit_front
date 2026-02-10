@@ -30,9 +30,9 @@ const positionMinPct = -50;
 const positionMaxPct = 50;
 
 // [-50, 50] 3등분 경계
-const rangePct = positionMaxPct - positionMinPct; // 100
-const zoneCut1Pct = positionMinPct + rangePct / 3; // -16.666...
-const zoneCut2Pct = positionMinPct + (2 * rangePct) / 3; // +16.666...
+const rangePct = positionMaxPct - positionMinPct;
+const zoneCut1Pct = positionMinPct + rangePct / 3 + 10;
+const zoneCut2Pct = positionMinPct + (2 * rangePct) / 3 - 10;
 
 // 평균(위치) 안정화용
 const shrinkageK = 2;
@@ -80,20 +80,44 @@ const calcProfile = (params: {
     : "WIDE";
 };
 
-/** ✅ topLikedItemIdList: 기존 로직 유지 */
-const buildTopLikedItemIdList = (preference: AxisData) => {
-  const list: number[] = [];
+/**
+ * ✅ topLikedItemIdList
+ * - 기존처럼 preference.roughData의 "상위(4~)"에서 뽑되,
+ * - ✅ 계산에 포함된(itemIdSet) 것만 top3에 포함
+ */
+const buildTopLikedItemIdList = (
+  preference: AxisData,
+  includedItemIdSet: Set<number>,
+) => {
+  const picked: number[] = [];
+  const pickedSet = new Set<number>();
 
   const roughData = preference.roughData;
+
   for (let i = roughData.length - 1; i >= 4; i--) {
     const bundleList = roughData[i];
+
     for (let b = bundleList.length - 1; b >= 0; b--) {
-      list.push(...bundleList[b]);
+      const ids = bundleList[b];
+
+      for (let k = ids.length - 1; k >= 0; k--) {
+        const id = ids[k];
+
+        // ✅ 계산에서 제외된 건 스킵
+        if (!includedItemIdSet.has(id)) continue;
+
+        // 중복 방지
+        if (pickedSet.has(id)) continue;
+
+        picked.push(id);
+        pickedSet.add(id);
+
+        if (picked.length >= 3) return picked;
+      }
     }
-    if (list.length >= 3) break;
   }
 
-  return list;
+  return picked;
 };
 
 /**
@@ -142,6 +166,7 @@ const useGetBoardResult = (parms: Parms): BoardResultWithTop => {
 
   // ----------------------------
   // 1) 선호도 평균(avgScore) 계산
+  //    (H/V까지 모두 위치가 있는 item만 대상으로 평균)
   // ----------------------------
   let prefScoreSum = 0;
   let prefScoreCount = 0;
@@ -194,7 +219,7 @@ const useGetBoardResult = (parms: Parms): BoardResultWithTop => {
 
     const score = preferenceGroupIdToScore(p.userAxisGroupID);
     const likeWeight = scoreToLikeWeightByAvg(score, avgPreferenceScore);
-    if (likeWeight <= 0) continue;
+    if (likeWeight <= 0) continue; // ✅ 계산 제외
 
     likedEntries.push({ itemId, likeWeight });
     totalLikeWeight += likeWeight;
@@ -212,11 +237,14 @@ const useGetBoardResult = (parms: Parms): BoardResultWithTop => {
     vSumWX2 += likeWeight * vPos * vPos;
   }
 
-  // ✅ (변경) 평균 기준으로 포함된 데이터가 없거나, 신호가 너무 약하면 true
-  const hasNoCalcData =
-    likedEntries.length === 0 || totalLikeWeight < noSignalWeightThreshold;
+  const hasNoCalcData = likedEntries.length === 0;
 
-  const topLikedItemIdList = buildTopLikedItemIdList(preference);
+  // ✅ topLikedItemIdList도 "계산 포함된 item"만
+  const includedItemIdSet = new Set(likedEntries.map((e) => e.itemId));
+  const topLikedItemIdList = buildTopLikedItemIdList(
+    preference,
+    includedItemIdSet,
+  );
 
   // 위치 평균은 shrinkage 적용(0쪽으로 안정화)
   const denomPos = totalLikeWeight + shrinkageK;

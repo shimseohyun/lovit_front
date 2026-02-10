@@ -1,8 +1,7 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import type { UserPoint } from "@interfacesV02/data/user";
-
 import { useMemo } from "react";
+import type { UserPoint } from "@interfacesV02/data/user";
 
 /* ✅ SVG 오버레이 */
 const Shape = styled.svg`
@@ -20,7 +19,7 @@ const Poly = styled.polygon`
     fill: ${p.theme.foregroundColors.mainLightest};
     stroke: ${p.theme.foregroundColors.mainLight};
   `}
-  stroke-width:0.5;
+  stroke-width: 0.5;
   stroke-linejoin: round;
 `;
 
@@ -34,27 +33,32 @@ type Parms = {
   points: UserPoint[];
 };
 
+/**
+ * 점들을 중심 기준으로 시계방향 정렬
+ * - x: horizontaPos
+ * - y: verticalPos
+ */
 const orderClockwise = (pts: UserPoint[]) => {
-  const cx = pts.reduce((s, p) => s + p.verticalPos, 0) / pts.length;
-  const cy = pts.reduce((s, p) => s + p.horizontaPos, 0) / pts.length;
+  if (pts.length <= 2) return [...pts];
 
-  return [...pts].sort(
-    (a, b) =>
-      Math.atan2(a.verticalPos - cy, a.horizontaPos - cx) -
-      Math.atan2(b.verticalPos - cy, b.horizontaPos - cx),
-  );
+  const cx = pts.reduce((s, p) => s + p.horizontaPos, 0) / pts.length; // ✅ x 평균
+  const cy = pts.reduce((s, p) => s + p.verticalPos, 0) / pts.length; // ✅ y 평균
+
+  return [...pts].sort((a, b) => {
+    const aa = Math.atan2(a.verticalPos - cy, a.horizontaPos - cx);
+    const bb = Math.atan2(b.verticalPos - cy, b.horizontaPos - cx);
+    return aa - bb;
+  });
 };
 
-const ResultPoly = (parms: Parms) => {
-  const { points } = parms;
-
+const ResultPoly = ({ points }: Parms) => {
   const toPolygonPoints = (pts: UserPoint[]) =>
     pts.map((p) => `${p.horizontaPos},${p.verticalPos}`).join(" ");
 
   const polygonPoints = useMemo(() => {
-    if (points.length < 1) return "";
+    if (points.length < 3) return "";
     return toPolygonPoints(orderClockwise(points));
-  }, []);
+  }, [points]);
 
   return (
     <>
@@ -66,12 +70,14 @@ const ResultPoly = (parms: Parms) => {
         <Dot
           key={p.id}
           style={{
-            left: `${p.horizontaPos.toFixed(2)}px`,
-            top: `${p.verticalPos.toFixed(2)}px`,
+            // ✅ SVG(viewBox 0~100)와 동일한 좌표계로 맞추기 (0~100)
+            left: `${p.horizontaPos.toFixed(2)}%`,
+            top: `${p.verticalPos.toFixed(2)}%`,
           }}
         />
       ))}
     </>
   );
 };
+
 export default ResultPoly;

@@ -12,6 +12,7 @@ import {
   PageContainer,
   PageViewPort,
 } from "@componentsV02/layout/DefaultLayout";
+import FullSpinner from "@componentsV02/spinner/Spinner";
 
 const EvaluationPageContent = () => {
   const { isLoading: isAuthLoading } = useAuth();
@@ -19,7 +20,7 @@ const EvaluationPageContent = () => {
   const { isFetching: isItemListLoading } = useBoardStepContext();
 
   const isLoading = !(!isAuthLoading && !isDataLoading && !isItemListLoading);
-  if (isLoading) return <div>로딩중</div>;
+  if (isLoading) return <FullSpinner />;
 
   return (
     <>

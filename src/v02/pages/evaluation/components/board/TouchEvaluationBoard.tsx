@@ -35,7 +35,9 @@ const TouchEvaluationBoard = () => {
         <span className="category">{currentItem.category}</span>
         <span className="name">{currentItem.name}</span>
       </Title.BoardTitleContainer>
-
+      <Title.BoardDescription>
+        사분면 중 어디에 속하는지 선택해주세요.
+      </Title.BoardDescription>
       <EvaluationBoard
         onClickGridItem={onClickBoardGrid}
         itemList={itemList}

@@ -1,10 +1,13 @@
 import BottomButton from "@componentsV02/button/BottomButton";
 import FillButton from "@componentsV02/button/FillButton";
+import FullSpinner from "@componentsV02/spinner/Spinner";
+import { useAuth } from "@hooksV02/auth/useAuth";
 import { useBoardStepContext } from "@hooksV02/board/context/context";
 import useBoardControl from "@hooksV02/board/useBoardControl";
 
 const EvaluationButton = () => {
-  const { isFin, isLast, currentStep, currentItem } = useBoardStepContext();
+  const { isLoggedIn } = useAuth();
+  const { isFin, isLast, currentStep } = useBoardStepContext();
   const {
     navigatePreferenceSwipe,
     navigateResult,
@@ -24,7 +27,7 @@ const EvaluationButton = () => {
   if (isFin) {
     return (
       <BottomButton>
-        {!isLast && (
+        {!isLast && isLoggedIn && (
           <FillButton
             buttonType={"ASSISTIVE"}
             onClick={navigateMore}
@@ -33,7 +36,8 @@ const EvaluationButton = () => {
             더하기
           </FillButton>
         )}
-        <FillButton type="button" onClick={navigateResult}>
+
+        <FillButton buttonType="PRIMARY" type="button" onClick={navigateResult}>
           결과보기
         </FillButton>
       </BottomButton>
@@ -43,6 +47,7 @@ const EvaluationButton = () => {
   if (currentStep === "EVALUATION_TOUCH") return;
   return (
     <BottomButton>
+      {isPushingItem && <FullSpinner />}
       {currentStep === "PREFERENCE" ? (
         <FillButton
           type="button"

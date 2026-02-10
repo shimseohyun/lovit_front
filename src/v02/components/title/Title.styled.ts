@@ -1,11 +1,21 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+export const BoardDescription = styled.div`
+  padding: 4px 16px 12px 16px;
+
+  ${(p) => css`
+    ${p.theme.fonts.body1}
+    color:${p.theme.fontColors.textLightest};
+  `}
+`;
+
 export const BoardTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   white-space: pre-wrap;
+  text-align: center;
 
   padding: 10px 16px 0 16px;
 
@@ -30,11 +40,12 @@ export const BoardTitleContainer = styled.div`
   }
 
   > img {
-    width: calc(3 * 40px);
-    height: calc(4 * 40px);
+    width: calc(3 * 35px);
+    height: calc(4 * 35px);
     border-radius: 8px;
     aspect-ratio: 3/4;
 
+    margin-top: 10px;
     margin-bottom: 12px;
     object-fit: cover;
   }

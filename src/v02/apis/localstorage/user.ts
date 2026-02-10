@@ -2,6 +2,7 @@ import type {
   GetUserBoardDataReturn,
   PostUserBoardDataBody,
 } from "@apisV02/firebase/domain/user";
+import { maxItemCount } from "@constantsV02/auth";
 import type { ItemIDList, RoughAxisData } from "@interfacesV02/data/user";
 import { convertRoughToAxisData } from "@utilsV02/convertRoughToAxisData";
 
@@ -19,7 +20,10 @@ export const getUserBoardDataLocal = (): GetUserBoardDataReturn => {
   const vertical: RoughAxisData = v ? JSON.parse(v) : [...initialEvaluation];
   const preference: RoughAxisData = p ? JSON.parse(p) : [...initialPreference];
 
+  const isMore = maxItemCount > itemList.length;
+
   return {
+    isMore: isMore,
     itemList: itemList,
     axis: {
       HORIZONTAL: convertRoughToAxisData("HORIZONTAL", horizontal),

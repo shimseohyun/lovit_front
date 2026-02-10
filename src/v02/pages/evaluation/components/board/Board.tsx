@@ -5,11 +5,14 @@ import SwipeEvaluationBoard from "./SwipeEvaluationBoard";
 import SwipePreferenceBoard from "./SwipePreferenceBoard";
 
 import Fin from "./Fin";
+import FullSpinner from "@componentsV02/spinner/Spinner";
 
 const Board = () => {
-  const { currentStep, isFin } = useBoardStepContext();
+  const { currentStep, isFin, isFetching } = useBoardStepContext();
 
   const getBoard = () => {
+    if (isFetching) return <FullSpinner />;
+
     if (isFin) return <Fin />;
 
     if (currentStep === "EVALUATION_TOUCH") return <TouchEvaluationBoard />;

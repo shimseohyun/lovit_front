@@ -2,27 +2,32 @@ import * as S from "@componentsV02/navigation/Navigateion.styled";
 import { useBoardStepContext } from "@hooksV02/board/context/context";
 import Progress from "./Progress";
 import useBoardControl from "@hooksV02/board/useBoardControl";
+import IconBox from "@componentsV02/icon/IconBox";
 
 const EvaluationNavigation = () => {
   const { currentItemIDX, totalStepIDX, currentStep } = useBoardStepContext();
-  const { skipCurrentItem, navigateEvaluationTouch } = useBoardControl();
+  const { navigateEvaluationTouch } = useBoardControl();
   return (
     <>
       <S.Container>
         <Progress totalCount={totalStepIDX} currentCount={currentItemIDX} />
-        <S.Content>
-          <div>
-            {(currentStep === "EVALUATION_SWIPE" ||
-              currentStep === "PREFERENCE") && (
-              <button onClick={navigateEvaluationTouch}>뒤로가기</button>
-            )}
-          </div>
-          <div>
-            {currentStep === "EVALUATION_TOUCH" && (
+        {currentStep !== "EVALUATION_TOUCH" && (
+          <S.Content>
+            <div>
+              {(currentStep === "EVALUATION_SWIPE" ||
+                currentStep === "PREFERENCE") && (
+                <button onClick={navigateEvaluationTouch}>
+                  <IconBox icon="left" />
+                </button>
+              )}
+            </div>
+            <div>
+              {/* {currentStep === "EVALUATION_TOUCH" && (
               <button onClick={skipCurrentItem}>건너뛰기</button>
-            )}
-          </div>
-        </S.Content>
+            )} */}
+            </div>
+          </S.Content>
+        )}
       </S.Container>
     </>
   );

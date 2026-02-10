@@ -42,7 +42,8 @@
       "@hooksV02/*": ["src/v02/hooks/*"],
       "@pagesV02/*": ["src/v02/pages/*"],
       "@interfacesV02/*": ["src/v02/interfaces/*"],
-      "@utilsV02/*": ["src/v02/utils/*"]
+      "@utilsV02/*": ["src/v02/utils/*"],
+      "@constantsV02/*": ["src/v02/constants/*"]
     }
   },
   "include": ["src"]

@@ -1,7 +1,10 @@
 import { postGoogleLogin, postLogout } from "@apisV02/firebase/domain/auth";
+import LoginBottomsheet from "@componentsV02/bottomsheet/contents/LoginBottomsheet";
+
 import styled from "@emotion/styled";
 import { useResetUserBoardData } from "@hooksV02/api/userBoardData";
 import { useAuth } from "@hooksV02/auth/useAuth";
+import { useBottomSheet } from "@hooksV02/bottomsheet/useBottomsheet";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useNavigate } from "react-router-dom";
 
@@ -15,6 +18,7 @@ const Container = styled.div`
   opacity: 40%;
 
   top: 44px;
+  right: 0px;
 
   display: flex;
   flex-direction: column;
@@ -33,6 +37,8 @@ const Container = styled.div`
 const TestTool = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { openBottomSheet } = useBottomSheet();
+
   return (
     <Container className="test-tool">
       <ReactQueryDevtools />
@@ -46,6 +52,9 @@ const TestTool = () => {
       <ResetDatabase />
       <button onClick={() => navigate("/evaluate")}> 평가보드</button>
       <button onClick={() => navigate("/result")}> 결과</button>
+      <button onClick={() => openBottomSheet(<LoginBottomsheet />)}>
+        바텀시트 열기
+      </button>
     </Container>
   );
 };

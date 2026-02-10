@@ -42,3 +42,37 @@ export const PageViewPortScroll = styled.div`
 
   overflow: scroll;
 `;
+
+export const Section = styled.section<{ $gap?: number }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 24px 16px;
+
+  > span {
+    ${(p) => css`
+      ${p.theme.fonts.body2};
+      color: ${p.theme.fontColors.textLightest};
+    `}
+  }
+
+  ${({ $gap }) => css`
+    gap: ${$gap !== undefined ? $gap : 0}px;
+  `}
+`;
+
+export const Separator = styled.div<{ $size: number }>`
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 100%;
+  margin: 12px 0px;
+  ${({ $size }) => css`
+    height: ${$size}px;
+  `}
+
+  ${(p) => css`
+    background-color: ${p.theme.foregroundColors.foregroundLighter};
+  `}
+`;

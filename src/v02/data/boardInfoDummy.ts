@@ -333,11 +333,11 @@ export const FACE_BOARD_INFO: BoardInformation = {
       MIDDLE: [
         {
           img: "/assets/result/idol/MIDDLE_MIDDLE_1.png",
-          label: "균형 잡힌 미녀가 좋아!",
+          label: "균형 잡힌 미남가 좋아!",
         },
         {
           img: "/assets/result/idol/MIDDLE_MIDDLE_0.png",
-          label: "미녀면 다 좋아!",
+          label: "미남이면 다 좋아!",
         },
       ],
       END: [
@@ -359,7 +359,7 @@ export const FACE_BOARD_INFO: BoardInformation = {
       ],
       END: [
         {
-          img: "/assets/result/idol/END_ENDpng",
+          img: "/assets/result/idol/END_END.png",
           label: "버터 강아지 콜렉터",
         },
       ],
@@ -392,7 +392,7 @@ export const FACE_BOARD_INFO: BoardInformation = {
       MIDDLE: [
         {
           img: "",
-          label: "균형 잡힌 미녀",
+          label: "균형 잡힌 미남",
         },
       ],
       END: [
