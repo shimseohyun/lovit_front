@@ -131,7 +131,12 @@ const SwipeBoard = (props: Params) => {
 
     if (!groupSummary || !group) return null;
 
-    const direction: DirectionType = slotID < currentSlotID ? "START" : "END";
+    const direction: DirectionType =
+      slotID == currentSlotID
+        ? groupSummary.axisSide
+        : slotID < currentSlotID
+          ? "START"
+          : "END";
     const icon =
       boardInformation.axisDict[axisData.type].axisSide[direction].icon;
 

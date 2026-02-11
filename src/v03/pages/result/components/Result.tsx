@@ -85,12 +85,15 @@ const Result = (parms: Parms) => {
         </>
       );
     } else {
+      console.log(result().img);
       return (
         <>
           <Title.BoardTitleContainer>
-            <Title.BoardTitleImg $imgURL={result().img} />
-
             <span>{result().label}</span>
+            <Title.BoardTitleImg
+              $imgURL={result().img}
+              style={{ height: 160 }}
+            />
           </Title.BoardTitleContainer>
 
           <Title.BoardDescription>

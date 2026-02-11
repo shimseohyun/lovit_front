@@ -59,7 +59,7 @@ export const BoardTitleContainer = styled.div`
 
 export const BoardTitleImg = styled.div<{ $imgURL: string }>`
   flex-grow: 1;
-  background-color: red;
+
   border-radius: 8px;
   aspect-ratio: 3/4;
 
@@ -71,7 +71,6 @@ export const BoardTitleImg = styled.div<{ $imgURL: string }>`
     background-image: url(${p.$imgURL});
     background-size: cover;
     background-position: center center;
-    border: solid 1px ${p.theme.strokeColors.strokeLighter};
   `}
 `;
 
