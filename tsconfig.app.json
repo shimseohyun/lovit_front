@@ -27,12 +27,33 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@data/*": ["src/data/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@pages/*": ["src/pages/*"],
-      "@interfaces/*": ["src/interfaces/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+
+      "@componentsV01/*": ["src/v01/components/*"],
+      "@dataV01/*": ["src/v01/data/*"],
+      "@hooksV01/*": ["src/v01/hooks/*"],
+      "@pagesV01/*": ["src/v01/pages/*"],
+      "@interfacesV01/*": ["src/v01/interfaces/*"],
+
+      "@apisV02/*": ["src/v02/apis/*"],
+      "@routersV02/*": ["src/v02/routers/*"],
+      "@componentsV02/*": ["src/v02/components/*"],
+      "@dataV02/*": ["src/v02/data/*"],
+      "@hooksV02/*": ["src/v02/hooks/*"],
+      "@pagesV02/*": ["src/v02/pages/*"],
+      "@interfacesV02/*": ["src/v02/interfaces/*"],
+      "@utilsV02/*": ["src/v02/utils/*"],
+      "@constantsV02/*": ["src/v02/constants/*"],
+
+      "@apisV03/*": ["src/v03/apis/*"],
+      "@routersV03/*": ["src/v03/routers/*"],
+      "@componentsV03/*": ["src/v03/components/*"],
+      "@dataV03/*": ["src/v03/data/*"],
+      "@hooksV03/*": ["src/v03/hooks/*"],
+      "@pagesV03/*": ["src/v03/pages/*"],
+      "@interfacesV03/*": ["src/v03/interfaces/*"],
+      "@utilsV03/*": ["src/v03/utils/*"],
+      "@constantsV03/*": ["src/v03/constants/*"]
     }
   },
   "include": ["src"]

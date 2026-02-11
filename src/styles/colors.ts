@@ -41,6 +41,9 @@ export const foregroundColors = {
   foregroundLight: colors.mono100,
   foregroundLighter: colors.mono050,
   foregroundStrongest: colors.mono900,
+
+  mainLight: "#F42572",
+  mainLightest: "#FEF4F8",
 } as const;
 
 export const iconColors = {
