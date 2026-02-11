@@ -12,6 +12,9 @@ export const BoardDescription = styled.div`
 
 export const BoardTitleContainer = styled.div`
   display: flex;
+
+  flex-shrink: 1;
+
   flex-direction: column;
   align-items: center;
   white-space: pre-wrap;
@@ -25,6 +28,7 @@ export const BoardTitleContainer = styled.div`
     ${p.theme.fonts.head1}
     color:${p.theme.fontColors.titleStrongest};
   `}
+
   > h1 {
     ${(p) => css`
       ${p.theme.fonts.head1}
@@ -39,17 +43,6 @@ export const BoardTitleContainer = styled.div`
     `}
   }
 
-  > img {
-    width: calc(3 * 35px);
-    height: calc(4 * 35px);
-    border-radius: 8px;
-    aspect-ratio: 3/4;
-
-    margin-top: 10px;
-    margin-bottom: 12px;
-    object-fit: cover;
-  }
-
   > .name {
     ${(p) => css`
       ${p.theme.fonts.head2}
@@ -62,6 +55,24 @@ export const BoardTitleContainer = styled.div`
       color:${p.theme.fontColors.textLighter};
     `}
   }
+`;
+
+export const BoardTitleImg = styled.div<{ $imgURL: string }>`
+  flex-grow: 1;
+  background-color: red;
+  border-radius: 8px;
+  aspect-ratio: 3/4;
+
+  margin-bottom: 8px;
+
+  ${(p) => css`
+    background-color: ${p.theme.foregroundColors.foregroundLighter};
+
+    background-image: url(${p.$imgURL});
+    background-size: cover;
+    background-position: center center;
+    border: solid 1px ${p.theme.strokeColors.strokeLighter};
+  `}
 `;
 
 export const BoardTitleSubContainer = styled.h1`

@@ -10,6 +10,7 @@ import EvaluationBoard from "@componentsV03/board/evaluationBoard/EvaluationBoar
 import useBoardControl from "@hooksV03/board/useBoardControl";
 
 import useGetBoardPoint from "@hooksV03/board/useGetBoardPoint";
+import Spacing from "@componentsV03/spacing/Spacing";
 
 const TouchEvaluationBoard = () => {
   const { vertical, horizontal, preference, itemList, boardInformation } =
@@ -30,11 +31,11 @@ const TouchEvaluationBoard = () => {
 
   return (
     <>
-      <Title.BoardTitleContainer>
+      <Title.BoardTitleContainer style={{ flexGrow: 1 }}>
         <span className="category">{currentItem.category}</span>
         <span className="name">{currentItem.name}</span>
 
-        <img src={currentItem.thumbnailURL} />
+        <Title.BoardTitleImg $imgURL={currentItem.thumbnailURL} />
       </Title.BoardTitleContainer>
       <Title.BoardDescription>
         사분면 중 어디에 속하는지 선택해주세요.
@@ -45,6 +46,7 @@ const TouchEvaluationBoard = () => {
         itemPointDict={points}
         boardInformation={boardInformation}
       />
+      <Spacing size={20} />
     </>
   );
 };

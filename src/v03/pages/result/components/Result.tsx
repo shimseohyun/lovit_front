@@ -4,30 +4,26 @@ import EvaluationBoard from "@componentsV03/board/evaluationBoard/EvaluationBoar
 import useGetBoardResult from "@hooksV03/board/useGetBoardResult";
 
 import { FACE_BOARD_INFO } from "@dataV03/boardInfoDummy";
-import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
-import { useAuth } from "@hooksV03/auth/useAuth";
+
 import useGetBoardPoint from "@hooksV03/board/useGetBoardPoint";
 import ResultPoly from "./ResultPoly";
 
 import useResultCell from "./cell/useResultCell";
 import ResultCell from "./cell/ResultCell";
-import { useGetTotalBoardData } from "@hooksV03/api/userTotalData";
 
 import type { GetUserBoardDataReturn } from "@apisV03/firebase/domain/user";
 import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
-import { Section, Separator } from "@componentsV03/layout/DefaultLayout";
+import { Section } from "@componentsV03/layout/DefaultLayout";
 
 import { BoardPoint, ResultCellTitle } from "./cell/ResultCell.styld";
 import Spacing from "@componentsV03/spacing/Spacing";
-import MoreButton from "./MoreButton";
-import FullSpinner from "@componentsV03/spinner/Spinner";
 
 type Parms = {
   userBoardData: GetUserBoardDataReturn;
   totalBoardDataDict: GetTotalBoardDataReturn;
 };
 
-const ResultContent = (parms: Parms) => {
+const Result = (parms: Parms) => {
   const { userBoardData, totalBoardDataDict } = parms;
   const { itemList, axis } = userBoardData;
 
@@ -81,17 +77,19 @@ const ResultContent = (parms: Parms) => {
           <Title.BoardTitleContainer>
             아직 취향을 발견하지 못했어요.
           </Title.BoardTitleContainer>
-
+          <Spacing size={20} />
+          {/* 
           <Title.BoardDescription>
             사분면을 채울수록 정확해져요!
-          </Title.BoardDescription>
+          </Title.BoardDescription> */}
         </>
       );
     } else {
       return (
         <>
           <Title.BoardTitleContainer>
-            <img src={result().img} alt={result().label} />
+            <Title.BoardTitleImg $imgURL={result().img} />
+
             <span>{result().label}</span>
           </Title.BoardTitleContainer>
 
@@ -115,13 +113,9 @@ const ResultContent = (parms: Parms) => {
         <ResultPoly points={likedPointsList} />
       </EvaluationBoard>
 
-      <Section $gap={8}>
-        <MoreButton isMore={userBoardData.isMore} />
-      </Section>
-
       {itemList.length > 0 && (
         <>
-          <Separator $size={8} />
+          <Spacing size={20} />
           <Section $gap={20}>
             <ResultCellTitle>
               <span>다른 유저와 비교해요!</span>
@@ -146,34 +140,9 @@ const ResultContent = (parms: Parms) => {
           </Section>
         </>
       )}
-      {/* <Separator $size={8} />
-      <Section>
-        <ResultCellTitle>
-          <span>원하는 인물이 없었나요?</span>
-        </ResultCellTitle>
-        <FillButton>인물 제안하기</FillButton>
-      </Section> */}
+
       <Spacing size={40} />
     </>
-  );
-};
-
-const Result = () => {
-  const { user } = useAuth();
-  const uid = user?.uid;
-
-  const { data: userBoardData, isFetching: isUserBoardFetching } =
-    useGetUserBoardData(uid);
-  const { data: totalBoardDataDict, isFetching: isTotalBoardFetching } =
-    useGetTotalBoardData();
-
-  if (isUserBoardFetching || isTotalBoardFetching) return <FullSpinner />;
-
-  return (
-    <ResultContent
-      userBoardData={userBoardData}
-      totalBoardDataDict={totalBoardDataDict}
-    />
   );
 };
 

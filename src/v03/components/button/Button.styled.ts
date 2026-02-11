@@ -2,7 +2,17 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { FillButtonType } from "./FillButton";
 
+export const BottomButtonGradient = styled.div`
+  width: 100%;
+  height: 20px;
+  transform: translate(-50%, 0%);
+  position: absolute;
+  left: 50%;
+  top: -20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
+`;
 export const BottomButtonContainer = styled.div`
+  position: relative;
   flex-shrink: 0;
   box-sizing: border-box;
   display: flex;

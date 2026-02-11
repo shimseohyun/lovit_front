@@ -6,6 +6,11 @@ type Parms = {
 
 const BottomButton = (parms: Parms) => {
   const { children } = parms;
-  return <S.BottomButtonContainer>{children}</S.BottomButtonContainer>;
+  return (
+    <S.BottomButtonContainer>
+      <S.BottomButtonGradient />
+      {children}
+    </S.BottomButtonContainer>
+  );
 };
 export default BottomButton;

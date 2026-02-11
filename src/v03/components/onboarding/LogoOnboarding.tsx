@@ -33,7 +33,7 @@ const Item = styled.div`
 
   /* 4번째만 깜빡 */
   &:nth-of-type(4) {
-    animation: ${blink} 1200ms ease-in-out infinite;
+    animation: ${blink} 1800ms ease-in-out infinite;
   }
 `;
 
