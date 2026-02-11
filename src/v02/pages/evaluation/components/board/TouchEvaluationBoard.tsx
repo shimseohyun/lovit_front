@@ -31,9 +31,10 @@ const TouchEvaluationBoard = () => {
   return (
     <>
       <Title.BoardTitleContainer>
-        <img src={currentItem.thumbnailURL} />
         <span className="category">{currentItem.category}</span>
         <span className="name">{currentItem.name}</span>
+
+        <img src={currentItem.thumbnailURL} />
       </Title.BoardTitleContainer>
       <Title.BoardDescription>
         사분면 중 어디에 속하는지 선택해주세요.
