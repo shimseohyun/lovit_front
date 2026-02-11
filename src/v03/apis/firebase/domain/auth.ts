@@ -40,9 +40,9 @@ export const postGoogleLogin = async () => {
 
     // 회원가입일 경우
     const additional = getAdditionalUserInfo(credential);
-
     if (additional?.isNewUser) await postPrevData(credential.user.uid);
     window.localStorage.clear();
+    window.location.reload();
   } catch (e) {
     throw e;
   }
