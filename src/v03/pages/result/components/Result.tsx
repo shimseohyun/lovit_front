@@ -89,11 +89,11 @@ const Result = (parms: Parms) => {
       return (
         <>
           <Title.BoardTitleContainer>
-            <span>{result().label}</span>
             <Title.BoardTitleImg
               $imgURL={result().img}
-              style={{ height: 160 }}
+              style={{ minHeight: 160, height: 160, minWidth: 10 }}
             />
+            <span>{result().label}</span>
           </Title.BoardTitleContainer>
 
           <Title.BoardDescription>
