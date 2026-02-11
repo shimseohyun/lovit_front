@@ -24,6 +24,16 @@ export default defineConfig({
       "@pagesV02": path.resolve(__dirname, "src/v02/pages"),
       "@utilsV02": path.resolve(__dirname, "src/v02/utils"),
       "@constantsV02": path.resolve(__dirname, "src/v02/constants"),
+
+      "@apisV03": path.resolve(__dirname, "src/v03/apis"),
+      "@routersV03": path.resolve(__dirname, "src/v03/routers"),
+      "@componentsV03": path.resolve(__dirname, "src/v03/components"),
+      "@dataV03": path.resolve(__dirname, "src/v03/data"),
+      "@hooksV03": path.resolve(__dirname, "src/v03/hooks"),
+      "@interfacesV03": path.resolve(__dirname, "src/v03/interfaces"),
+      "@pagesV03": path.resolve(__dirname, "src/v03/pages"),
+      "@utilsV03": path.resolve(__dirname, "src/v03/utils"),
+      "@constantsV03": path.resolve(__dirname, "src/v03/constants"),
     },
   },
 });

@@ -43,7 +43,17 @@
       "@pagesV02/*": ["src/v02/pages/*"],
       "@interfacesV02/*": ["src/v02/interfaces/*"],
       "@utilsV02/*": ["src/v02/utils/*"],
-      "@constantsV02/*": ["src/v02/constants/*"]
+      "@constantsV02/*": ["src/v02/constants/*"],
+
+      "@apisV03/*": ["src/v03/apis/*"],
+      "@routersV03/*": ["src/v03/routers/*"],
+      "@componentsV03/*": ["src/v03/components/*"],
+      "@dataV03/*": ["src/v03/data/*"],
+      "@hooksV03/*": ["src/v03/hooks/*"],
+      "@pagesV03/*": ["src/v03/pages/*"],
+      "@interfacesV03/*": ["src/v03/interfaces/*"],
+      "@utilsV03/*": ["src/v03/utils/*"],
+      "@constantsV03/*": ["src/v03/constants/*"]
     }
   },
   "include": ["src"]

@@ -6,9 +6,8 @@ import { global } from "./styles/global";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { RouterProvider } from "react-router-dom";
-import router from "@routersV02/router";
-
-import { AuthProvider } from "@hooksV02/auth/context/AuthProvider";
+import router from "@routersV03/router";
+import { AuthProvider } from "@hooksV03/auth/context/AuthProvider";
 
 const App = () => {
   const queryClient = new QueryClient();
