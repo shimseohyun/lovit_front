@@ -87,8 +87,8 @@ const useSwipeBoard = (parms: Parms) => {
     });
 
     // 마지막: 포커스 해제(null)
-    const endId = window.setTimeout(() => setOnboardingAxis(null), t);
-    timersRef.current.push(endId);
+    const endID = window.setTimeout(() => setOnboardingAxis(null), t);
+    timersRef.current.push(endID);
 
     return stopOnboarding;
   }, [isSolo, stopOnboarding]);

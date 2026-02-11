@@ -24,7 +24,7 @@ const useBoardControl = () => {
     setEvaluationSlot,
     resetSlot,
   } = useBoardSlotContext();
-  const { currentItemID, navigateNextItemIDX, navigateStep, reset } =
+  const { currentItemID, navigateNextItemIDX, navigateStep } =
     useBoardStepContext();
 
   const { user } = useAuth();
@@ -116,7 +116,6 @@ const useBoardControl = () => {
   };
 
   const navigateMore = () => {
-    reset();
     navigateStep("EVALUATION_TOUCH");
   };
 

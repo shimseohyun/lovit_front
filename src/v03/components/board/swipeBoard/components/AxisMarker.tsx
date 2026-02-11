@@ -70,6 +70,7 @@ const MarkerCotainer = styled.div<{
 `;
 
 const Marker = styled.div<{
+  $isBetween: boolean;
   $isCurrent: boolean;
   $isSelected: boolean;
   $axis: AxisType;
@@ -93,6 +94,9 @@ const Marker = styled.div<{
 
   overflow: visible;
 
+  ${({ $axis }) => css`
+    flex-direction: ${$axis === "HORIZONTAL" ? "row" : "column"};
+  `}
   ${(p) => css`
     background-color: ${p.theme.foregroundColors.foregroundLighter};
     ${p.$isLabel
@@ -108,7 +112,7 @@ const Marker = styled.div<{
   width: 40px;
   height: 40px;
 
-  ${({ $isSelected, $axis, $isCurrent, ...p }) => {
+  ${({ $isSelected, $axis, $isCurrent, $isBetween, ...p }) => {
     if ($isSelected) {
       return css`
         ${$isCurrent ||
@@ -118,6 +122,7 @@ const Marker = styled.div<{
         `}
 
         ${$isCurrent &&
+        !$isBetween &&
         css`
           width: 56px;
           height: 56px;
@@ -129,6 +134,17 @@ const Marker = styled.div<{
       `;
     }
   }}
+
+  ${({ $isBetween, $axis }) =>
+    $isBetween &&
+    css`
+      height: ${$axis === "VERTICAL" ? "76px" : "40px"};
+      width: ${$axis === "HORIZONTAL" ? "76px" : "40px"};
+      gap: ${$axis === "HORIZONTAL" ? 8 : 0}px;
+
+      margin-top: ${$axis === "HORIZONTAL" ? 16 : 0}px;
+      margin-left: ${$axis === "HORIZONTAL" ? 0 : 16}px;
+    `}
 `;
 
 const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
@@ -168,7 +184,28 @@ const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
   `}
 `;
 
-const IconLabel = styled.div<{ $isSelected: boolean; $iconIntensity: number }>`
+const IconLabel = styled.div<{
+  $isVisible?: boolean;
+  $isSelected: boolean;
+  $iconIntensity: number;
+}>`
+  transition:
+    width 220ms ease-out,
+    height 220ms ease-out;
+
+  opacity: 100%;
+  width: 32px;
+  height: 32px;
+
+  text-align: center;
+  ${({ $isVisible }) =>
+    $isVisible === false &&
+    css`
+      width: 0px;
+      height: 0px;
+      overflow: hidden;
+    `}
+
   ${({ $isSelected, $iconIntensity }) => css`
     font-size: ${$isSelected ? 24 : 20}px;
     line-height: 32px;
@@ -185,6 +222,8 @@ type Parms = {
   label?: string;
   imgURL?: string;
   icon?: string;
+  startIcon?: string;
+  endIcon?: string;
   iconIntensity?: number;
 };
 
@@ -198,11 +237,14 @@ const AxisMarker = (parms: Parms) => {
     label,
     imgURL,
     icon = "",
+    startIcon = "",
+    endIcon = "",
     iconIntensity = 100,
   } = parms;
 
   const isLabel = type !== "ITEM_LIST";
-  const isNone = type === "BETWEEN";
+
+  const isBetween = type === "BETWEEN" && isCurrent;
 
   return (
     <MarkerCotainer
@@ -211,27 +253,36 @@ const AxisMarker = (parms: Parms) => {
       $axis={axis}
     >
       <Spot $isCurrent={isCurrent} />
-      {!isNone && (
-        <Marker
-          $isCurrent={isCurrent}
-          $isSelected={isSelected}
-          $axis={axis}
-          $isLabel={isLabel}
-          $imgURL={imgURL}
-        >
-          {label !== undefined && (
-            <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
-              {label}
-            </MarkerLabel>
-          )}
 
-          {isLabel && (
+      <Marker
+        $isBetween={isBetween}
+        $isCurrent={isCurrent}
+        $isSelected={isSelected}
+        $axis={axis}
+        $isLabel={isLabel}
+        $imgURL={imgURL}
+      >
+        {label !== undefined && (
+          <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
+            {label}
+          </MarkerLabel>
+        )}
+
+        {isLabel && (
+          <>
             <IconLabel $isSelected={isSelected} $iconIntensity={iconIntensity}>
-              {icon}
+              {isBetween ? startIcon : icon}
             </IconLabel>
-          )}
-        </Marker>
-      )}
+            <IconLabel
+              $isVisible={isBetween}
+              $isSelected={isSelected}
+              $iconIntensity={iconIntensity}
+            >
+              {endIcon}
+            </IconLabel>
+          </>
+        )}
+      </Marker>
     </MarkerCotainer>
   );
 };

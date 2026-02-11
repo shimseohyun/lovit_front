@@ -169,7 +169,7 @@ const FACE_AXIS: Axis = {
   stepCount: 11,
   axisSide: {
     START: {
-      icon: "🩶",
+      icon: "🤍",
       label: "취향",
       labelColor: "#9d9d9d",
       groupColor: "#f0f0f0",

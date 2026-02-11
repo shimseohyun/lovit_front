@@ -14,15 +14,15 @@ type BoardResult = {
 };
 
 type BoardResultWithTop = BoardResult & {
-  topLikedItemIdList: ItemIDList;
+  topLikedItemIDList: ItemIDList;
   hasNoCalcData: boolean; // 계산에 포함되는 데이터가 없으면 true
 };
 
-const groupMinId = 0;
-const groupMaxId = 5;
-const groupSize = groupMaxId - groupMinId + 1; // 6
+const groupMinID = 0;
+const groupMaxID = 5;
+const groupSize = groupMaxID - groupMinID + 1; // 6
 
-// groupId -> positionPct
+// groupID -> positionPct
 const groupCenter = 2.5;
 const groupStepPct = 20;
 
@@ -45,11 +45,11 @@ const noSignalWeightThreshold = 0.15;
 const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
 
-const isValidGroupId = (groupId: number) =>
-  Number.isFinite(groupId) && groupId >= groupMinId && groupId <= groupMaxId;
+const isValidGroupID = (groupID: number) =>
+  Number.isFinite(groupID) && groupID >= groupMinID && groupID <= groupMaxID;
 
-const groupIdToPositionPct = (groupId: number) =>
-  (groupId - groupCenter) * groupStepPct;
+const groupIDToPositionPct = (groupID: number) =>
+  (groupID - groupCenter) * groupStepPct;
 
 const positionPctToZone = (positionPct: number): ResultType => {
   if (positionPct < zoneCut1Pct) return "START";
@@ -81,13 +81,13 @@ const calcProfile = (params: {
 };
 
 /**
- * ✅ topLikedItemIdList
+ * ✅ topLikedItemIDList
  * - 기존처럼 preference.roughData의 "상위(4~)"에서 뽑되,
- * - ✅ 계산에 포함된(itemIdSet) 것만 top3에 포함
+ * - ✅ 계산에 포함된(itemIDSet) 것만 top3에 포함
  */
-const buildTopLikedItemIdList = (
+const buildTopLikedItemIDList = (
   preference: AxisData,
-  includedItemIdSet: Set<number>,
+  includedItemIDSet: Set<number>,
 ) => {
   const picked: number[] = [];
   const pickedSet = new Set<number>();
@@ -104,7 +104,7 @@ const buildTopLikedItemIdList = (
         const id = ids[k];
 
         // ✅ 계산에서 제외된 건 스킵
-        if (!includedItemIdSet.has(id)) continue;
+        if (!includedItemIDSet.has(id)) continue;
 
         // 중복 방지
         if (pickedSet.has(id)) continue;
@@ -122,20 +122,20 @@ const buildTopLikedItemIdList = (
 
 /**
  * ✅ (변경) 선호도 평균 기반 계산
- * - preference groupId를 0..10 점수로 보고(score: 0..1),
+ * - preference groupID를 0..10 점수로 보고(score: 0..1),
  * - score 평균(avgScore)을 먼저 구한 뒤,
  * - score > avgScore 인 아이템만 계산에 포함 (평균 기준으로 가중치 정규화)
  */
-const preferenceMinGroupId = 0;
-const preferenceMaxGroupId = 10;
-const preferenceRange = preferenceMaxGroupId - preferenceMinGroupId;
+const preferenceMinGroupID = 0;
+const preferenceMaxGroupID = 10;
+const preferenceRange = preferenceMaxGroupID - preferenceMinGroupID;
 
-const preferenceGroupIdToScore = (pGroupId: number) => {
-  if (!Number.isFinite(pGroupId)) return NaN;
-  const clamped = clamp(pGroupId, preferenceMinGroupId, preferenceMaxGroupId);
+const preferenceGroupIDToScore = (pGroupID: number) => {
+  if (!Number.isFinite(pGroupID)) return NaN;
+  const clamped = clamp(pGroupID, preferenceMinGroupID, preferenceMaxGroupID);
   return preferenceRange === 0
     ? 0
-    : (clamped - preferenceMinGroupId) / preferenceRange; // 0..1
+    : (clamped - preferenceMinGroupID) / preferenceRange; // 0..1
 };
 
 const scoreToLikeWeightByAvg = (score: number, avgScore: number) => {
@@ -171,17 +171,17 @@ const useGetBoardResult = (parms: Parms): BoardResultWithTop => {
   let prefScoreSum = 0;
   let prefScoreCount = 0;
 
-  for (const itemId of itemList) {
-    const p = pDict[itemId];
-    const h = hDict[itemId];
-    const v = vDict[itemId];
+  for (const itemID of itemList) {
+    const p = pDict[itemID];
+    const h = hDict[itemID];
+    const v = vDict[itemID];
     if (!p || !h || !v) continue;
 
-    const hGroupId = h.userAxisGroupID;
-    const vGroupId = v.userAxisGroupID;
-    if (!isValidGroupId(hGroupId) || !isValidGroupId(vGroupId)) continue;
+    const hGroupID = h.userAxisGroupID;
+    const vGroupID = v.userAxisGroupID;
+    if (!isValidGroupID(hGroupID) || !isValidGroupID(vGroupID)) continue;
 
-    const score = preferenceGroupIdToScore(p.userAxisGroupID);
+    const score = preferenceGroupIDToScore(p.userAxisGroupID);
     if (!Number.isFinite(score)) continue;
 
     prefScoreSum += score;
@@ -204,31 +204,31 @@ const useGetBoardResult = (parms: Parms): BoardResultWithTop => {
   let vSumWX = 0;
   let vSumWX2 = 0;
 
-  const likedEntries: Array<{ itemId: number; likeWeight: number }> = [];
+  const likedEntries: Array<{ itemID: number; likeWeight: number }> = [];
 
-  for (const itemId of itemList) {
-    const p = pDict[itemId];
-    const h = hDict[itemId];
-    const v = vDict[itemId];
+  for (const itemID of itemList) {
+    const p = pDict[itemID];
+    const h = hDict[itemID];
+    const v = vDict[itemID];
     if (!p || !h || !v) continue;
 
-    const hGroupId = h.userAxisGroupID;
-    const vGroupId = v.userAxisGroupID;
+    const hGroupID = h.userAxisGroupID;
+    const vGroupID = v.userAxisGroupID;
 
-    if (!isValidGroupId(hGroupId) || !isValidGroupId(vGroupId)) continue;
+    if (!isValidGroupID(hGroupID) || !isValidGroupID(vGroupID)) continue;
 
-    const score = preferenceGroupIdToScore(p.userAxisGroupID);
+    const score = preferenceGroupIDToScore(p.userAxisGroupID);
     const likeWeight = scoreToLikeWeightByAvg(score, avgPreferenceScore);
     if (likeWeight <= 0) continue; // ✅ 계산 제외
 
-    likedEntries.push({ itemId, likeWeight });
+    likedEntries.push({ itemID, likeWeight });
     totalLikeWeight += likeWeight;
 
-    hGroupLikeWeight[hGroupId] += likeWeight;
-    vGroupLikeWeight[vGroupId] += likeWeight;
+    hGroupLikeWeight[hGroupID] += likeWeight;
+    vGroupLikeWeight[vGroupID] += likeWeight;
 
-    const hPos = groupIdToPositionPct(hGroupId);
-    const vPos = groupIdToPositionPct(vGroupId);
+    const hPos = groupIDToPositionPct(hGroupID);
+    const vPos = groupIDToPositionPct(vGroupID);
 
     hSumWX += likeWeight * hPos;
     hSumWX2 += likeWeight * hPos * hPos;
@@ -239,11 +239,11 @@ const useGetBoardResult = (parms: Parms): BoardResultWithTop => {
 
   const hasNoCalcData = likedEntries.length === 0;
 
-  // ✅ topLikedItemIdList도 "계산 포함된 item"만
-  const includedItemIdSet = new Set(likedEntries.map((e) => e.itemId));
-  const topLikedItemIdList = buildTopLikedItemIdList(
+  // ✅ topLikedItemIDList도 "계산 포함된 item"만
+  const includedItemIDSet = new Set(likedEntries.map((e) => e.itemID));
+  const topLikedItemIDList = buildTopLikedItemIDList(
     preference,
-    includedItemIdSet,
+    includedItemIDSet,
   );
 
   // 위치 평균은 shrinkage 적용(0쪽으로 안정화)
@@ -291,7 +291,7 @@ const useGetBoardResult = (parms: Parms): BoardResultWithTop => {
   return {
     horizontal: { zone: horizontalZone, profile: horizontalProfile },
     vertical: { zone: verticalZone, profile: verticalProfile },
-    topLikedItemIdList,
+    topLikedItemIDList,
     hasNoCalcData,
   };
 };

@@ -99,7 +99,7 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
   /** ✅ 제스처 내부 상태 */
   const gestureRef = useRef({
     isActive: false,
-    pointerId: -1,
+    pointerID: -1,
 
     startX: 0,
     startY: 0,
@@ -145,7 +145,7 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
   const reset = () => {
     const g = gestureRef.current;
     g.isActive = false;
-    g.pointerId = -1;
+    g.pointerID = -1;
     g.axisLocked = null;
 
     directionRef.current = emptyDirection;
@@ -172,7 +172,7 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
       const g = gestureRef.current;
 
       g.isActive = true;
-      g.pointerId = e.pointerId;
+      g.pointerID = e.pointerId;
 
       g.startX = e.clientX;
       g.startY = e.clientY;
@@ -199,7 +199,7 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
 
     const onPointerMove: PointerEventHandler<T> = (e) => {
       const g = gestureRef.current;
-      if (!g.isActive || g.pointerId !== e.pointerId) return;
+      if (!g.isActive || g.pointerID !== e.pointerId) return;
 
       const dx = e.clientX - g.startX;
       const dy = e.clientY - g.startY;
@@ -240,7 +240,7 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
 
     const finish = (e: Parameters<PointerEventHandler<T>>[0]) => {
       const g = gestureRef.current;
-      if (!g.isActive || g.pointerId !== e.pointerId) return;
+      if (!g.isActive || g.pointerID !== e.pointerId) return;
 
       const endT = performance.now();
 
@@ -273,7 +273,7 @@ const useSwipe = <T extends HTMLElement = HTMLElement>(
 
       // ✅ 제스처 종료 정리
       g.isActive = false;
-      g.pointerId = -1;
+      g.pointerID = -1;
       g.axisLocked = null;
 
       setDragAxisSafe(null);

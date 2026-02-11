@@ -31,7 +31,7 @@ const ResultContent = (parms: Parms) => {
   const { userBoardData, totalBoardDataDict } = parms;
   const { itemList, axis } = userBoardData;
 
-  const { horizontal, vertical, hasNoCalcData, topLikedItemIdList } =
+  const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({
       vertical: axis.VERTICAL,
       horizontal: axis.HORIZONTAL,
@@ -44,7 +44,7 @@ const ResultContent = (parms: Parms) => {
     horizontal: axis.HORIZONTAL,
     preference: axis.PREFERENCE,
     itemList,
-    likedItemList: topLikedItemIdList,
+    likedItemList: topLikedItemIDList,
   });
 
   const itemPositionDict = {

@@ -50,6 +50,8 @@ const useBoardStep = (parms: Parms) => {
 
   const currentItemID = pendingItemIDList[currentItemIDX] ?? 0;
 
+  const reset = () => {};
+
   return {
     isFin,
     isLast,
@@ -62,6 +64,7 @@ const useBoardStep = (parms: Parms) => {
 
     navigateStep,
     navigateNextItemIDX,
+    reset,
 
     isFetching,
   };
