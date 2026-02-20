@@ -16,49 +16,34 @@ import type { AxisData, BoardAxisDict } from "@interfacesV03/type";
 import { getSwipeBoardSubTitle } from "@componentsV03/board/swipeBoard/getSwipeBoardTitle";
 import { useMemo } from "react";
 
-const SwipeEvaluationBoard = () => {
+type Parms = { axis: AxisType };
+const SwipeEvaluationBoard = (parms: Parms) => {
+  const { axis } = parms;
   const { vertical, horizontal, boardInformation } = useBoardStaticContext();
   const { evaluationSlot, evaluationGroup, setEvaluationSlot } =
     useBoardSlotContext();
 
+  const data = axis === "VERTICAL" ? vertical : horizontal;
+
   if (evaluationSlot === undefined || evaluationGroup === undefined) return;
 
-  const dataDict: BoardAxisDict = useMemo(() => {
+  const dataDict: BoardAxisDict | undefined = useMemo(() => {
     return {
-      VERTICAL:
-        evaluationSlot.VERTICAL !== undefined
-          ? {
-              startIDX:
-                vertical.slotByGroupDict[evaluationGroup.VERTICAL].startSlotIDX,
-              endIDX:
-                vertical.slotByGroupDict[evaluationGroup.VERTICAL].endSlotIDX,
-              ...vertical,
-            }
-          : undefined,
-      HORIZONTAL:
-        evaluationSlot.HORIZONTAL !== undefined
-          ? {
-              startIDX:
-                horizontal.slotByGroupDict[evaluationGroup.HORIZONTAL]
-                  .startSlotIDX,
-              endIDX:
-                horizontal.slotByGroupDict[evaluationGroup.HORIZONTAL]
-                  .endSlotIDX,
-              ...horizontal,
-            }
-          : undefined,
+      [axis]: {
+        startIDX: data.slotByGroupDict[evaluationGroup.VERTICAL].startSlotIDX,
+        endIDX: data.slotByGroupDict[evaluationGroup.VERTICAL].endSlotIDX,
+        ...data,
+      },
     };
-  }, []);
+  }, [axis]);
+
+  if (dataDict === undefined) return;
 
   const getSlot = (s: SlotDict) => {
     setEvaluationSlot({ VERTICAL: s.VERTICAL, HORIZONTAL: s.HORIZONTAL });
   };
 
-  const {
-    dragDirection: direction,
-    swipeBoardProps,
-    dragAxis,
-  } = useSwipeBoard({
+  const { dragDirection: direction, swipeBoardProps } = useSwipeBoard({
     slot: evaluationSlot,
     getSlot: getSlot,
     dataDict: dataDict,
@@ -83,41 +68,23 @@ const SwipeEvaluationBoard = () => {
   };
 
   const BoardTitle = () => {
-    const vGroup = evaluationGroup.VERTICAL;
-    const hGroup = evaluationGroup.HORIZONTAL;
+    const groupID = evaluationGroup[axis];
 
-    const vSummary = boardInformation.axisDict.VERTICAL.groupSummary[vGroup];
-    const hSummary = boardInformation.axisDict.HORIZONTAL.groupSummary[hGroup];
+    const groupSummary = boardInformation.axisDict[axis].groupSummary[groupID];
+
     return (
       <Title.BoardTitleSubContainer>
         <Title.BoardTitelGroupChip>
-          {vSummary.intensityLabel} {vSummary.groupLabel}
-          {" · "}
-          {hSummary.intensityLabel} {hSummary.groupLabel}
+          {groupSummary.intensityLabel} {groupSummary.groupLabel}
         </Title.BoardTitelGroupChip>
 
-        {/* 상하 */}
-        <Title.BoardTitleSubWrapper
-          $isSelected={
-            (dragAxis === "VERTICAL" || dragAxis === null) &&
-            evaluationSlot.VERTICAL !== undefined
-          }
-        >
-          {getSubTitle("VERTICAL", vertical)}
-        </Title.BoardTitleSubWrapper>
-
-        {/* 좌우 */}
-        <Title.BoardTitleSubWrapper
-          $isSelected={
-            (dragAxis === "HORIZONTAL" || dragAxis === null) &&
-            evaluationSlot.HORIZONTAL !== undefined
-          }
-        >
-          {getSubTitle("HORIZONTAL", horizontal)}
+        <Title.BoardTitleSubWrapper $isSelected={true}>
+          {getSubTitle(axis, data)}
         </Title.BoardTitleSubWrapper>
       </Title.BoardTitleSubContainer>
     );
   };
+
   return (
     <>
       <Title.BoardTitleContainer>

@@ -14,7 +14,8 @@ const EvaluationNavigation = () => {
         {currentStep !== "EVALUATION_TOUCH" && (
           <S.Content>
             <div>
-              {(currentStep === "EVALUATION_SWIPE" ||
+              {(currentStep === "EVALUATION_SWIPE_HORIZONTAL" ||
+                currentStep === "EVALUATION_SWIPE_VERTICAL" ||
                 currentStep === "PREFERENCE") && (
                 <button onClick={navigateEvaluationTouch}>
                   <IconBox icon="left" />
@@ -23,8 +24,8 @@ const EvaluationNavigation = () => {
             </div>
             <div>
               {/* {currentStep === "EVALUATION_TOUCH" && (
-              <button onClick={skipCurrentItem}>건너뛰기</button>
-            )} */}
+                <button onClick={skipCurrentItem}>건너뛰기</button>
+              )} */}
             </div>
           </S.Content>
         )}

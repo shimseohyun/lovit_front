@@ -16,8 +16,10 @@ const Board = () => {
     if (isFin) return <Fin />;
 
     if (currentStep === "EVALUATION_TOUCH") return <TouchEvaluationBoard />;
-    else if (currentStep === "EVALUATION_SWIPE")
-      return <SwipeEvaluationBoard />;
+    else if (currentStep === "EVALUATION_SWIPE_HORIZONTAL")
+      return <SwipeEvaluationBoard axis="HORIZONTAL" />;
+    else if (currentStep === "EVALUATION_SWIPE_VERTICAL")
+      return <SwipeEvaluationBoard axis="VERTICAL" />;
     else if (currentStep === "PREFERENCE") return <SwipePreferenceBoard />;
   };
 

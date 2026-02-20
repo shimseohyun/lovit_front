@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { usePostUserBoardData } from "@hooksV03/api/userBoardData";
 import { useAuth } from "@hooksV03/auth/useAuth";
 import { usePostUserDataToTotalBoardData } from "@hooksV03/api/userTotalData";
+import type { AxisType } from "@interfacesV03/type";
 
 const useBoardControl = () => {
   const { preference, vertical, horizontal, itemList } =
@@ -78,26 +79,42 @@ const useBoardControl = () => {
     });
   };
 
-  // 평가 스와이프로 이동
-  const navigateEvaluationSwipe = (v: number, h: number) => {
-    const vIsFirst = vertical.slotByGroupDict[v].slotCount === 1;
-    const hIsFirst = horizontal.slotByGroupDict[h].slotCount === 1;
+  // 평가 스와이프로 이동 + 축
+  const navigateEvaluationSwipe = (axis: AxisType) => {
+    if (axis === "VERTICAL") navigateStep("EVALUATION_SWIPE_VERTICAL");
+    else navigateStep("EVALUATION_SWIPE_HORIZONTAL");
+  };
 
+  // 평가 스와이프로 이동
+  const navigateEvaluationTouchNext = (v: number, h: number) => {
     const vSlotIDX = getSlotCenterIDX(v, vertical.slotByGroupDict);
     const hSlotIDX = getSlotCenterIDX(h, horizontal.slotByGroupDict);
 
+    const vIsFirst = vertical.slotByGroupDict[v].slotCount === 1;
+    const hIsFirst = horizontal.slotByGroupDict[h].slotCount === 1;
+
     getEvaluationGroup({ VERTICAL: v, HORIZONTAL: h });
     setEvaluationSlot({
-      VERTICAL: vIsFirst ? undefined : vSlotIDX,
-      HORIZONTAL: hIsFirst ? undefined : hSlotIDX,
+      VERTICAL: vSlotIDX,
+      HORIZONTAL: hSlotIDX,
     });
 
-    if (vIsFirst && hIsFirst) {
-      navigateStep("PREFERENCE");
-    } else {
-      navigateStep("EVALUATION_SWIPE");
-    }
+    if (vIsFirst && hIsFirst) navigatePreferenceSwipe();
+    else if (!hIsFirst) navigateEvaluationSwipe("HORIZONTAL");
+    else if (!vIsFirst) navigateEvaluationSwipe("VERTICAL");
   };
+
+  const navigateEvaluationSwipeNext = () => {
+    if (evaluationGroup === undefined || evaluationGroup["VERTICAL"])
+      return false;
+    const groupID = evaluationGroup["VERTICAL"];
+
+    const vIsFirst = vertical.slotByGroupDict[groupID].slotCount === 1;
+
+    if (vIsFirst) navigatePreferenceSwipe();
+    else navigateEvaluationSwipe("VERTICAL");
+  };
+
   // 이전단계로 이동
   const navigateEvaluationTouch = () => {
     navigateStep("EVALUATION_TOUCH");
@@ -137,9 +154,11 @@ const useBoardControl = () => {
   };
 
   return {
-    navigateEvaluationSwipe,
     navigateEvaluationTouch,
+    navigateEvaluationTouchNext,
+    navigateEvaluationSwipeNext,
     navigatePreferenceSwipe,
+
     navigateResult,
     isPushingItem,
     confrimCurrentItem,

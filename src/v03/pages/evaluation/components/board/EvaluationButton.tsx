@@ -9,20 +9,14 @@ const EvaluationButton = () => {
   const { isLoggedIn } = useAuth();
   const { isFin, isLast, currentStep } = useBoardStepContext();
   const {
+    navigateEvaluationSwipeNext,
     navigatePreferenceSwipe,
+
     navigateResult,
     isPushingItem,
     confrimCurrentItem,
     navigateMore,
   } = useBoardControl();
-
-  const onClickNavigatePreference = () => {
-    navigatePreferenceSwipe();
-  };
-
-  const onClickNavigateNextIDX = () => {
-    confrimCurrentItem();
-  };
 
   if (isFin) {
     return (
@@ -45,31 +39,47 @@ const EvaluationButton = () => {
   }
 
   if (currentStep === "EVALUATION_TOUCH") return;
-  return (
-    <BottomButton>
-      {isPushingItem && <FullSpinner />}
-      {currentStep === "PREFERENCE" ? (
+
+  if (currentStep === "EVALUATION_SWIPE_VERTICAL")
+    return (
+      <BottomButton>
+        <FillButton
+          type="button"
+          buttonType={"ASSISTIVE"}
+          onClick={navigatePreferenceSwipe}
+        >
+          이렇게 할게요!
+        </FillButton>
+      </BottomButton>
+    );
+
+  if (currentStep === "EVALUATION_SWIPE_HORIZONTAL")
+    return (
+      <BottomButton>
+        <FillButton
+          type="button"
+          buttonType={"ASSISTIVE"}
+          onClick={navigateEvaluationSwipeNext}
+        >
+          이렇게 할게요!
+        </FillButton>
+      </BottomButton>
+    );
+
+  if (currentStep === "PREFERENCE")
+    return (
+      <BottomButton>
+        {isPushingItem && <FullSpinner />}
         <FillButton
           type="button"
           buttonType={"PRIMARY"}
           disabled={isPushingItem}
-          onClick={onClickNavigateNextIDX}
+          onClick={confrimCurrentItem}
         >
           이렇게 할게요!
         </FillButton>
-      ) : (
-        <>
-          <FillButton
-            type="button"
-            buttonType={"ASSISTIVE"}
-            onClick={onClickNavigatePreference}
-          >
-            이렇게 할게요!
-          </FillButton>
-        </>
-      )}
-    </BottomButton>
-  );
+      </BottomButton>
+    );
 };
 
 export default EvaluationButton;
