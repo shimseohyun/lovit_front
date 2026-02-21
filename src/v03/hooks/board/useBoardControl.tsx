@@ -87,11 +87,11 @@ const useBoardControl = () => {
 
   // 평가 스와이프로 이동
   const navigateEvaluationTouchNext = (v: number, h: number) => {
-    const vSlotIDX = getSlotCenterIDX(v, vertical.slotByGroupDict);
-    const hSlotIDX = getSlotCenterIDX(h, horizontal.slotByGroupDict);
-
     const vIsFirst = vertical.slotByGroupDict[v].slotCount === 1;
     const hIsFirst = horizontal.slotByGroupDict[h].slotCount === 1;
+
+    const vSlotIDX = getSlotCenterIDX(v, vertical.slotByGroupDict);
+    const hSlotIDX = getSlotCenterIDX(h, horizontal.slotByGroupDict);
 
     getEvaluationGroup({ VERTICAL: v, HORIZONTAL: h });
     setEvaluationSlot({
@@ -105,8 +105,11 @@ const useBoardControl = () => {
   };
 
   const navigateEvaluationSwipeNext = () => {
-    if (evaluationGroup === undefined || evaluationGroup["VERTICAL"])
-      return false;
+    if (evaluationGroup === undefined) {
+      navigatePreferenceSwipe();
+      return;
+    }
+
     const groupID = evaluationGroup["VERTICAL"];
 
     const vIsFirst = vertical.slotByGroupDict[groupID].slotCount === 1;
@@ -138,7 +141,7 @@ const useBoardControl = () => {
   };
 
   // 현재 ITEM IDX 완료하기
-  const confrimCurrentItem = async () => {
+  const confirmCurrentItem = async () => {
     try {
       await pushItem();
       resetSlot();
@@ -161,7 +164,7 @@ const useBoardControl = () => {
 
     navigateResult,
     isPushingItem,
-    confrimCurrentItem,
+    confirmCurrentItem,
 
     navigateMore,
     skipCurrentItem,

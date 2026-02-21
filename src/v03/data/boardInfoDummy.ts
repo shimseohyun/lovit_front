@@ -170,13 +170,13 @@ const FACE_AXIS: Axis = {
   axisSide: {
     START: {
       icon: "🤍",
-      label: "취향",
+      label: "덜 취향",
       labelColor: "#9d9d9d",
       groupColor: "#f0f0f0",
     },
     END: {
-      icon: "💖",
-      label: "취향",
+      icon: "🩷",
+      label: "더 취향",
       labelColor: "#F42572",
       groupColor: "#FEF4F8",
     },
@@ -184,7 +184,7 @@ const FACE_AXIS: Axis = {
   groupSummary: [
     {
       axisSide: "END",
-      groupIcon: "💖",
+      groupIcon: "🩷",
       intensityLabel: "0",
       groupLabel: "취향",
       groupDescription: "취향이 아니에요",
@@ -204,7 +204,7 @@ const FACE_AXIS: Axis = {
     },
     {
       axisSide: "END",
-      groupIcon: "💖",
+      groupIcon: "🩷",
       intensityLabel: "1",
       groupLabel: "취향",
       groupDescription: "취향과 제법 멀어요",
@@ -224,7 +224,7 @@ const FACE_AXIS: Axis = {
     },
     {
       axisSide: "END",
-      groupIcon: "💖",
+      groupIcon: "🩷",
       intensityLabel: "2",
       groupLabel: "취향",
       groupDescription: "약간 취향에서 벗어났어요",
@@ -244,7 +244,7 @@ const FACE_AXIS: Axis = {
     },
     {
       axisSide: "END",
-      groupIcon: "💖",
+      groupIcon: "🩷",
       intensityLabel: "3",
       groupLabel: "취향",
       groupDescription: "약간 취향이에요",
@@ -264,7 +264,7 @@ const FACE_AXIS: Axis = {
     },
     {
       axisSide: "END",
-      groupIcon: "💖",
+      groupIcon: "🩷",
       intensityLabel: "4",
       groupLabel: "취향",
       groupDescription: "완전 취향이에요",
@@ -284,7 +284,7 @@ const FACE_AXIS: Axis = {
     },
     {
       axisSide: "END",
-      groupIcon: "💖",
+      groupIcon: "🩷",
       intensityLabel: "5",
       groupLabel: "취향",
       groupDescription: "완전 마음을 울려요!",

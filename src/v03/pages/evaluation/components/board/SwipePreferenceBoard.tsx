@@ -16,10 +16,8 @@ import HeartRateInput from "@componentsV03/starRate/HeartRateInput";
 import useSwipeBoard from "@componentsV03/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV03/board/swipeBoard/SwipeBoard";
 
-import { getSwipeBoardSubTitle } from "@componentsV03/board/swipeBoard/getSwipeBoardTitle";
-
 const SwipePreferenceBoard = () => {
-  const { preference, boardInformation } = useBoardStaticContext();
+  const { preference } = useBoardStaticContext();
   const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
 
   const centerIDX = getSlotCenterIDX(5, preference.slotByGroupDict);
@@ -32,7 +30,7 @@ const SwipePreferenceBoard = () => {
     setPreferenceSlot({ preference: s.HORIZONTAL });
   };
 
-  const { dragDirection: direction, swipeBoardProps } = useSwipeBoard({
+  const { swipeBoardProps } = useSwipeBoard({
     slot: { HORIZONTAL: preferenceSlot?.preference },
     getSlot: getSlot,
     dataDict: {
@@ -52,36 +50,36 @@ const SwipePreferenceBoard = () => {
   const slot = preference.slotDict[slotID];
 
   const gorupID = slot.userAxisGroupID;
-  const groupSummary =
-    boardInformation.axisDict["PREFERENCE"].groupSummary[gorupID];
+  // const groupSummary =
+  //   boardInformation.axisDict["PREFERENCE"].groupSummary[gorupID];
 
-  const getSubTitle = () => {
-    return getSwipeBoardSubTitle({
-      data: preference,
-      slotIDX: preferenceSlot?.preference ?? centerIDX,
-      dragDirection: direction["HORIZONTAL"],
-      icon: groupSummary.groupIcon,
-      intensity: groupSummary.intensityLabel,
-      groupLabel: groupSummary.groupLabel,
-      showGroupLabelInGroupTitle: false,
-      labelColorLight: groupSummary.labelColorLight,
-      labelColorLighter: groupSummary.labelColorLightest,
-    });
-  };
+  // const getSubTitle = () => {
+  //   return getSwipeBoardSubTitle({
+  //     data: preference,
+  //     slotIDX: preferenceSlot?.preference ?? centerIDX,
+  //     dragDirection: direction["HORIZONTAL"],
+  //     icon: groupSummary.groupIcon,
+  //     intensity: groupSummary.intensityLabel,
+  //     groupLabel: groupSummary.groupLabel,
+  //     showGroupLabelInGroupTitle: false,
+  //     labelColorLight: groupSummary.labelColorLight,
+  //     labelColorLighter: groupSummary.labelColorLightest,
+  //   });
+  // };
 
-  const BoardTitle = () => {
-    return (
-      <Title.BoardTitleSubContainer>
-        <Title.BoardTitelGroupChip>
-          {groupSummary.groupDescription}
-        </Title.BoardTitelGroupChip>
+  // const BoardTitle = () => {
+  //   return (
+  //     <Title.BoardTitleSubContainer>
+  //       <Title.BoardTitelGroupChip>
+  //         {groupSummary.groupDescription}
+  //       </Title.BoardTitelGroupChip>
 
-        <Title.BoardTitleSubWrapper $isSelected={true}>
-          {getSubTitle()}
-        </Title.BoardTitleSubWrapper>
-      </Title.BoardTitleSubContainer>
-    );
-  };
+  //       <Title.BoardTitleSubWrapper $isSelected={true}>
+  //         {getSubTitle()}
+  //       </Title.BoardTitleSubWrapper>
+  //     </Title.BoardTitleSubContainer>
+  //   );
+  // };
   return (
     <>
       <Title.BoardTitleContainer>
@@ -90,7 +88,7 @@ const SwipePreferenceBoard = () => {
       </Title.BoardTitleContainer>
 
       <S.SwipeBoardContainer>
-        <BoardTitle />
+        {/* <BoardTitle /> */}
 
         <SwipeBoard {...swipeBoardProps} />
       </S.SwipeBoardContainer>

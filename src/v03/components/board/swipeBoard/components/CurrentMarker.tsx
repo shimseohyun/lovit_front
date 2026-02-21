@@ -4,14 +4,15 @@ import type { AxisType, DirectionType } from "@interfacesV03/type";
 
 type params = {
   axis: AxisType | null;
+  direction: DirectionType | null;
   imgURL: string;
 };
 
-const CurrentMarker = ({ axis, imgURL }: params) => {
+const CurrentMarker = ({ axis, direction, imgURL }: params) => {
   const isDragging = axis !== null;
 
   return (
-    <MarkerContainer $axis={axis}>
+    <MarkerContainer $axis={axis} $direction={direction}>
       {isDragging && <AxisPoint axis={axis} />}
       <Marker $imgURL={imgURL} $isDragging={isDragging} $axis={axis} />
     </MarkerContainer>
@@ -19,8 +20,6 @@ const CurrentMarker = ({ axis, imgURL }: params) => {
 };
 
 export default CurrentMarker;
-
-type cursorIconPathDict = Record<AxisType, Record<DirectionType, string>>;
 
 /** ---------- helpers (축/방향별 스타일/데이터) ---------- */
 
@@ -48,13 +47,13 @@ const pointContainerAxisStyle = (axis: AxisType) => {
     return css`
       transform: translateX(-50%);
       left: 50%;
-      bottom: 4px;
+      top: 6px;
     `;
   }
   return css`
     transform: translateY(-50%);
     top: 50%;
-    right: 4px;
+    left: 6px;
   `;
 };
 
@@ -66,26 +65,14 @@ const pointSvgByAxis: Record<
     width: 9,
     height: 8,
     viewBox: "0 0 9 8",
-    path: "M3.59955 7.5C3.98445 8.16667 4.9467 8.16667 5.3316 7.5L8.7957 1.5C9.1806 0.833334 8.69948 0 7.92968 0H1.00147C0.231674 0 -0.249451 0.833333 0.135449 1.5L3.59955 7.5Z",
+    path: "M 3.59955 0.5 C 3.98445 -0.16667 4.9467 -0.16667 5.3316 0.5 L 8.7957 6.5 C 9.1806 7.166666 8.69948 8 7.92968 8 H 1.00147 C 0.231674 8 -0.249451 7.166667 0.135449 6.5 L 3.59955 0.5 Z",
   },
+
   VERTICAL: {
     width: 8,
     height: 9,
     viewBox: "0 0 8 9",
-    path: "M7.5 5.3316C8.16667 4.9467 8.16667 3.98445 7.5 3.59955L1.5 0.13545C0.833334 -0.24945 0 0.231675 0 1.00148V7.92968C0 8.69948 0.833333 9.1806 1.5 8.7957L7.5 5.3316Z",
-  },
-};
-
-const cursorIconPathDict: cursorIconPathDict = {
-  HORIZONTAL: {
-    END: "M10 6.86603C10.6667 6.48113 10.6667 5.51887 10 5.13397L4 1.66987C3.33333 1.28497 2.5 1.7661 2.5 2.5359V9.4641C2.5 10.2339 3.33333 10.715 4 10.3301L10 6.86603Z",
-    START:
-      "M2 5.13397C1.33333 5.51887 1.33333 6.48113 2 6.86603L8 10.3301C8.66667 10.715 9.5 10.2339 9.5 9.4641V2.5359C9.5 1.7661 8.66667 1.28497 8 1.66987L2 5.13397Z",
-  },
-  VERTICAL: {
-    END: "M5.13397 10C5.51887 10.6667 6.48113 10.6667 6.86603 10L10.3301 4C10.715 3.33333 10.2339 2.5 9.4641 2.5H2.5359C1.7661 2.5 1.28497 3.33333 1.66987 4L5.13397 10Z",
-    START:
-      "M6.86603 2C6.48113 1.33333 5.51887 1.33333 5.13397 2L1.66987 8C1.28497 8.66667 1.7661 9.5 2.5359 9.5H9.4641C10.2339 9.5 10.715 8.66667 10.3301 8L6.86603 2Z",
+    path: "M 0.5 5.3316 C -0.16667 4.9467 -0.16667 3.98445 0.5 3.59955 L 6.5 0.13545 C 7.166666 -0.24945 8 0.231675 8 1.00148 V 7.92968 C 8 8.69948 7.166667 9.1806 6.5 8.7957 L 0.5 5.3316 Z",
   },
 };
 
@@ -110,16 +97,38 @@ const AxisPoint = ({ axis }: { axis: AxisType }) => {
 
 /** ---------- styled ---------- */
 
-const MarkerContainer = styled.div<{ $axis: AxisType | null }>`
+const MarkerContainer = styled.div<{
+  $axis: AxisType | null;
+  $direction: DirectionType | null;
+}>`
   position: absolute;
-  transform: translate(-50%, -50%);
+  transition: transform 320ms ease-out;
+
+  ${({ $direction, $axis }) => {
+    if ($direction === null)
+      return css`
+        transform: translate(-50%, -50%);
+      `;
+    else if (
+      ($direction === "START" && $axis === "HORIZONTAL") ||
+      ($direction === "END" && $axis === "VERTICAL")
+    )
+      return css`
+        transform: translate(-50%, -50%) rotate(12deg);
+      `;
+    else if (
+      ($direction === "END" && $axis === "HORIZONTAL") ||
+      ($direction === "START" && $axis === "VERTICAL")
+    )
+      return css`
+        transform: translate(-50%, -50%) rotate(-12deg);
+      `;
+  }}
+
   top: 50%;
   left: 50%;
   width: 2px;
   height: 2px;
-
-  display: flex;
-  align-items: center;
 
   ${({ $axis }) => markerContainerAxisStyle($axis)}
 `;
@@ -127,8 +136,8 @@ const MarkerContainer = styled.div<{ $axis: AxisType | null }>`
 const PointContainer = styled.div<{ $axis: AxisType }>`
   position: absolute;
 
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   flex-shrink: 0;
 
   display: flex;
@@ -143,25 +152,25 @@ const Marker = styled.div<{
   $isDragging: boolean;
   $axis: AxisType | null;
 }>`
+  position: absolute;
+
   z-index: 1;
   transition: margin 220ms ease-out;
 
   flex-shrink: 0;
   border-radius: 48px;
 
-  width: 48px;
-  height: 48px;
+  ${({ $axis }) => css`
+    width: 72px;
+    height: 72px;
 
-  ${({ $isDragging, $axis }) =>
-    $axis !== null &&
-    $isDragging &&
-    css`
-      width: 72px;
-      height: 72px;
-
-      margin-bottom: ${$axis === "VERTICAL" ? "0px" : "14px"};
-      margin-right: ${$axis === "VERTICAL" ? "14px" : "0px"};
-    `}
+    transform: translate(
+      ${$axis === "VERTICAL" ? "0%" : "-50%"},
+      ${$axis === "VERTICAL" ? "-50%" : "0%"}
+    );
+    top: ${$axis === "VERTICAL" ? "" : "16px"};
+    left: ${$axis === "VERTICAL" ? "16px" : ""};
+  `}
 
   ${({ $imgURL }) => css`
     background-image: url(${$imgURL});
@@ -170,6 +179,6 @@ const Marker = styled.div<{
   `}
 
   ${(p) => css`
-    box-shadow: 0 0 0 2px ${p.theme.foregroundColors.foregroundStrongest};
+    box-shadow: 0 0 0 2.5px ${p.theme.foregroundColors.foregroundStrongest};
   `}
 `;

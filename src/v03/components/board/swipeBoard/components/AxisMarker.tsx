@@ -16,10 +16,14 @@ const Spot = styled.div<{ $isCurrent: boolean }>`
   ${(p) => {
     if (p.$isCurrent) {
       return css`
+        width: 6px;
+        height: 6px;
         background-color: ${p.theme.strokeColors.strokeStorngest};
       `;
     } else {
       return css`
+        width: 5px;
+        height: 5px;
         background-color: ${p.theme.strokeColors.strokeLight};
       `;
     }
@@ -45,11 +49,6 @@ const MarkerCotainer = styled.div<{
 
   width: 2px;
   height: 2px;
-  display: flex;
-
-  ${({ $axis }) => css`
-    flex-direction: ${$axis === "HORIZONTAL" ? "column" : "row"};
-  `}
 
   justify-content: center;
   align-items: center;
@@ -83,12 +82,20 @@ const Marker = styled.div<{
     width 220ms ease-out,
     height 220ms ease-out;
 
-  flex-shrink: 0;
-  position: relative;
+  position: absolute;
+  ${({ $axis }) => css`
+    transform: translate(
+      ${$axis === "VERTICAL" ? "0%" : "-50%"},
+      ${$axis === "VERTICAL" ? "-50%" : "0%"}
+    );
+    bottom: ${$axis === "VERTICAL" ? "" : "12px"};
+    right: ${$axis === "VERTICAL" ? "12px" : ""};
+  `}
 
   border-radius: 52px;
 
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
 
@@ -97,6 +104,7 @@ const Marker = styled.div<{
   ${({ $axis }) => css`
     flex-direction: ${$axis === "HORIZONTAL" ? "row" : "column"};
   `}
+
   ${(p) => css`
     background-color: ${p.theme.foregroundColors.foregroundLighter};
     ${p.$isLabel
@@ -109,28 +117,21 @@ const Marker = styled.div<{
         `}
   `}
 
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
 
-  ${({ $isSelected, $axis, $isCurrent, $isBetween, ...p }) => {
-    if ($isSelected) {
+  ${({ $isSelected, $axis, $isCurrent, $isLabel, ...p }) => {
+    if ($isSelected && $isCurrent && !$isLabel) {
       return css`
-        ${$isCurrent ||
-        css`
-          margin-top: ${$axis === "HORIZONTAL" ? 16 : 0}px;
-          margin-left: ${$axis === "HORIZONTAL" ? 0 : 16}px;
-        `}
-
-        ${$isCurrent &&
-        !$isBetween &&
-        css`
-          width: 56px;
-          height: 56px;
-          border: solid 2px ${p.theme.strokeColors.strokeStorngest};
-
-          margin-top: ${$axis === "HORIZONTAL" ? 12 : 0}px;
-          margin-left: ${$axis === "HORIZONTAL" ? 0 : 12}px;
-        `}
+        width: 60px;
+        height: 60px;
+        border: solid 2px ${p.theme.strokeColors.strokeStorngest};
+      `;
+    } else if ($isSelected && $isCurrent && $isLabel) {
+      return css`
+        width: 60px;
+        height: 60px;
+        border: solid 2px ${p.theme.strokeColors.strokeLightest};
       `;
     }
   }}
@@ -138,12 +139,9 @@ const Marker = styled.div<{
   ${({ $isBetween, $axis }) =>
     $isBetween &&
     css`
-      height: ${$axis === "VERTICAL" ? "76px" : "40px"};
-      width: ${$axis === "HORIZONTAL" ? "76px" : "40px"};
-      gap: ${$axis === "HORIZONTAL" ? 8 : 0}px;
-
-      margin-top: ${$axis === "HORIZONTAL" ? 16 : 0}px;
-      margin-left: ${$axis === "HORIZONTAL" ? 0 : 16}px;
+      height: ${$axis === "VERTICAL" ? "76px" : "48px"};
+      width: ${$axis === "HORIZONTAL" ? "76px" : "48px"};
+      gap: ${$axis === "HORIZONTAL" ? 2 : 0}px;
     `}
 `;
 
@@ -160,7 +158,7 @@ const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
 
   transform: translateX(-50%);
   left: 50%;
-  bottom: -10px;
+  top: -16px;
 
   box-sizing: border-box;
   max-width: calc(100% + 10px);
@@ -168,19 +166,25 @@ const MarkerLabel = styled.div<{ $isLabel: boolean; $isCurrent: boolean }>`
   text-align: center;
 
   ${(p) => css`
-    padding: ${p.$isLabel ? "1px 6px" : "2px 5px"};
+    padding: 2px 6px;
 
-    ${p.$isLabel ? p.theme.fonts.body3B : p.theme.fonts.body4B};
+    ${p.theme.fonts.body3B};
+    color: ${p.theme.fontColors.textLightest};
+    background-color: ${p.theme.foregroundColors.foregroundLight};
+    ${p.$isCurrent &&
+    !p.$isLabel &&
+    css`
+      color: ${p.theme.fontColors.textInverseLight};
+      background-color: ${p.$isLabel
+        ? p.theme.foregroundColors.foregroundLighter
+        : p.theme.foregroundColors.foregroundStrongest};
+    `}
 
-    ${p.$isCurrent
-      ? css`
-          color: ${p.theme.fontColors.textInverseLight};
-          background-color: ${p.theme.foregroundColors.foregroundStrongest};
-        `
-      : css`
-          color: ${p.theme.fontColors.textLightest};
-          background-color: ${p.theme.foregroundColors.foregroundLight};
-        `}
+    ${p.$isCurrent &&
+    p.$isLabel &&
+    css`
+      color: ${p.theme.fontColors.textLight};
+    `}
   `}
 `;
 
@@ -214,6 +218,7 @@ const IconLabel = styled.div<{
 `;
 
 type Parms = {
+  isWillCurrent: boolean;
   isSelected: boolean;
   isVisible: boolean;
   isCurrent: boolean;
@@ -229,6 +234,7 @@ type Parms = {
 
 const AxisMarker = (parms: Parms) => {
   const {
+    isWillCurrent,
     isSelected,
     isVisible,
     isCurrent,
@@ -256,14 +262,17 @@ const AxisMarker = (parms: Parms) => {
 
       <Marker
         $isBetween={isBetween}
-        $isCurrent={isCurrent}
+        $isCurrent={isCurrent || isWillCurrent}
         $isSelected={isSelected}
         $axis={axis}
         $isLabel={isLabel}
         $imgURL={imgURL}
       >
         {label !== undefined && (
-          <MarkerLabel $isCurrent={isCurrent} $isLabel={isLabel}>
+          <MarkerLabel
+            $isCurrent={isCurrent || isWillCurrent}
+            $isLabel={isLabel}
+          >
             {label}
           </MarkerLabel>
         )}

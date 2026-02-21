@@ -5,81 +5,94 @@ import { useAuth } from "@hooksV03/auth/useAuth";
 import { useBoardStepContext } from "@hooksV03/board/context/context";
 import useBoardControl from "@hooksV03/board/useBoardControl";
 
-const EvaluationButton = () => {
+const ACTION_LABEL = "이렇게 할게요!";
+
+const ActionButton = () => {
   const { isLoggedIn } = useAuth();
   const { isFin, isLast, currentStep } = useBoardStepContext();
+
   const {
     navigateEvaluationSwipeNext,
     navigatePreferenceSwipe,
-
     navigateResult,
     isPushingItem,
-    confrimCurrentItem,
+    confirmCurrentItem,
     navigateMore,
   } = useBoardControl();
 
   if (isFin) {
     return (
-      <BottomButton>
+      <>
         {!isLast && isLoggedIn && (
           <FillButton
-            buttonType={"ASSISTIVE"}
+            buttonType="ASSISTIVE"
             onClick={navigateMore}
             type="button"
-          >
-            더하기
-          </FillButton>
+            children="더하기"
+          />
         )}
 
-        <FillButton buttonType="PRIMARY" type="button" onClick={navigateResult}>
-          결과보기
-        </FillButton>
-      </BottomButton>
+        <FillButton
+          buttonType="PRIMARY"
+          type="button"
+          onClick={navigateResult}
+          children="결과보기"
+        />
+      </>
     );
   }
 
+  // 진행 상태: step별 처리
+  switch (currentStep) {
+    case "EVALUATION_TOUCH":
+      return null;
+
+    case "EVALUATION_SWIPE_HORIZONTAL":
+      return (
+        <FillButton
+          buttonType="ASSISTIVE"
+          onClick={navigateEvaluationSwipeNext}
+          children={ACTION_LABEL}
+        />
+      );
+
+    case "EVALUATION_SWIPE_VERTICAL":
+      return (
+        <FillButton
+          buttonType="ASSISTIVE"
+          onClick={navigatePreferenceSwipe}
+          children={ACTION_LABEL}
+        />
+      );
+
+    case "PREFERENCE":
+      return (
+        <>
+          {isPushingItem && <FullSpinner />}
+          <FillButton
+            buttonType="PRIMARY"
+            onClick={confirmCurrentItem}
+            disabled={isPushingItem}
+            children={ACTION_LABEL}
+          />
+        </>
+      );
+
+    default:
+      return null;
+  }
+};
+
+const EvaluationButton = () => {
+  const { currentStep } = useBoardStepContext();
+
   if (currentStep === "EVALUATION_TOUCH") return;
 
-  if (currentStep === "EVALUATION_SWIPE_VERTICAL")
-    return (
-      <BottomButton>
-        <FillButton
-          type="button"
-          buttonType={"ASSISTIVE"}
-          onClick={navigatePreferenceSwipe}
-        >
-          이렇게 할게요!
-        </FillButton>
-      </BottomButton>
-    );
-
-  if (currentStep === "EVALUATION_SWIPE_HORIZONTAL")
-    return (
-      <BottomButton>
-        <FillButton
-          type="button"
-          buttonType={"ASSISTIVE"}
-          onClick={navigateEvaluationSwipeNext}
-        >
-          이렇게 할게요!
-        </FillButton>
-      </BottomButton>
-    );
-
-  if (currentStep === "PREFERENCE")
-    return (
-      <BottomButton>
-        {isPushingItem && <FullSpinner />}
-        <FillButton
-          type="button"
-          buttonType={"PRIMARY"}
-          disabled={isPushingItem}
-          onClick={confrimCurrentItem}
-        >
-          이렇게 할게요!
-        </FillButton>
-      </BottomButton>
-    );
+  return (
+    <BottomButton>
+      <ActionButton />
+    </BottomButton>
+  );
 };
 
 export default EvaluationButton;

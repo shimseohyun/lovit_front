@@ -246,6 +246,7 @@ export const Label = styled.div<{
 `;
 
 export const BoardAxisItem = styled.div<{ $size: number; $axis: AxisType }>`
+  position: relative;
   ${({ $size, $axis }) => {
     if ($axis === "HORIZONTAL") {
       return css`
