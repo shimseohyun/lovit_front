@@ -28,26 +28,12 @@ const Action = (parms: ActionParms) => {
   );
 };
 
-const ShareAction = () => {
-  return (
-    <Flex width="100%" gap="8px" alignItem="center" justifyContent="center">
-      {/* <Action imgURL="/assets/icons/share/kakao.svg" label="카카오톡" /> */}
-      <Action onClick={shareX} imgURL="/assets/icons/share/x.svg" label="X" />
-      <Action
-        onClick={copyLink}
-        imgURL="/assets/icons/share/link.svg"
-        label="링크 복사"
-      />
-      <Action
-        onClick={downloadImage}
-        imgURL="/assets/icons/share/image.svg"
-        label="이미지 저장"
-      />
-    </Flex>
-  );
+type Parms = {
+  saveImage: () => void;
 };
 
-const Share = () => {
+const Share = (parms: Parms) => {
+  const { saveImage } = parms;
   const { isLoggedIn } = useAuth();
   const { mutate: postLogin, isPending: isLoading } = usePostLogin();
   const onClick = () => {
@@ -62,7 +48,20 @@ const Share = () => {
         결과를 공유할 수 있어요
       </Label>
 
-      <ShareAction />
+      <Flex width="100%" gap="8px" alignItem="center" justifyContent="center">
+        {/* <Action imgURL="/assets/icons/share/kakao.svg" label="카카오톡" /> */}
+        <Action onClick={shareX} imgURL="/assets/icons/share/x.svg" label="X" />
+        <Action
+          onClick={copyLink}
+          imgURL="/assets/icons/share/link.svg"
+          label="링크 복사"
+        />
+        <Action
+          onClick={saveImage}
+          imgURL="/assets/icons/share/image.svg"
+          label="이미지 저장"
+        />
+      </Flex>
 
       {!isLoggedIn && (
         <Flex
@@ -70,19 +69,16 @@ const Share = () => {
           onClick={onClick}
           style={{ cursor: "pointer", paddingTop: "8px" }}
         >
-          <Label font="body2" color="textLightest">
-            결과를 저장하려면?
-          </Label>
           <Label
             font="body2B"
             color="textLightest"
             style={{
               textDecoration: "underline",
               textDecorationThickness: "1px",
-              textUnderlineOffset: "2px",
+              textUnderlineOffset: "4px",
             }}
           >
-            로그인하기
+            로그인하고 결과 저장하기
           </Label>
         </Flex>
       )}

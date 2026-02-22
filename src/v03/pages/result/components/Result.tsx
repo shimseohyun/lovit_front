@@ -1,3 +1,6 @@
+import { useRef } from "react";
+import html2canvas from "html2canvas";
+
 import * as Title from "@componentsV03/title/Title.styled";
 
 import EvaluationBoard from "@componentsV03/board/evaluationBoard/EvaluationBoard";
@@ -8,18 +11,15 @@ import { FACE_BOARD_INFO } from "@dataV03/boardInfoDummy";
 import useGetBoardPoint from "@hooksV03/board/useGetBoardPoint";
 import ResultPoly from "./ResultPoly";
 
-import useResultCell from "./cell/useResultCell";
-import ResultCell from "./cell/ResultCell";
-
 import type { GetUserBoardDataReturn } from "@apisV03/firebase/domain/user";
 import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
-import { Section, Separator } from "@componentsV03/layout/DefaultLayout";
+import { Separator } from "@componentsV03/layout/DefaultLayout";
 
-import { BoardPoint } from "./cell/ResultCell.styld";
 import Spacing from "@componentsV03/spacing/Spacing";
-import Share from "./share/Share";
-import Flex from "@componentsV03/flex/Flex";
+
+import ResultTotalList from "./ResultTotalList";
 import Label from "@componentsV03/label/Label";
+import Share from "./share/Share";
 
 type Parms = {
   userBoardData: GetUserBoardDataReturn;
@@ -29,6 +29,9 @@ type Parms = {
 const Result = (parms: Parms) => {
   const { userBoardData, totalBoardDataDict } = parms;
   const { itemList, axis } = userBoardData;
+
+  // ✅ 이 영역만 캡쳐
+  const captureRef = useRef<HTMLDivElement>(null);
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({
@@ -52,13 +55,6 @@ const Result = (parms: Parms) => {
     PREFERENCE: axis.PREFERENCE.itemPositionDict,
   };
 
-  const { resultDict } = useResultCell({
-    data: totalBoardDataDict,
-    itemList,
-    boardInfromation: FACE_BOARD_INFO,
-    itemPositionDict,
-  });
-
   const verticalZone = vertical.zone;
   const horizontalZone = horizontal.zone;
 
@@ -76,34 +72,68 @@ const Result = (parms: Parms) => {
   const ResultTitle = () => {
     if (hasNoCalcData) {
       return (
-        <>
-          <Title.BoardTitleContainer>
-            <h2>아직 취향을 발견하지 못했어요.</h2>
-          </Title.BoardTitleContainer>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <Title.BoardTitleContainer>
-            <h6>나의 취향은...</h6>
-            <h1>{result().label}</h1>
-            <Spacing size={8} />
-
-            <Title.BoardTitleImg
-              $imgURL={result().img}
-              style={{ minHeight: 260, height: 148, minWidth: 10 }}
-            />
-          </Title.BoardTitleContainer>
-        </>
+        <Title.BoardTitleContainer>
+          <h2>아직 취향을 발견하지 못했어요.</h2>
+        </Title.BoardTitleContainer>
       );
     }
+
+    return (
+      <>
+        <Title.BoardTitleContainer
+          className="display"
+          style={{ display: "flex" }}
+        >
+          <h6>나의 취향은...</h6>
+          <h1>{result().label}</h1>
+          <Spacing size={8} />
+
+          <Title.BoardTitleImg
+            $imgURL={result().img}
+            style={{ minHeight: 260, height: 260, minWidth: 10 }}
+          />
+        </Title.BoardTitleContainer>
+      </>
+    );
+  };
+
+  const ResultCaptrueTitle = () => {
+    if (hasNoCalcData) {
+      return (
+        <Title.BoardTitleContainer
+          className="captrue"
+          style={{ display: "none" }}
+        >
+          <h2>아직 취향을 발견하지 못했어요.</h2>
+          <Spacing size={8} />
+        </Title.BoardTitleContainer>
+      );
+    }
+
+    return (
+      <>
+        <Title.BoardTitleContainer
+          className="captrue"
+          style={{ display: "none" }}
+        >
+          <Title.BoardTitleImg
+            $imgURL={result().img}
+            data-capture="result-img"
+            style={{ minHeight: 160, height: 160, minWidth: 10 }}
+          />
+          <Label font="head2" color="textStrongest">
+            {result().label}
+          </Label>
+          <Spacing size={8} />
+        </Title.BoardTitleContainer>
+      </>
+    );
   };
 
   const Board = () => {
     return (
       <EvaluationBoard
-        boardSize={350}
+        boardSize={340}
         boardInformation={FACE_BOARD_INFO}
         itemList={itemList}
         itemPointDict={points}
@@ -113,57 +143,71 @@ const Result = (parms: Parms) => {
     );
   };
 
-  const TotalResultList = () => {
-    return (
-      itemList.length > 0 && (
-        <>
-          <Section $gap={20}>
-            <Flex
-              justifyContent="space-between"
-              alignItem="center"
-              width="100%"
-            >
-              <Label font="head2" color="titleStrongest">
-                다른 유저와 비교해요!
-              </Label>
+  const handleCapture = async () => {
+    if (!captureRef.current) return;
 
-              <Flex gap="12px">
-                <Flex gap="2px" alignItem="center" justifyContent="center">
-                  <BoardPoint $isUser={false} />
-                  <Label font="body3" color="textLighter">
-                    평균
-                  </Label>
-                </Flex>
+    const canvas = await html2canvas(captureRef.current, {
+      backgroundColor: "#fff",
+      scale: 2,
+      useCORS: true,
+      onclone: (doc) => {
+        // 2) 캡쳐 버전 보여주기 (display:none이면 html2canvas가 아예 렌더 안 함)
+        const captureEl = doc.querySelector(".captrue") as HTMLElement | null; // 네 클래스명 유지
+        if (captureEl) {
+          captureEl.style.display = "flex";
+        }
+      },
+    });
 
-                <Flex gap="2px" alignItem="center" justifyContent="center">
-                  <BoardPoint $isUser={true} />
-                  <Label font="body3" color="textLighter">
-                    내 평가
-                  </Label>
-                </Flex>
-              </Flex>
-            </Flex>
-
-            {Object.entries(resultDict)
-              .sort(([a], [b]) => Number(a) - Number(b))
-              .map(([idx, cell]) => {
-                if (!cell) return null;
-                return <ResultCell key={idx} {...cell} />;
-              })}
-          </Section>
-        </>
-      )
+    const blob: Blob | null = await new Promise((resolve) =>
+      canvas.toBlob((b) => resolve(b), "image/png"),
     );
+    if (!blob) return;
+
+    // 예시: 다운로드
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "result.png";
+    a.click();
+    URL.revokeObjectURL(url);
   };
+
   return (
     <>
       <ResultTitle />
       <Spacing size={12} />
-      <Board />
-      <Spacing size={12} />
-      <Share />
+      {/* ✅ 캡쳐 대상 */}
+      <div
+        ref={captureRef}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          boxSizing: "border-box",
+          paddingLeft: 16,
+          paddingRight: 16,
+          backgroundColor: "#fff",
+        }}
+      >
+        {/* 상단 결과 */}
+        <ResultCaptrueTitle />
+
+        <Board />
+        <Spacing size={12} />
+      </div>
+      <Share saveImage={handleCapture} />
       <Separator $size={8} />
-      <TotalResultList />
+
+      {/* 전체 결과 */}
+      <ResultTotalList
+        data={totalBoardDataDict}
+        itemList={itemList}
+        boardInfromation={FACE_BOARD_INFO}
+        itemPositionDict={itemPositionDict}
+      />
       <Spacing size={40} />
     </>
   );
