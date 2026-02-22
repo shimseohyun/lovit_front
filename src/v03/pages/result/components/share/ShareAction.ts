@@ -9,5 +9,3 @@ export const shareX = () => {
 };
 
 export const copyLink = () => {};
-
-export const downloadImage = () => {};

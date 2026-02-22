@@ -8,7 +8,7 @@ import { Section } from "@componentsV03/layout/DefaultLayout";
 
 import FullSpinner from "@componentsV03/spinner/Spinner";
 import Flex from "@componentsV03/flex/Flex";
-import { copyLink, downloadImage, shareX } from "./ShareAction";
+import { copyLink, shareX } from "./ShareAction";
 
 type ActionParms = {
   label: string;
