@@ -5,17 +5,17 @@ import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 
-const pulseGrow = keyframes`
+const pulseGrow = (width: number) => keyframes`
   0% {
-    transform: scaleX(1);
+    transform: ${width + 0}%;
     opacity: 0.6;
   }
   50% {
-    transform: scaleX(1.2); /* +10% */
+    width: ${width + 10}%; /* +10% */
     opacity: 0.4;
   }
   100% {
-    transform: scaleX(1);
+    transform: ${width + 0}%;
     opacity: 0.6;
   }
 `;
@@ -70,10 +70,10 @@ const PulseBar = styled.div<{ $width: number; $isActive: boolean }>`
   will-change: transform, opacity;
   pointer-events: none;
 
-  ${({ $isActive }) =>
+  ${({ $isActive, $width }) =>
     $isActive &&
     css`
-      animation: ${pulseGrow} 2s ease-in-out infinite;
+      animation: ${pulseGrow($width)} 2s ease-in-out infinite;
     `}
 
   ${(p) => css`

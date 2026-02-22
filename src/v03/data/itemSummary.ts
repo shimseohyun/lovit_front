@@ -78,7 +78,7 @@ const IDOL_SUMMAR_LIST: ItemSummaryDict = {
     itemSummaryID: 11,
     name: "재민",
     category: "엔시티",
-    thumbnailURL: "/assets/item/idol/NCT_JAEHYUN.png",
+    thumbnailURL: "/assets/item/idol/NCT_JAEMIN.png",
   },
   12: {
     itemSummaryID: 12,
