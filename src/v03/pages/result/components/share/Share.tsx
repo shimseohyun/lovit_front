@@ -30,13 +30,14 @@ const Action = (parms: ActionParms) => {
 };
 
 const Share = () => {
-  const { handleCapture, resultLabel } = useResultContext();
+  const { handleCapture, resultLabel, isCaptureLoading } = useResultContext();
   const { isLoggedIn } = useAuth();
-  const { mutate: postLogin, isPending: isLoading } = usePostLogin();
+  const { mutate: postLogin, isPending: isLoginLoading } = usePostLogin();
   const onClick = () => {
     postLogin();
   };
 
+  const isLoading = isLoginLoading || isCaptureLoading;
   return (
     <Section $gap={16}>
       {isLoading && <FullSpinner />}

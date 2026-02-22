@@ -13,7 +13,12 @@ import type {
   UserPointDict,
 } from "@interfacesV03/data/user";
 import type { BoardAxisType } from "@interfacesV03/type";
-import { useRef, type PropsWithChildren, type RefObject } from "react";
+import {
+  useRef,
+  useState,
+  type PropsWithChildren,
+  type RefObject,
+} from "react";
 
 type ResultValue = {
   hasNoCalcData: boolean;
@@ -25,8 +30,10 @@ type ResultValue = {
   totalBoardDataDict: GetTotalBoardDataReturn;
   itemPositionDict: Record<BoardAxisType, UserAxisItemPositionDict>;
   boardInformation: BoardInformation;
+
   captureRef: RefObject<HTMLDivElement | null>;
   handleCapture: () => Promise<void>;
+  isCaptureLoading: boolean;
 };
 
 export const [ResultContext, useResultContext] =
@@ -81,60 +88,165 @@ export const ResultProvider = (parms: Parms) => {
   };
 
   const captureRef = useRef<HTMLDivElement>(null);
+  const [isCaptureLoading, setIsCaptureLoading] = useState(false);
+
+  const nextFrame = () =>
+    new Promise<void>((r) => requestAnimationFrame(() => r()));
+
+  const extractBgUrls = (bg: string) => {
+    const urls: string[] = [];
+    const re = /url\(\s*['"]?([^'")]+)['"]?\s*\)/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(bg))) {
+      const u = m[1];
+      if (!u || u.startsWith("data:")) continue;
+      urls.push(u);
+    }
+    return urls;
+  };
+
+  const waitForImgs = async (root: HTMLElement) => {
+    const imgs = Array.from(root.querySelectorAll("img")) as HTMLImageElement[];
+
+    imgs.forEach((img) => {
+      try {
+        img.loading = "eager";
+        img.decoding = "sync";
+
+        // 현재 로딩된 리소스로 고정 (srcset/sizes 변경으로 누락되는 케이스 방지)
+        const stableSrc = img.currentSrc || img.src;
+        if (stableSrc) img.src = stableSrc;
+
+        img.removeAttribute("srcset");
+        img.removeAttribute("sizes");
+      } catch {}
+    });
+
+    await Promise.all(
+      imgs.map(async (img) => {
+        if (img.complete && img.naturalWidth > 0) {
+          if (img.decode) {
+            try {
+              await img.decode();
+            } catch {}
+          }
+          return;
+        }
+
+        await new Promise<void>((resolve) => {
+          const done = () => resolve();
+          img.addEventListener("load", done, { once: true });
+          img.addEventListener("error", done, { once: true });
+        });
+
+        if (img.decode) {
+          try {
+            await img.decode();
+          } catch {}
+        }
+      }),
+    );
+  };
+
+  const preloadBackgroundImages = async (root: HTMLElement) => {
+    const all = Array.from(root.querySelectorAll("*")) as HTMLElement[];
+    const urls = new Set<string>();
+
+    for (const el of all) {
+      const bg = getComputedStyle(el).backgroundImage;
+      extractBgUrls(bg).forEach((u) => urls.add(u));
+    }
+
+    await Promise.all(
+      Array.from(urls).map(
+        (url) =>
+          new Promise<void>((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+            img.src = url;
+          }),
+      ),
+    );
+  };
 
   const handleCapture = async () => {
+    if (isCaptureLoading) return;
+
     const node = captureRef.current;
     if (!node) return;
 
-    // 폰트 로딩 대기(글자 깨짐/흐림 방지)
-    await (document as any).fonts?.ready;
+    setIsCaptureLoading(true);
 
-    // 1) 화면에 영향 없이 clone을 offscreen에 붙인다
-    const host = document.createElement("div");
-    host.style.position = "fixed";
-    host.style.left = "-10000px";
-    host.style.top = "0";
-    host.style.width = "fit-content";
-    host.style.pointerEvents = "none";
-    host.style.opacity = "0"; // 혹시 모를 플리커 방지
+    try {
+      try {
+        // @ts-ignore
+        await (document.fonts?.ready ?? Promise.resolve());
+      } catch {}
 
-    const cloned = node.cloneNode(true) as HTMLDivElement;
-    host.appendChild(cloned);
-    document.body.appendChild(host);
+      const host = document.createElement("div");
+      host.style.position = "fixed";
+      host.style.left = "-10000px";
+      host.style.top = "0";
 
-    // 2) clone 내부에서 캡쳐용 UI만 켜기 (html2canvas onclone 대체)
-    cloned.querySelectorAll(".captrue").forEach((el) => {
-      (el as HTMLElement).style.display = "flex";
-    });
+      host.style.pointerEvents = "none";
 
-    // (선택) 화면용 UI 숨기고 싶으면
-    cloned.querySelectorAll(".display").forEach((el) => {
-      (el as HTMLElement).style.display = "none";
-    });
+      const cloned = node.cloneNode(true) as HTMLDivElement;
 
-    const rect = cloned.getBoundingClientRect();
-    const targetW = 500;
-    const targetH = Math.round(rect.height * (targetW / rect.width));
+      host.appendChild(cloned);
+      document.body.appendChild(host);
 
-    const blob = await htmlToImage.toBlob(cloned, {
-      backgroundColor: "#fff",
-      cacheBust: true,
+      let blob: Blob | null = null;
 
-      pixelRatio: Math.min(4, (window.devicePixelRatio || 1) * 2),
-      canvasWidth: targetW,
-      canvasHeight: targetH,
-    });
+      try {
+        cloned.querySelectorAll(".captrue").forEach((el) => {
+          (el as HTMLElement).style.display = "flex";
+        });
 
-    document.body.removeChild(host);
+        cloned.querySelectorAll(".display").forEach((el) => {
+          (el as HTMLElement).style.display = "none";
+        });
 
-    if (!blob) return;
+        await nextFrame();
+        await nextFrame();
 
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "result.png";
-    a.click();
-    URL.revokeObjectURL(url);
+        await waitForImgs(cloned);
+        await preloadBackgroundImages(cloned);
+
+        await nextFrame();
+
+        // 4) 최종 캡쳐 사이즈 계산
+        const rect = cloned.getBoundingClientRect();
+        const targetW = 500;
+        const targetH = Math.round(rect.height * (targetW / rect.width));
+
+        blob = await htmlToImage.toBlob(cloned, {
+          backgroundColor: "#fff",
+          cacheBust: true,
+          includeQueryParams: true,
+
+          pixelRatio: Math.min(4, (window.devicePixelRatio || 1) * 2),
+          canvasWidth: targetW,
+          canvasHeight: targetH,
+        });
+      } finally {
+        document.body.removeChild(host);
+      }
+
+      if (!blob) return;
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "result.png";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsCaptureLoading(false);
+    }
   };
 
   return (
@@ -151,6 +263,7 @@ export const ResultProvider = (parms: Parms) => {
         itemPositionDict,
         captureRef,
         handleCapture,
+        isCaptureLoading,
       }}
     >
       {children}

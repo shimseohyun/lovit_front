@@ -1,4 +1,4 @@
-import { css } from "@emotion/react";
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { useMemo } from "react";
 import type { UserPoint } from "@interfacesV03/data/user";
@@ -9,21 +9,7 @@ const Shape = styled.svg`
   width: 100%;
   height: 100%;
   pointer-events: none;
-  mix-blend-mode: multiply;
-`;
-
-const Poly = styled.polygon`
-  ${(p) => css`
-    fill: ${p.theme.foregroundColors.mainLightest};
-    stroke: ${p.theme.foregroundColors.mainLight};
-  `}
-  stroke-width: 0.5;
-  stroke-linejoin: round;
-`;
-
-const Dot = styled.div`
-  position: absolute;
-  transform: translate(-50%, -50%);
+  z-index: 2;
 `;
 
 type Parms = {
@@ -44,6 +30,9 @@ const orderClockwise = (pts: UserPoint[]) => {
 };
 
 const ResultPoly = ({ points }: Parms) => {
+  const theme = useTheme();
+  const color = theme.foregroundColors.mainLight;
+
   const toPolygonPoints = (pts: UserPoint[]) =>
     pts.map((p) => `${p.horizontaPos},${p.verticalPos}`).join(" ");
 
@@ -55,18 +44,18 @@ const ResultPoly = ({ points }: Parms) => {
   return (
     <>
       <Shape viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-        {polygonPoints !== "" && <Poly points={polygonPoints} />}
+        {polygonPoints !== "" && (
+          <>
+            <polygon
+              points={polygonPoints}
+              stroke={color}
+              fill={color}
+              fillOpacity={0.05}
+              strokeWidth={0.5}
+            />
+          </>
+        )}
       </Shape>
-
-      {points.map((p) => (
-        <Dot
-          key={p.id}
-          style={{
-            left: `${p.horizontaPos.toFixed(2)}%`,
-            top: `${p.verticalPos.toFixed(2)}%`,
-          }}
-        />
-      ))}
     </>
   );
 };

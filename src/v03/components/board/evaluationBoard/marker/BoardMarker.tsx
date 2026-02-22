@@ -57,11 +57,10 @@ export const Marker = styled.div<{
 
     background-image: url(${$imgURL});
     background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-position: center center;
   `}
 
-  border-radius: 9999px;
+  border-radius: 100px;
 
   ${(p) => {
     return css`
@@ -69,6 +68,10 @@ export const Marker = styled.div<{
       border-color: ${p.$isLiked
         ? p.theme.foregroundColors.mainLight
         : p.theme.strokeColors.strokeLight};
+      ${p.$isLiked &&
+      css`
+        z-index: 3;
+      `}
     `;
   }}
 `;
