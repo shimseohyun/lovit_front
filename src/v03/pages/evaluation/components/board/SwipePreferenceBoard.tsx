@@ -17,7 +17,7 @@ import useSwipeBoard from "@componentsV03/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV03/board/swipeBoard/SwipeBoard";
 
 const SwipePreferenceBoard = () => {
-  const { preference } = useBoardStaticContext();
+  const { preference, boardInformation } = useBoardStaticContext();
   const { preferenceSlot, setPreferenceSlot } = useBoardSlotContext();
 
   const centerIDX = getSlotCenterIDX(5, preference.slotByGroupDict);
@@ -50,50 +50,32 @@ const SwipePreferenceBoard = () => {
   const slot = preference.slotDict[slotID];
 
   const gorupID = slot.userAxisGroupID;
-  // const groupSummary =
-  //   boardInformation.axisDict["PREFERENCE"].groupSummary[gorupID];
 
-  // const getSubTitle = () => {
-  //   return getSwipeBoardSubTitle({
-  //     data: preference,
-  //     slotIDX: preferenceSlot?.preference ?? centerIDX,
-  //     dragDirection: direction["HORIZONTAL"],
-  //     icon: groupSummary.groupIcon,
-  //     intensity: groupSummary.intensityLabel,
-  //     groupLabel: groupSummary.groupLabel,
-  //     showGroupLabelInGroupTitle: false,
-  //     labelColorLight: groupSummary.labelColorLight,
-  //     labelColorLighter: groupSummary.labelColorLightest,
-  //   });
-  // };
+  const groupSummary =
+    boardInformation.axisDict["PREFERENCE"].groupSummary[gorupID];
 
-  // const BoardTitle = () => {
-  //   return (
-  //     <Title.BoardTitleSubContainer>
-  //       <Title.BoardTitelGroupChip>
-  //         {groupSummary.groupDescription}
-  //       </Title.BoardTitelGroupChip>
-
-  //       <Title.BoardTitleSubWrapper $isSelected={true}>
-  //         {getSubTitle()}
-  //       </Title.BoardTitleSubWrapper>
-  //     </Title.BoardTitleSubContainer>
-  //   );
-  // };
   return (
     <>
       <Title.BoardTitleContainer>
-        <h6>드래그하거나 터치해주세요</h6>
+        <h6>드래그하거나 하트를 터치해주세요</h6>
         <h1>얼마나 취향인가요?</h1>
       </Title.BoardTitleContainer>
 
-      <S.SwipeBoardContainer>
-        {/* <BoardTitle /> */}
+      <Title.BoardTitelGroupChipWrapper>
+        <Title.BoardTitelGroupChip
+          $lightColor={groupSummary.labelColorLight}
+          $lighterColor={groupSummary.labelColorLightest}
+        >
+          {groupSummary.groupIcon} {groupSummary.intensityLabel}
+        </Title.BoardTitelGroupChip>
+      </Title.BoardTitelGroupChipWrapper>
 
+      <S.SwipeBoardContainer>
         <SwipeBoard {...swipeBoardProps} />
       </S.SwipeBoardContainer>
 
       <S.BoardRateContaienr>
+        <span>{groupSummary.groupDescription}</span>
         <HeartRateInput value={gorupID} onChange={onClickStar} />
       </S.BoardRateContaienr>
     </>

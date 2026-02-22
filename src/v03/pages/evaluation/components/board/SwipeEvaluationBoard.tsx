@@ -14,6 +14,7 @@ import SwipeBoard from "@componentsV03/board/swipeBoard/SwipeBoard";
 import type { BoardAxisDict } from "@interfacesV03/type";
 
 import { useMemo } from "react";
+import Spacing from "@componentsV03/spacing/Spacing";
 
 type Parms = { axis: AxisType };
 
@@ -55,16 +56,27 @@ const SwipeEvaluationBoard = (parms: Parms) => {
   return (
     <>
       <Title.BoardTitleContainer>
-        <Title.BoardTitelGroupChip>
-          {groupSummary.groupIcon} {groupSummary.intensityLabel}{" "}
-          {groupSummary.groupLabel}
-        </Title.BoardTitelGroupChip>
+        {axis === "HORIZONTAL" ? (
+          <h6>왼쪽·오른쪽으로 드래그해주세요</h6>
+        ) : (
+          <h6>위·아래로 드래그해주세요</h6>
+        )}
         <h1>{"같은 그룹에 속한 사람과\n비교할 수 있어요"}</h1>
       </Title.BoardTitleContainer>
 
+      <Title.BoardTitelGroupChipWrapper>
+        <Title.BoardTitelGroupChip
+          $lightColor={groupSummary.labelColorLight}
+          $lighterColor={groupSummary.labelColorLightest}
+        >
+          {groupSummary.groupIcon} {groupSummary.intensityLabel}{" "}
+          {groupSummary.groupLabel}
+        </Title.BoardTitelGroupChip>
+      </Title.BoardTitelGroupChipWrapper>
+
       <S.SwipeBoardContainer>
-        {/* <BoardTitle /> */}
         <SwipeBoard {...swipeBoardProps} />
+        <Spacing size={40} />
       </S.SwipeBoardContainer>
     </>
   );

@@ -57,6 +57,13 @@ export const Section = styled.section<{ $gap?: number }>`
     `}
   }
 
+  > .subTitle {
+    ${(p) => css`
+      ${p.theme.fonts.body1};
+      color: ${p.theme.fontColors.textLight};
+    `}
+  }
+
   ${({ $gap }) => css`
     gap: ${$gap !== undefined ? $gap : 0}px;
   `}

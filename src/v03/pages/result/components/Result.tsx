@@ -13,10 +13,13 @@ import ResultCell from "./cell/ResultCell";
 
 import type { GetUserBoardDataReturn } from "@apisV03/firebase/domain/user";
 import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
-import { Section } from "@componentsV03/layout/DefaultLayout";
+import { Section, Separator } from "@componentsV03/layout/DefaultLayout";
 
-import { BoardPoint, ResultCellTitle } from "./cell/ResultCell.styld";
+import { BoardPoint } from "./cell/ResultCell.styld";
 import Spacing from "@componentsV03/spacing/Spacing";
+import Share from "./share/Share";
+import Flex from "@componentsV03/flex/Flex";
+import Label from "@componentsV03/label/Label";
 
 type Parms = {
   userBoardData: GetUserBoardDataReturn;
@@ -75,65 +78,72 @@ const Result = (parms: Parms) => {
       return (
         <>
           <Title.BoardTitleContainer>
-            아직 취향을 발견하지 못했어요.
+            <h2>아직 취향을 발견하지 못했어요.</h2>
           </Title.BoardTitleContainer>
-          <Spacing size={20} />
-          {/* 
-          <Title.BoardDescription>
-            사분면을 채울수록 정확해져요!
-          </Title.BoardDescription> */}
         </>
       );
     } else {
-      console.log(result().img);
       return (
         <>
           <Title.BoardTitleContainer>
+            <h6>나의 취향은...</h6>
+            <h1>{result().label}</h1>
+            <Spacing size={8} />
+
             <Title.BoardTitleImg
               $imgURL={result().img}
-              style={{ minHeight: 160, height: 160, minWidth: 10 }}
+              style={{ minHeight: 260, height: 148, minWidth: 10 }}
             />
-            <span>{result().label}</span>
           </Title.BoardTitleContainer>
-
-          <Title.BoardDescription>
-            사분면을 바탕으로 취향을 찾았어요!
-          </Title.BoardDescription>
         </>
       );
     }
   };
 
-  return (
-    <>
-      <ResultTitle />
-
+  const Board = () => {
+    return (
       <EvaluationBoard
+        boardSize={350}
         boardInformation={FACE_BOARD_INFO}
         itemList={itemList}
         itemPointDict={points}
       >
         <ResultPoly points={likedPointsList} />
       </EvaluationBoard>
+    );
+  };
 
-      {itemList.length > 0 && (
+  const TotalResultList = () => {
+    return (
+      itemList.length > 0 && (
         <>
-          <Spacing size={20} />
           <Section $gap={20}>
-            <ResultCellTitle>
-              <span>다른 유저와 비교해요!</span>
+            <Flex
+              justifyContent="space-between"
+              alignItem="center"
+              width="100%"
+            >
+              <Label font="head2" color="titleStrongest">
+                다른 유저와 비교해요!
+              </Label>
 
-              <div className="hint">
-                <span>
+              <Flex gap="12px">
+                <Flex gap="2px" alignItem="center" justifyContent="center">
                   <BoardPoint $isUser={false} />
-                  <span>평균</span>
-                </span>
-                <span>
+                  <Label font="body3" color="textLighter">
+                    평균
+                  </Label>
+                </Flex>
+
+                <Flex gap="2px" alignItem="center" justifyContent="center">
                   <BoardPoint $isUser={true} />
-                  <span>내 평가</span>
-                </span>
-              </div>
-            </ResultCellTitle>
+                  <Label font="body3" color="textLighter">
+                    내 평가
+                  </Label>
+                </Flex>
+              </Flex>
+            </Flex>
+
             {Object.entries(resultDict)
               .sort(([a], [b]) => Number(a) - Number(b))
               .map(([idx, cell]) => {
@@ -142,8 +152,18 @@ const Result = (parms: Parms) => {
               })}
           </Section>
         </>
-      )}
-
+      )
+    );
+  };
+  return (
+    <>
+      <ResultTitle />
+      <Spacing size={12} />
+      <Board />
+      <Spacing size={12} />
+      <Share />
+      <Separator $size={8} />
+      <TotalResultList />
       <Spacing size={40} />
     </>
   );

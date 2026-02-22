@@ -214,33 +214,6 @@ export const PreferenceBarPoint = styled.div<{
   }
 `;
 
-export const ResultCellTitle = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-
-  ${(p) => css`
-    ${p.theme.fonts.head2}
-    color: ${p.theme.fontColors.titleStrongest};
-  `}
-
-  > .hint {
-    display: flex;
-    gap: 12px;
-
-    ${(p) => css`
-      ${p.theme.fonts.body3};
-      color: ${p.theme.fontColors.textLighter};
-    `}
-  }
-  > .hint > span {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-  }
-`;
-
 export const BoardPoint = styled.div<{ $isUser: boolean }>`
   width: 12px;
   height: 12px;

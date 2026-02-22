@@ -333,7 +333,7 @@ export const FACE_BOARD_INFO: BoardInformation = {
       MIDDLE: [
         {
           img: "/assets/result/idol/MIDDLE_MIDDLE_1.png",
-          label: "균형 잡힌 미남가 좋아!",
+          label: "균형 잡힌 미남이 좋아!",
         },
         {
           img: "/assets/result/idol/MIDDLE_MIDDLE_0.png",

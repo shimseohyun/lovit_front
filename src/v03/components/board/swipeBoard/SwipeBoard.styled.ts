@@ -8,7 +8,7 @@ export const BoardContaienr = styled.div`
   width: 100%;
 
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 
   flex-grow: 1;
 `;

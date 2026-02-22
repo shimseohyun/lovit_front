@@ -35,6 +35,12 @@ export const BoardTitleContainer = styled.div`
       color:${p.theme.fontColors.textStrongest};
     `}
   }
+  > h2 {
+    ${(p) => css`
+      ${p.theme.fonts.head2}
+      color:${p.theme.fontColors.textStrongest};
+    `}
+  }
   > h6 {
     padding-bottom: 4px;
     ${(p) => css`
@@ -111,20 +117,15 @@ export const BoardTitleGroupWrapper = styled.div`
   gap: 4px;
 `;
 
-export const BoardTitelGroupChip = styled.div`
+export const BoardTitelGroupChipWrapper = styled.div`
   display: flex;
-  padding-bottom: 8px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   justify-content: center;
   align-items: center;
-  gap: 2px;
-
-  ${(p) => css`
-    ${p.theme.fonts.body3}
-    color: ${p.theme.fontColors.textLightest};
-  `}
 `;
 
-export const BoardTitleSubChip = styled.div<{
+export const BoardTitelGroupChip = styled.div<{
   $lightColor?: string;
   $lighterColor?: string;
   $isMinus?: boolean;
