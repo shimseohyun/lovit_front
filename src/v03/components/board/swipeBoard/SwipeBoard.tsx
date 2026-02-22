@@ -21,6 +21,7 @@ import {
 import AxisMarker from "./components/AxisMarker";
 import CurrentMarker from "./components/CurrentMarker";
 import { getItemSummary } from "@dataV03/itemSummary";
+import AxisMarkerLabel from "./components/AxisMarkerLabel";
 
 type Params = {
   stepPX: number;
@@ -29,7 +30,7 @@ type Params = {
   dataDict: BoardAxisDict;
 
   dragAxis: AxisType | null;
-  dragDirection: BoardDirection;
+  dragDirection: BoardDirection | null;
   isSolo: boolean;
 
   bind: SwipeBind;
@@ -49,6 +50,7 @@ const SwipeBoard = (props: Params) => {
     isSolo,
     slotCount,
     dataDict,
+    dragDirection,
     slot,
   } = props;
 
@@ -62,6 +64,11 @@ const SwipeBoard = (props: Params) => {
       ? "HORIZONTAL"
       : "VERTICAL"
     : dragAxis;
+
+  const dragDirectionUI: DirectionType | null =
+    dragAxisUI === null || dragDirection === null
+      ? null
+      : dragDirection[dragAxisUI];
 
   const getTranslatePx = (axis: AxisType, slotID: number) => {
     const data = dataDict[axis];
@@ -92,11 +99,23 @@ const SwipeBoard = (props: Params) => {
     slotID: number,
   ) => {
     const currentSlotID = slot[axis] ?? 0;
+    const currentSlotType = axisData.slotDict[currentSlotID].slotType;
     const isCurrent = currentSlotID === slotID;
 
     const { isSelected, isVisible } = getMarkerVisibility(axis, isCurrent);
 
-    // 1) ITEM_LIST
+    const isLabelVisible =
+      currentSlotID - 1 === slotID || currentSlotID + 1 === slotID;
+
+    const isLabelSelected =
+      (currentSlotID - 1 === slotID && dragDirectionUI === "START") ||
+      (currentSlotID + 1 === slotID && dragDirectionUI === "END");
+
+    const groupID = slotValue.userAxisGroupID;
+    const axisInfo = boardInformation.axisDict[axisData.type];
+    const groupSummary = axisInfo?.groupSummary[groupID];
+    const group = axisData.groupDict[groupID];
+
     if (
       slotValue.slotType === "ITEM_LIST" &&
       slotValue.userAxisBundleID != null
@@ -110,9 +129,17 @@ const SwipeBoard = (props: Params) => {
 
       return (
         <S.BoardAxisItem key={`${axis}-${slotID}`} $size={stepPX} $axis={axis}>
+          <AxisMarkerLabel
+            axis={dragAxisUI}
+            direction={dragDirectionUI}
+            label={`만큼\n${groupSummary.groupLabel}`}
+            isVisible={isLabelVisible}
+            isSelected={isLabelSelected}
+          />
           <AxisMarker
             isVisible={isVisible}
             isSelected={isSelected}
+            isWillCurrent={isLabelSelected}
             isCurrent={isCurrent}
             axis={axis}
             type={slotValue.slotType}
@@ -123,24 +150,25 @@ const SwipeBoard = (props: Params) => {
       );
     }
 
-    // 2) GROUP / etc
-    const groupID = slotValue.userAxisGroupID;
-    const axisInfo = boardInformation.axisDict[axisData.type];
-    const groupSummary = axisInfo?.groupSummary[groupID];
-    const group = axisData.groupDict[groupID];
-
     if (!groupSummary || !group) return null;
 
     const direction: DirectionType = slotID < currentSlotID ? "START" : "END";
 
     const icon =
       boardInformation.axisDict[axisData.type].axisSide[
-        slotValue.slotType == "START_LABEL"
-          ? "START"
-          : slotValue.slotType == "END_LABEL"
-            ? "END"
-            : direction
+        axisData.type === "PREFERENCE"
+          ? direction
+          : slotValue.slotType == "START_LABEL"
+            ? "START"
+            : slotValue.slotType == "END_LABEL"
+              ? "END"
+              : direction
       ].icon;
+
+    const comparisonLabel =
+      boardInformation.axisDict[axisData.type].axisSide[
+        currentSlotID > slotID ? "START" : "END"
+      ].label;
 
     const label =
       groupSummary.iconIntensity === undefined
@@ -152,13 +180,21 @@ const SwipeBoard = (props: Params) => {
 
     return (
       <S.BoardAxisItem key={`${axis}-${slotID}`} $size={stepPX} $axis={axis}>
+        <AxisMarkerLabel
+          isVisible={currentSlotType !== "CENTER_LABEL" && isLabelVisible}
+          isSelected={isLabelSelected}
+          axis={dragAxisUI}
+          direction={dragDirectionUI}
+          label={`보다\n${comparisonLabel}`}
+        />
         <AxisMarker
           isVisible={isCurrentVisible}
           isSelected={isSelected}
           isCurrent={isCurrent}
+          isWillCurrent={isCurrent}
           axis={axis}
           type={slotValue.slotType}
-          label={label}
+          label={slotValue.slotType === "BETWEEN" ? undefined : label}
           icon={icon}
           startIcon={
             boardInformation.axisDict[axisData.type].axisSide["START"].icon
@@ -201,7 +237,11 @@ const SwipeBoard = (props: Params) => {
         );
       })}
 
-      <CurrentMarker axis={dragAxisUI} imgURL={currentItem.thumbnailURL} />
+      <CurrentMarker
+        axis={dragAxisUI}
+        direction={dragDirectionUI}
+        imgURL={currentItem.thumbnailURL}
+      />
     </S.BoardContaienr>
   );
 };

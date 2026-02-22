@@ -5,7 +5,11 @@ import { useGetPendingItemList } from "@hooksV03/api/userBoardData";
 import { useAuth } from "@hooksV03/auth/useAuth";
 import { useEffect, useState } from "react";
 
-type BoardStep = "EVALUATION_TOUCH" | "EVALUATION_SWIPE" | "PREFERENCE";
+type BoardStep =
+  | "EVALUATION_TOUCH"
+  | "EVALUATION_SWIPE_HORIZONTAL"
+  | "EVALUATION_SWIPE_VERTICAL"
+  | "PREFERENCE";
 
 type Parms = {
   maxCount?: number;

@@ -23,10 +23,10 @@ const TouchEvaluationBoard = () => {
     itemList,
   });
   const { currentItem } = useBoardStepContext();
-  const { navigateEvaluationSwipe } = useBoardControl();
+  const { navigateEvaluationTouchNext } = useBoardControl();
 
   const onClickBoardGrid = (v: number, h: number) => {
-    navigateEvaluationSwipe(v, h);
+    navigateEvaluationTouchNext(v, h);
   };
 
   return (

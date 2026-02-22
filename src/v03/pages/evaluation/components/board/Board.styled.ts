@@ -13,7 +13,7 @@ export const BoardRateContaienr = styled.div`
   gap: 8px;
 
   ${(p) => css`
-    ${p.theme.fonts.body2B}
+    ${p.theme.fonts.body2}
     color: ${p.theme.fontColors.textLight};
   `}
 `;

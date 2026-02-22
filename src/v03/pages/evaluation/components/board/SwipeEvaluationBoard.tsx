@@ -11,123 +11,72 @@ import {
 import useSwipeBoard from "@componentsV03/board/swipeBoard/useSwipeBoard";
 import SwipeBoard from "@componentsV03/board/swipeBoard/SwipeBoard";
 
-import type { AxisData, BoardAxisDict } from "@interfacesV03/type";
+import type { BoardAxisDict } from "@interfacesV03/type";
 
-import { getSwipeBoardSubTitle } from "@componentsV03/board/swipeBoard/getSwipeBoardTitle";
 import { useMemo } from "react";
+import Spacing from "@componentsV03/spacing/Spacing";
 
-const SwipeEvaluationBoard = () => {
+type Parms = { axis: AxisType };
+
+const SwipeEvaluationBoard = (parms: Parms) => {
+  const { axis } = parms;
   const { vertical, horizontal, boardInformation } = useBoardStaticContext();
   const { evaluationSlot, evaluationGroup, setEvaluationSlot } =
     useBoardSlotContext();
 
+  const data = axis === "VERTICAL" ? vertical : horizontal;
+
   if (evaluationSlot === undefined || evaluationGroup === undefined) return;
 
-  const dataDict: BoardAxisDict = useMemo(() => {
+  const dataDict: BoardAxisDict | undefined = useMemo(() => {
     return {
-      VERTICAL:
-        evaluationSlot.VERTICAL !== undefined
-          ? {
-              startIDX:
-                vertical.slotByGroupDict[evaluationGroup.VERTICAL].startSlotIDX,
-              endIDX:
-                vertical.slotByGroupDict[evaluationGroup.VERTICAL].endSlotIDX,
-              ...vertical,
-            }
-          : undefined,
-      HORIZONTAL:
-        evaluationSlot.HORIZONTAL !== undefined
-          ? {
-              startIDX:
-                horizontal.slotByGroupDict[evaluationGroup.HORIZONTAL]
-                  .startSlotIDX,
-              endIDX:
-                horizontal.slotByGroupDict[evaluationGroup.HORIZONTAL]
-                  .endSlotIDX,
-              ...horizontal,
-            }
-          : undefined,
+      [axis]: {
+        startIDX: data.slotByGroupDict[evaluationGroup[axis]].startSlotIDX,
+        endIDX: data.slotByGroupDict[evaluationGroup[axis]].endSlotIDX,
+        ...data,
+      },
     };
-  }, []);
+  }, [axis]);
+
+  if (dataDict === undefined) return;
 
   const getSlot = (s: SlotDict) => {
     setEvaluationSlot({ VERTICAL: s.VERTICAL, HORIZONTAL: s.HORIZONTAL });
   };
 
-  const {
-    dragDirection: direction,
-    swipeBoardProps,
-    dragAxis,
-  } = useSwipeBoard({
+  const { swipeBoardProps } = useSwipeBoard({
     slot: evaluationSlot,
     getSlot: getSlot,
     dataDict: dataDict,
   });
 
-  const getSubTitle = (axis: AxisType, data: AxisData) => {
-    const groupID = evaluationGroup[axis];
-    const groupSummary = boardInformation.axisDict[axis].groupSummary[groupID];
+  const groupID = evaluationGroup[axis];
+  const groupSummary = boardInformation.axisDict[axis].groupSummary[groupID];
 
-    return getSwipeBoardSubTitle({
-      data,
-      slotIDX: evaluationSlot[axis],
-      dragDirection: direction[axis],
-      icon: groupSummary.groupIcon,
-      intensity: groupSummary.intensityLabel,
-      groupLabel: groupSummary.groupLabel,
-      axisSide: groupSummary.axisSide, // evaluation만
-      showGroupLabelInGroupTitle: true,
-      labelColorLight: groupSummary.labelColorLight,
-      labelColorLighter: groupSummary.labelColorLightest,
-    });
-  };
-
-  const BoardTitle = () => {
-    const vGroup = evaluationGroup.VERTICAL;
-    const hGroup = evaluationGroup.HORIZONTAL;
-
-    const vSummary = boardInformation.axisDict.VERTICAL.groupSummary[vGroup];
-    const hSummary = boardInformation.axisDict.HORIZONTAL.groupSummary[hGroup];
-    return (
-      <Title.BoardTitleSubContainer>
-        <Title.BoardTitelGroupChip>
-          {vSummary.intensityLabel} {vSummary.groupLabel}
-          {" · "}
-          {hSummary.intensityLabel} {hSummary.groupLabel}
-        </Title.BoardTitelGroupChip>
-
-        {/* 상하 */}
-        <Title.BoardTitleSubWrapper
-          $isSelected={
-            (dragAxis === "VERTICAL" || dragAxis === null) &&
-            evaluationSlot.VERTICAL !== undefined
-          }
-        >
-          {getSubTitle("VERTICAL", vertical)}
-        </Title.BoardTitleSubWrapper>
-
-        {/* 좌우 */}
-        <Title.BoardTitleSubWrapper
-          $isSelected={
-            (dragAxis === "HORIZONTAL" || dragAxis === null) &&
-            evaluationSlot.HORIZONTAL !== undefined
-          }
-        >
-          {getSubTitle("HORIZONTAL", horizontal)}
-        </Title.BoardTitleSubWrapper>
-      </Title.BoardTitleSubContainer>
-    );
-  };
   return (
     <>
       <Title.BoardTitleContainer>
-        <h6>드래그해서 비교할 수 있어요.</h6>
-        <h1>같은 그룹에 속한 사람이 있어요</h1>
+        {axis === "HORIZONTAL" ? (
+          <h6>왼쪽·오른쪽으로 드래그해주세요</h6>
+        ) : (
+          <h6>위·아래로 드래그해주세요</h6>
+        )}
+        <h1>{"같은 그룹에 속한 사람과\n비교할 수 있어요"}</h1>
       </Title.BoardTitleContainer>
 
+      <Title.BoardTitelGroupChipWrapper>
+        <Title.BoardTitelGroupChip
+          $lightColor={groupSummary.labelColorLight}
+          $lighterColor={groupSummary.labelColorLightest}
+        >
+          {groupSummary.groupIcon} {groupSummary.intensityLabel}{" "}
+          {groupSummary.groupLabel}
+        </Title.BoardTitelGroupChip>
+      </Title.BoardTitelGroupChipWrapper>
+
       <S.SwipeBoardContainer>
-        <BoardTitle />
         <SwipeBoard {...swipeBoardProps} />
+        <Spacing size={40} />
       </S.SwipeBoardContainer>
     </>
   );

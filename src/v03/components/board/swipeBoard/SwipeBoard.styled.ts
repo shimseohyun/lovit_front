@@ -8,7 +8,7 @@ export const BoardContaienr = styled.div`
   width: 100%;
 
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 
   flex-grow: 1;
 `;
@@ -246,6 +246,7 @@ export const Label = styled.div<{
 `;
 
 export const BoardAxisItem = styled.div<{ $size: number; $axis: AxisType }>`
+  position: relative;
   ${({ $size, $axis }) => {
     if ($axis === "HORIZONTAL") {
       return css`

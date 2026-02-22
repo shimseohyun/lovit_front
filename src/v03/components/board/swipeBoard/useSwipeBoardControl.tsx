@@ -40,8 +40,8 @@ const useSwipeBoardControl = (params: Params) => {
     stepPX,
     isHorizontal = true,
     isVertical = true,
-    minDistancePx = 1,
-    lockDirectionPx = 1,
+    minDistancePx = 4,
+    lockDirectionPx = 4,
     draggingMode = "down",
   } = params;
 
@@ -50,17 +50,18 @@ const useSwipeBoardControl = (params: Params) => {
   const startSlotRef = useRef<SlotDict>(slot);
   const liveSlotRef = useRef<SlotDict>(slot);
 
-  const commitSlot = useCallback((next: SlotDict) => {
-    liveSlotRef.current = next;
-    getSlot(next);
-  }, []);
+  const commitSlot = useCallback(
+    (next: SlotDict) => {
+      liveSlotRef.current = next;
+      getSlot(next);
+    },
+    [getSlot],
+  );
 
   const isAxisEnabled = (axis: AxisType) => {
     if (axis === "HORIZONTAL") return isHorizontal;
-    else if (axis === "VERTICAL") return isVertical;
-    else {
-      return false;
-    }
+    if (axis === "VERTICAL") return isVertical;
+    return false;
   };
 
   const revertToStart = useCallback(() => {
@@ -77,55 +78,58 @@ const useSwipeBoardControl = (params: Params) => {
     [commitSlot],
   );
 
+  const { bind, isDragging, dragAxis, dragDirection } =
+    useSwipe<HTMLDivElement>({
+      minDistancePx,
+      lockDirectionPx,
+      draggingMode,
+
+      onProgress: ({ deltaX, deltaY, axis }) => {
+        if (!axis) return;
+        if (!isAxisEnabled(axis)) return;
+
+        setIsAnimating(false);
+
+        const axisDelta = axis === "HORIZONTAL" ? deltaX : deltaY;
+        const start = getSlotValue(startSlotRef.current, axis) ?? 0;
+
+        // ✅ 방향 수정: 오른쪽/아래로 드래그하면 슬롯 증가
+        const raw = start + axisDelta / stepPX;
+        const snapped = clamp(Math.round(raw), min[axis], max[axis]);
+
+        const next = setSlotValue(liveSlotRef.current, axis, snapped);
+        commitSlot(next);
+      },
+
+      onEnd: ({ passed, axis, totalDx, totalDy }) => {
+        if (!isAxisEnabled(axis)) {
+          revertToStart();
+          return;
+        }
+
+        if (!passed) {
+          revertToStart();
+          return;
+        }
+
+        const total = axis === "HORIZONTAL" ? totalDx : totalDy;
+        const start = getSlotValue(startSlotRef.current, axis);
+        if (start === undefined) return;
+
+        // ✅ 방향 수정: 오른쪽/아래로 드래그하면 슬롯 증가
+        const raw = start + total / stepPX;
+        const target = clamp(Math.round(raw), min[axis], max[axis]);
+
+        snapTo(axis, target);
+      },
+    });
+
   useEffect(() => {
     if (!isDragging) {
       startSlotRef.current = slot;
       liveSlotRef.current = slot;
     }
-  }, [slot]);
-
-  const { bind, isDragging, dragAxis, direction } = useSwipe<HTMLDivElement>({
-    minDistancePx,
-    lockDirectionPx,
-    draggingMode,
-
-    onProgress: ({ deltaX, deltaY, axis }) => {
-      if (!axis) return;
-      if (!isAxisEnabled(axis)) return;
-
-      setIsAnimating(false);
-
-      const axisDelta = axis === "HORIZONTAL" ? deltaX : deltaY;
-      const start = getSlotValue(startSlotRef.current, axis) ?? 0;
-
-      const raw = start - axisDelta / stepPX;
-      const snapped = clamp(Math.round(raw), min[axis], max[axis]);
-
-      const next = setSlotValue(liveSlotRef.current, axis, snapped);
-      commitSlot(next);
-    },
-
-    onEnd: ({ passed, axis, totalDx, totalDy }) => {
-      if (!isAxisEnabled(axis)) {
-        revertToStart();
-        return;
-      }
-
-      if (!passed) {
-        revertToStart();
-        return;
-      }
-
-      const total = axis === "HORIZONTAL" ? totalDx : totalDy;
-      const start = getSlotValue(startSlotRef.current, axis);
-      if (start === undefined) return;
-
-      const raw = start - total / stepPX;
-      const target = clamp(Math.round(raw), min[axis], max[axis]);
-
-      snapTo(axis, target);
-    },
-  });
+  }, [slot, isDragging]);
 
   const onPointerDown: PointerEventHandler<HTMLDivElement> = (e) => {
     startSlotRef.current = liveSlotRef.current;
@@ -146,6 +150,7 @@ const useSwipeBoardControl = (params: Params) => {
     if (dragAxis === null) return null;
     return isAxisEnabled(dragAxis) ? dragAxis : null;
   };
+
   return {
     isAnimating,
     onTransitionEnd,
@@ -154,7 +159,7 @@ const useSwipeBoardControl = (params: Params) => {
 
     isDragging: getIsDragging(),
     dragAxis: getDragAxis(),
-    dragDirection: direction,
+    dragDirection,
   };
 };
 

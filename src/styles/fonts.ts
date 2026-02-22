@@ -42,6 +42,7 @@ export const fonts = {
   // head
   narrative: fontGenerator(19, 24, "head", -1),
   head1: fontGenerator(28, 40, "head", -1),
+  head1_5: fontGenerator(24, 36, "head", -1),
   head2: fontGenerator(22, 32, "head", -1),
   head3: fontGenerator(19, 28, "head", -1),
 
@@ -52,8 +53,8 @@ export const fonts = {
   body2B: fontGenerator(15, 20, "bodyB", -1),
   body3: fontGenerator(13, 16, "body", -1),
   body3B: fontGenerator(13, 16, "bodyB", -1),
-  body4: fontGenerator(7, 9, "body", -1),
-  body4B: fontGenerator(7, 9, "bodyB", -1),
+  body4: fontGenerator(10, 12, "body", -1),
+  body4B: fontGenerator(10, 12, "bodyB", -1),
 
   // element (기본값이 +1%로 자동 적용)
   element1: fontGenerator(17, 24, "element", 1),

@@ -13,6 +13,7 @@ import { getItemSummary } from "@dataV03/itemSummary";
 import useViewport from "@hooksV03/useViewPort";
 
 type Parms = {
+  boardSize?: number;
   onClickGridItem?: (r: number, c: number) => void;
   boardInformation: BoardInformation;
 
@@ -22,6 +23,7 @@ type Parms = {
 
 const EvaluationBoard = (parms: Parms) => {
   const {
+    boardSize,
     onClickGridItem,
     boardInformation,
 
@@ -32,7 +34,7 @@ const EvaluationBoard = (parms: Parms) => {
 
   const { width } = useViewport();
   const CENTER_SIZE = 20;
-  const BOARD_SIZE = width - 32;
+  const BOARD_SIZE = boardSize === undefined ? width - 32 : boardSize;
 
   return (
     <>
@@ -55,12 +57,12 @@ const EvaluationBoard = (parms: Parms) => {
                     : rowInfo.groupSummary[r];
 
                 const label = info.groupLabel;
-                const icon = info.groupIcon;
+                // const icon = info.groupIcon;
                 const intesity = info.intensityLabel;
 
                 return (
                   <S.Label $axis={axis} key={`${rIDX}-${cIDX}`}>
-                    {icon} {intesity} {label}
+                    {intesity} {label}
                   </S.Label>
                 );
               } else {
