@@ -1,24 +1,27 @@
 import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
+import Label from "@componentsV03/label/Label";
+import Flex from "@componentsV03/flex/Flex";
 
 const spin = keyframes`
   to { transform: rotate(360deg); }
 `;
 
-const Overlay = styled.div`
+const Overlay = styled.div<{ $isBackground: boolean }>`
   position: fixed;
   inset: 0;
   z-index: 9999;
 
-  /* 전체 영역에 투명 레이어를 깔아서 터치/클릭 차단 */
-  background: rgba(0, 0, 0, 0);
+  ${({ $isBackground }) => css`
+    background: ${$isBackground ? "#fff" : "rgba(0, 0, 0, 0)"};
+  `}
+
   pointer-events: auto;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* iOS 사파리에서 스크롤/터치 억제 보강 */
   touch-action: none;
   pointer-events: none;
 `;
@@ -35,10 +38,22 @@ const Spinner = styled.div`
   animation: ${spin} 800ms linear infinite;
 `;
 
-const FullSpinner = () => {
+type Parms = {
+  label?: string;
+  isBackground?: boolean;
+};
+const FullSpinner = (parms: Parms) => {
+  const { label, isBackground = false } = parms;
   return (
-    <Overlay aria-busy="true" aria-label="Loading">
-      <Spinner />
+    <Overlay aria-busy="true" aria-label="Loading" $isBackground={isBackground}>
+      <Flex direction="column" gap="16px" alignItem="center">
+        <Spinner />
+        {label && (
+          <Label font="body1" color="textLight">
+            {label}
+          </Label>
+        )}
+      </Flex>
     </Overlay>
   );
 };
