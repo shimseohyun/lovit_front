@@ -76,9 +76,9 @@ const IDOL_SUMMAR_LIST: ItemSummaryDict = {
   },
   11: {
     itemSummaryID: 11,
-    name: "건우",
-    category: "알파드라이브원",
-    thumbnailURL: "/assets/item/idol/ADO_GEONWOO.png",
+    name: "재민",
+    category: "엔시티",
+    thumbnailURL: "/assets/item/idol/NCT_JAEHYUN.png",
   },
   12: {
     itemSummaryID: 12,

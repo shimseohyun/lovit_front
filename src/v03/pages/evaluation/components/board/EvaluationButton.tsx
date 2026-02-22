@@ -84,9 +84,9 @@ const ActionButton = () => {
 };
 
 const EvaluationButton = () => {
-  const { currentStep } = useBoardStepContext();
+  const { currentStep, isFin } = useBoardStepContext();
 
-  if (currentStep === "EVALUATION_TOUCH") return;
+  if (!isFin && currentStep === "EVALUATION_TOUCH") return;
 
   return (
     <BottomButton>

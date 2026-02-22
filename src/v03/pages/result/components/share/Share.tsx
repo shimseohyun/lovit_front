@@ -49,8 +49,11 @@ const Share = (parms: Parms) => {
       </Label>
 
       <Flex width="100%" gap="8px" alignItem="center" justifyContent="center">
-        {/* <Action imgURL="/assets/icons/share/kakao.svg" label="카카오톡" /> */}
-        <Action onClick={shareX} imgURL="/assets/icons/share/x.svg" label="X" />
+        <Action
+          onClick={shareX}
+          imgURL="/assets/icons/share/x.svg"
+          label="X로 공유"
+        />
         <Action
           onClick={copyLink}
           imgURL="/assets/icons/share/link.svg"
