@@ -76,6 +76,8 @@ export const Ceter = styled.div`
 export const Label = styled.div<{
   $axis: AxisType;
 }>`
+  display: flex;
+
   pointer-events: none;
   flex-grow: 1;
 
@@ -86,11 +88,15 @@ export const Label = styled.div<{
     if ($axis === "VERTICAL") {
       return css`
         padding: 0px 6px;
+        flex-direction: column;
+        gap: 4px;
       `;
     } else if ($axis === "HORIZONTAL") {
       return css`
         padding: 4px 0px;
         white-space: nowrap;
+        flex-direction: row;
+        gap: 2px;
       `;
     }
   }}
@@ -107,6 +113,6 @@ export const Label = styled.div<{
   ${({ theme }) => css`
     background-color: ${theme.foregroundColors.foregroundLighter};
     color: ${theme.fontColors.textLighter};
-    ${theme.fonts.body4B}
+    ${theme.fonts.caption}
   `}
 `;
