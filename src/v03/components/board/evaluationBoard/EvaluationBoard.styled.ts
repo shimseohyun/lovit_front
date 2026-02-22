@@ -21,9 +21,13 @@ export const BoardContainer = styled.div<{ $size: number }>`
   position: relative;
 
   flex-shrink: 0;
+  /* margin-left: -1px;
+  margin-right: -1px; */
 
+  padding: 1px;
   ${(p) => css`
-    box-shadow: 0 0 0 1px ${p.theme.strokeColors.strokeLighter};
+    border: 1px solid ${p.theme.strokeColors.strokeLighter};
+
     background-color: ${p.theme.strokeColors.strokeLightest};
   `}
 `;

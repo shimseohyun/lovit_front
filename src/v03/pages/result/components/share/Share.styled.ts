@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const ActionButton = styled.button`
-  width: 80px;
+  width: 72px;
 
   display: flex;
   align-items: center;
@@ -11,9 +11,9 @@ export const ActionButton = styled.button`
   gap: 8px;
 
   > .icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 656px;
+    width: 48px;
+    height: 48px;
+    border-radius: 48px;
     ${(p) => css`
       background-color: ${p.theme.foregroundColors.foregroundLighter};
     `}

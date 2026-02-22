@@ -3,12 +3,15 @@ import styled from "@emotion/styled";
 import type { FillButtonType } from "./FillButton";
 
 export const BottomButtonGradient = styled.div`
+  touch-action: none;
+  pointer-events: none;
+
   width: 100%;
-  height: 20px;
+  height: 40px;
   transform: translate(-50%, 0%);
   position: absolute;
   left: 50%;
-  top: -20px;
+  top: -40px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
 `;
 export const BottomButtonContainer = styled.div`

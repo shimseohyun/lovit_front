@@ -9,6 +9,7 @@ import { Section } from "@componentsV03/layout/DefaultLayout";
 import FullSpinner from "@componentsV03/spinner/Spinner";
 import Flex from "@componentsV03/flex/Flex";
 import { copyLink, shareX } from "./ShareAction";
+import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 
 type ActionParms = {
   label: string;
@@ -28,12 +29,8 @@ const Action = (parms: ActionParms) => {
   );
 };
 
-type Parms = {
-  saveImage: () => void;
-};
-
-const Share = (parms: Parms) => {
-  const { saveImage } = parms;
+const Share = () => {
+  const { handleCapture, resultLabel } = useResultContext();
   const { isLoggedIn } = useAuth();
   const { mutate: postLogin, isPending: isLoading } = usePostLogin();
   const onClick = () => {
@@ -50,7 +47,7 @@ const Share = (parms: Parms) => {
 
       <Flex width="100%" gap="8px" alignItem="center" justifyContent="center">
         <Action
-          onClick={shareX}
+          onClick={() => shareX(resultLabel)}
           imgURL="/assets/icons/share/x.svg"
           label="X로 공유"
         />
@@ -60,7 +57,7 @@ const Share = (parms: Parms) => {
           label="링크 복사"
         />
         <Action
-          onClick={saveImage}
+          onClick={() => handleCapture()}
           imgURL="/assets/icons/share/image.svg"
           label="이미지 저장"
         />

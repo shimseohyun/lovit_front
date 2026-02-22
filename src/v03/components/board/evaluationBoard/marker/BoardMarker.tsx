@@ -5,7 +5,6 @@ type Parms = {
   preferencePercent?: number;
   isLiked: boolean;
   img: string;
-
   left: number;
   top: number;
 };
@@ -15,12 +14,15 @@ const BoardMarker = (parms: Parms) => {
 
   const size =
     preferencePercent === undefined ? 12 : (preferencePercent / 100) * 24;
+
   const opacity =
-    preferencePercent === undefined ? 100 : preferencePercent + 10;
+    preferencePercent === undefined
+      ? 1
+      : Math.min(1, (preferencePercent + 10) / 100);
 
   return (
     <Marker
-      src={img}
+      $imgURL={img}
       $top={top}
       $left={left}
       $size={size}
@@ -32,16 +34,18 @@ const BoardMarker = (parms: Parms) => {
 
 export default BoardMarker;
 
-export const Marker = styled.img<{
+export const Marker = styled.div<{
+  $imgURL: string;
   $top: number;
   $left: number;
   $size: number;
-  $opacity: number;
+  $opacity: number; // ✅ 0~1
   $isLiked: boolean;
 }>`
   touch-action: none;
+  pointer-events: none;
 
-  ${({ $left, $top, $size, $opacity }) => css`
+  ${({ $left, $top, $size, $opacity, $imgURL }) => css`
     position: absolute;
     transform: translate(-50%, -50%);
     top: ${$top}%;
@@ -49,8 +53,15 @@ export const Marker = styled.img<{
 
     width: ${$size + 12}px;
     height: ${$size + 12}px;
-    opacity: ${$opacity}%;
+    opacity: ${$opacity};
+
+    background-image: url(${$imgURL});
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   `}
+
+  border-radius: 9999px;
 
   ${(p) => {
     return css`
@@ -60,8 +71,4 @@ export const Marker = styled.img<{
         : p.theme.strokeColors.strokeLight};
     `;
   }}
-
-  border-radius: 40px;
-
-  object-fit: cover;
 `;

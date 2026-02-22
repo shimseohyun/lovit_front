@@ -3,7 +3,7 @@ import type {
   UserAxisItemPositionDict,
 } from "@interfacesV03/data/user";
 import type { BoardAxisType, ResultType } from "@interfacesV03/type";
-import type { ResultCellParms } from "./ResultCell";
+import type { TotalResultCellParms } from "./TotalResultCell";
 import { getItemSummary } from "@dataV03/itemSummary";
 import type {
   BoardInformation,
@@ -13,7 +13,7 @@ import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
 
 type Parms = {
   itemList: ItemIDList;
-  boardInfromation: BoardInformation;
+  boardInformation: BoardInformation;
   itemPositionDict: Record<BoardAxisType, UserAxisItemPositionDict>;
   data: GetTotalBoardDataReturn;
 };
@@ -40,15 +40,15 @@ const getAvgResult = (v: number, h: number, dict: BoardResultDict): string => {
   return dict[getAvgResultType(v)][getAvgResultType(h)][0].label;
 };
 
-const useResultCell = (parms: Parms) => {
+const useTotalResultCell = (parms: Parms) => {
   const {
     itemList,
-    boardInfromation,
+    boardInformation,
     itemPositionDict,
     data: originData,
   } = parms;
   const data = originData.totalBoardData;
-  const resultDict: Record<number, ResultCellParms> = {};
+  const resultDict: Record<number, TotalResultCellParms> = {};
 
   itemList.forEach((itemID) => {
     const result = data[itemID];
@@ -65,7 +65,7 @@ const useResultCell = (parms: Parms) => {
       itemResult: getAvgResult(
         verticalAvgResult,
         horizontalAvgResult,
-        boardInfromation.avgResultDict,
+        boardInformation.avgResultDict,
       ),
       avg: {
         HORIZONTAL: horizontalAvgResult,
@@ -93,4 +93,4 @@ const useResultCell = (parms: Parms) => {
   return { resultDict };
 };
 
-export default useResultCell;
+export default useTotalResultCell;

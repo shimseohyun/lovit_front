@@ -1,7 +1,7 @@
 import type { BoardAxisType } from "@interfacesV03/type";
-import * as S from "./ResultCell.styld";
+import * as S from "./TotalResult.style";
 
-export type ResultCellParms = {
+export type TotalResultCellParms = {
   itemResult: string;
   itemName: string;
   itemImg: string;
@@ -9,7 +9,7 @@ export type ResultCellParms = {
   user: Record<BoardAxisType, number>;
 };
 
-const ResultCell = (parms: ResultCellParms) => {
+const TotalResultCell = (parms: TotalResultCellParms) => {
   const { itemImg, itemName, itemResult, avg, user } = parms;
   return (
     <S.Container>
@@ -42,4 +42,4 @@ const ResultCell = (parms: ResultCellParms) => {
   );
 };
 
-export default ResultCell;
+export default TotalResultCell;

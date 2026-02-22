@@ -20,6 +20,7 @@ const Overlay = styled.div`
 
   /* iOS 사파리에서 스크롤/터치 억제 보강 */
   touch-action: none;
+  pointer-events: none;
 `;
 
 const Spinner = styled.div`

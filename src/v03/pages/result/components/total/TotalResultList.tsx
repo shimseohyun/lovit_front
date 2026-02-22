@@ -1,31 +1,21 @@
 import Flex from "@componentsV03/flex/Flex";
 import Label from "@componentsV03/label/Label";
 import { Section } from "@componentsV03/layout/DefaultLayout";
-import { BoardPoint } from "./cell/ResultCell.styld";
-import ResultCell from "./cell/ResultCell";
-import useResultCell from "./cell/useResultCell";
 
-import type {
-  ItemIDList,
-  UserAxisItemPositionDict,
-} from "@interfacesV03/data/user";
-import type { BoardInformation } from "@interfacesV03/data/system";
-import type { BoardAxisType } from "@interfacesV03/type";
-import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
+import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 
-type Parms = {
-  itemList: ItemIDList;
-  boardInfromation: BoardInformation;
-  itemPositionDict: Record<BoardAxisType, UserAxisItemPositionDict>;
-  data: GetTotalBoardDataReturn;
-};
-const ResultTotalList = (parms: Parms) => {
-  const { itemList, boardInfromation, itemPositionDict, data } = parms;
+import { BoardPoint } from "./TotalResult.style";
+import TotalResultCell from "./TotalResultCell";
+import useTotalResultCell from "./useTotalResult";
 
-  const { resultDict } = useResultCell({
-    data,
+const TotalResultList = () => {
+  const { itemList, boardInformation, itemPositionDict, totalBoardDataDict } =
+    useResultContext();
+
+  const { resultDict } = useTotalResultCell({
+    data: totalBoardDataDict,
     itemList,
-    boardInfromation,
+    boardInformation,
     itemPositionDict,
   });
 
@@ -59,7 +49,7 @@ const ResultTotalList = (parms: Parms) => {
             .sort(([a], [b]) => Number(a) - Number(b))
             .map(([idx, cell]) => {
               if (!cell) return null;
-              return <ResultCell key={idx} {...cell} />;
+              return <TotalResultCell key={idx} {...cell} />;
             })}
         </Section>
       </>
@@ -67,4 +57,4 @@ const ResultTotalList = (parms: Parms) => {
   );
 };
 
-export default ResultTotalList;
+export default TotalResultList;
