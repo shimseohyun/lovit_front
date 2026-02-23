@@ -1,10 +1,12 @@
 const { origin } = window.location;
 
 const makeShareUrlFromImg = (boardID: number, imgURL: string) => {
-  const fileName = imgURL.split("/").pop();
-  if (!fileName) return origin;
+  const last = imgURL.split("/").pop() ?? "";
+  const file = last.split(".")[0]; // 쿼리/해시 제거
+  const baseName = file.replace("_", ""); // 확장자 제거(.png 등)
 
-  return `${origin}/share/${boardID}/${encodeURIComponent(fileName)}`;
+  if (!baseName) return origin;
+  return `${origin}/share/${boardID}/${encodeURIComponent(baseName)}`;
 };
 
 const getContents = (label: string, shareUrl: string) => {

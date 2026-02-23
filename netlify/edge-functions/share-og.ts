@@ -1,7 +1,7 @@
 import type { Context } from "@netlify/edge-functions";
 
 const BOARD_IMAGE_BASE: Record<string, string> = {
-  "0": "/assets/result/idol/", // ✅ boardID=0이면 이 폴더에서 찾는다
+  "0": "/assets/result/idol/",
   // "1": "/assets/result/girl/",
 };
 
@@ -14,24 +14,44 @@ function escapeHtml(s: string) {
     .replaceAll("'", "&#039;");
 }
 
-function isSafeFileName(name: string) {
-  // ✅ ../ 방지 + 너무 자유롭게 열어두지 않기
-  return /^[A-Za-z0-9_.-]+\.(png|jpg|jpeg|webp)$/i.test(name);
+/**
+ * ENDEND -> END_END.png
+ * STARTMIDDLE -> START_MIDDLE.png
+ * MIDDLEMIDDLE0 -> MIDDLE_MIDDLE_0.png
+ */
+function codeToFileName(codeRaw: string) {
+  const code = codeRaw
+    .split("?")[0]
+    .split("#")[0]
+    .replace(/\.(png|jpg|jpeg|webp)$/i, "") // 혹시 .png 붙어와도 제거
+    .toUpperCase();
+
+  // (START|MIDDLE|END)(START|MIDDLE|END)(optional digits)
+  const m = code.match(/^(START|MIDDLE|END)(START|MIDDLE|END)(\d+)?$/);
+  if (!m) return null;
+
+  const a = m[1];
+  const b = m[2];
+  const n = m[3]; // "0" | "1" | undefined
+
+  return n ? `${a}_${b}_${n}.png` : `${a}_${b}.png`;
 }
 
 export default async (req: Request, _context: Context) => {
   const url = new URL(req.url);
-  const segs = url.pathname.replace(/^\/+|\/+$/g, "").split("/"); // ["share","0","START_START.png"]
+  const segs = url.pathname.replace(/^\/+|\/+$/g, "").split("/"); // ["share","0","ENDEND"]
 
   const shareRoot = (segs[0] ?? "").toLowerCase();
   const boardID = segs[1] ?? "";
-  const fileName = decodeURIComponent(segs[2] ?? "");
+  const codeOrName = decodeURIComponent(segs[2] ?? "");
 
   if (shareRoot !== "share") return new Response("Not Found", { status: 404 });
   if (!BOARD_IMAGE_BASE[boardID])
     return new Response("Not Found", { status: 404 });
-  if (!fileName || !isSafeFileName(fileName))
-    return new Response("Bad Request", { status: 400 });
+  if (!codeOrName) return new Response("Bad Request", { status: 400 });
+
+  const fileName = codeToFileName(codeOrName);
+  if (!fileName) return new Response("Bad Request", { status: 400 });
 
   const imgPath = `${BOARD_IMAGE_BASE[boardID]}${fileName}`;
   const ogImage = new URL(imgPath, url.origin).toString();
