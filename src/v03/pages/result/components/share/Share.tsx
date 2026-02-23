@@ -30,7 +30,8 @@ const Action = (parms: ActionParms) => {
 };
 
 const Share = () => {
-  const { handleCapture, resultLabel, isCaptureLoading } = useResultContext();
+  const { handleCapture, resultLabel, resultImgURL, isCaptureLoading } =
+    useResultContext();
   const { isLoggedIn } = useAuth();
   const { mutate: postLogin, isPending: isLoginLoading } = usePostLogin();
   const onClick = () => {
@@ -48,12 +49,14 @@ const Share = () => {
 
       <Flex width="100%" gap="8px" alignItem="center" justifyContent="center">
         <Action
-          onClick={() => shareX(resultLabel)}
+          onClick={() =>
+            shareX({ label: resultLabel, boardID: 0, imgURL: resultImgURL })
+          }
           imgURL="/assets/icons/share/x.svg"
           label="X로 공유"
         />
         <Action
-          onClick={copyLink}
+          onClick={() => copyLink({ boardID: 0, imgURL: resultImgURL })}
           imgURL="/assets/icons/share/link.svg"
           label="링크 복사"
         />

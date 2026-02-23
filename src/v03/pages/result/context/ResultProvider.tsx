@@ -33,6 +33,7 @@ type ResultValue = {
   isMore: boolean;
   hasNoCalcData: boolean;
   resultLabel: string;
+
   resultImgURL: string;
   itemList: ItemIDList;
   itemPointDict: UserPointDict;
@@ -277,6 +278,7 @@ export const ResultProvider = (parms: Parms) => {
         boardInformation,
         itemSummaryDict,
         hasNoCalcData,
+
         resultLabel: result().label,
         resultImgURL: result().img,
         itemList,
