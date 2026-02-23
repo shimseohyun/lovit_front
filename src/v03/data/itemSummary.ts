@@ -209,8 +209,8 @@ const IDOL_SUMMAR_LIST: ItemSummaryDict = {
   33: {
     itemSummaryID: 33,
     name: "한진",
-    category: "보이넥스트도어",
-    thumbnailURL: "/assets/item/idol/BOYNEXTDOOR_HANJIN.jpg",
+    category: "투어스",
+    thumbnailURL: "/assets/item/idol/TWS_HANJIN.jpg",
   },
   34: {
     itemSummaryID: 34,
