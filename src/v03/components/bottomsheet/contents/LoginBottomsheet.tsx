@@ -10,7 +10,7 @@ const LoginBottomsheet = () => {
   };
   return (
     <>
-      {isLoading && <FullSpinner />}
+      {isLoading && <FullSpinner label="정보를 불러오고 있어요" />}
       <S.Title>
         <h3>로그인이 필요해요</h3>
         <span>로그인 후 더 많은 인물을 분석할 수 있어요.</span>

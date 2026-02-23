@@ -10,7 +10,7 @@ const makeShareUrlFromImg = (boardID: number, imgURL: string) => {
 };
 
 const getContents = (label: string, shareUrl: string) => {
-  return `나는 [${label}]\n러빗과 함께 나의 취향 사분면을 찾아보세요\n\n${shareUrl}`;
+  return `나는 [${label}]\n나의 취향 사분면을 만들어보세요!\n\n${shareUrl}`;
 };
 
 export const shareX = (parms: {

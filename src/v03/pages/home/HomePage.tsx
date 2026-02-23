@@ -1,4 +1,3 @@
-import * as Title from "@componentsV03/title/Title.styled";
 import BottomButton from "@componentsV03/button/BottomButton";
 import FillButton from "@componentsV03/button/FillButton";
 import {
@@ -9,6 +8,8 @@ import Navigation from "@componentsV03/navigation/Navigation";
 import { useAuth } from "@hooksV03/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 import LogoOnboarding from "@componentsV03/onboarding/LogoOnboarding";
+import Label from "@componentsV03/label/Label";
+import Spacing from "@componentsV03/spacing/Spacing";
 
 const HomePage = () => {
   const { isLoggedIn } = useAuth();
@@ -18,12 +19,16 @@ const HomePage = () => {
     <>
       <PageContainer>
         <Navigation />
-        <Title.BoardTitleContainer>
-          <h1>{`사분면에서 찾는\n나의 취향 버뮤다 라인`}</h1>
-        </Title.BoardTitleContainer>
-        <Title.BoardDescription>
-          내 버뮤다 라인은 누구일까?
-        </Title.BoardDescription>
+        <Spacing size={16} />
+        <Label
+          font="head1"
+          color={"textStrongest"}
+          style={{ textAlign: "center" }}
+        >{`내 손으로 채우는\n나만의 취향 사분면`}</Label>
+        <Spacing size={10} />
+        <Label font="body1" color="textLight">
+          나의 취향 대삼각형을 찾아서...
+        </Label>
         <PageViewPort>
           <LogoOnboarding />
         </PageViewPort>
