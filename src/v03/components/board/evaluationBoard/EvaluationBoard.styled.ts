@@ -89,14 +89,14 @@ export const Label = styled.div<{
       return css`
         padding: 0px 6px;
         flex-direction: column;
-        gap: 4px;
+        gap: 3px;
       `;
     } else if ($axis === "HORIZONTAL") {
       return css`
         padding: 4px 0px;
         white-space: nowrap;
         flex-direction: row;
-        gap: 2px;
+        gap: 1px;
       `;
     }
   }}

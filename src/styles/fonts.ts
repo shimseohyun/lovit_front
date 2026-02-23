@@ -56,7 +56,7 @@ export const fonts = {
   body4: fontGenerator(10, 12, "body", -1),
   body4B: fontGenerator(10, 12, "bodyB", -1),
 
-  caption: fontGenerator(10, 10, "bodyB", 0),
+  caption: fontGenerator(8, 8, "bodyB", 0),
 
   // element (기본값이 +1%로 자동 적용)
   element1: fontGenerator(17, 24, "element", 1),

@@ -56,14 +56,15 @@ const EvaluationBoard = (parms: Parms) => {
                     ? colInfo.groupSummary[c]
                     : rowInfo.groupSummary[r];
 
+                const label = info.groupLabel;
                 const icon = info.groupIcon;
                 const intesity = info.intensityLabel;
 
                 return (
                   <S.Label $axis={axis} key={`${rIDX}-${cIDX}`}>
-                    <span>{intesity}</span>
-
                     <span> {icon}</span>
+                    <span>{intesity}</span>
+                    <span>{label}</span>
                   </S.Label>
                 );
               } else {

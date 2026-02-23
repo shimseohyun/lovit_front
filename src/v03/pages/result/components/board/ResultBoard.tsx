@@ -49,7 +49,7 @@ export const ResultBoard = () => {
   const Board = () => {
     return (
       <EvaluationBoard
-        boardSize={340}
+        boardSize={350}
         boardInformation={boardInformation}
         itemList={itemList}
         itemPointDict={itemPointDict}
