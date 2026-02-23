@@ -11,9 +11,11 @@ import type { BoardStaticValue, ProviderProps } from "./type";
 import useBoardData from "@hooksV03/board/context/useBoardData";
 import useBoardSlot from "@hooksV03/board/context/useBoardSlot";
 import useBoardStep from "@hooksV03/board/context/useBoardStep";
+import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
 
 export const BoardDataProvider = (props: ProviderProps) => {
-  const { children, boardInformation, itemSummaryDict } = props;
+  const { children, boardID } = props;
+  const { boardInformation, itemSummaryDict } = BOARD_INFO_DICT[boardID];
 
   const boardSlot = useBoardSlot();
   const boardStep = useBoardStep({ itemSummaryDict });
@@ -21,6 +23,7 @@ export const BoardDataProvider = (props: ProviderProps) => {
 
   const staticValue: BoardStaticValue = useMemo(
     () => ({
+      boardID,
       boardInformation,
       itemSummaryDict,
       stepPX: defaultStepPx,

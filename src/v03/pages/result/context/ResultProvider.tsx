@@ -26,6 +26,7 @@ import { useGetTotalBoardData } from "@hooksV03/api/userTotalData";
 import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
 import { useAuth } from "@hooksV03/auth/useAuth";
 import { getItemCount } from "@dataV03/itemSummary";
+import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
 
 type ResultValue = {
   isFetching: boolean;
@@ -38,6 +39,7 @@ type ResultValue = {
   likedItemPointList: UserPoint[];
   totalBoardDataDict: GetTotalBoardDataReturn;
   itemPositionDict: Record<BoardAxisType, UserAxisItemPositionDict>;
+  boardID: number;
   boardInformation: BoardInformation;
   itemSummaryDict: ItemSummaryDict;
 
@@ -50,14 +52,15 @@ export const [ResultContext, useResultContext] =
   createStrictContext<ResultValue>("useResultContext");
 
 type Parms = PropsWithChildren<{
-  boardInformation: BoardInformation;
-  itemSummaryDict: ItemSummaryDict;
+  boardID: number;
 }>;
 
 export const ResultProvider = (parms: Parms) => {
   const { user } = useAuth();
   const uid = user?.uid;
-  const { boardInformation, children, itemSummaryDict } = parms;
+
+  const { children, boardID } = parms;
+  const { boardInformation, itemSummaryDict } = BOARD_INFO_DICT[boardID];
 
   const { data: userBoardData, isFetching: isUserBoardFetching } =
     useGetUserBoardData(uid, getItemCount(itemSummaryDict));
@@ -270,6 +273,7 @@ export const ResultProvider = (parms: Parms) => {
       value={{
         isFetching: isUserBoardFetching || isTotalBoardFetching,
         isMore: userBoardData.isMore,
+        boardID,
         boardInformation,
         itemSummaryDict,
         hasNoCalcData,

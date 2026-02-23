@@ -8,8 +8,11 @@ import { BOY_SUMMARY_LIST } from "./board/boy/boyItemSummary";
 
 export type BoardDict = {
   boardInformation: BoardInformation;
-  itemSummary: ItemSummaryDict;
+  itemSummaryDict: ItemSummaryDict;
 };
 export const BOARD_INFO_DICT: Record<number, BoardDict> = {
-  0: { boardInformation: BOY_FACE_BOARD_INFO, itemSummary: BOY_SUMMARY_LIST },
+  0: {
+    boardInformation: BOY_FACE_BOARD_INFO,
+    itemSummaryDict: BOY_SUMMARY_LIST,
+  },
 };

@@ -11,10 +11,7 @@ const EvaluationPage = () => {
   if (board === null) return;
 
   return (
-    <BoardDataProvider
-      boardInformation={board.boardInformation}
-      itemSummaryDict={board.itemSummary}
-    >
+    <BoardDataProvider boardID={parsedID}>
       <EvaluationPageContent />
     </BoardDataProvider>
   );

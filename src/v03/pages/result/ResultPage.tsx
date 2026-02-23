@@ -12,10 +12,7 @@ const ResultPage = () => {
   if (board === null) return;
 
   return (
-    <ResultProvider
-      boardInformation={board.boardInformation}
-      itemSummaryDict={board.itemSummary}
-    >
+    <ResultProvider boardID={parsedID}>
       <ResultPageContent />
     </ResultProvider>
   );
