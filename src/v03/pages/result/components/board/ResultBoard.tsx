@@ -1,5 +1,5 @@
 import EvaluationBoard from "@componentsV03/board/evaluationBoard/EvaluationBoard";
-import ResultPoly from "../ResultPoly";
+import ResultPoly from "./ResultPoly";
 import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 
 import * as Title from "@componentsV03/title/Title.styled";
@@ -11,6 +11,7 @@ export const ResultBoard = () => {
     hasNoCalcData,
     resultImgURL,
     resultLabel,
+    itemSummaryDict,
     boardInformation,
     itemList,
     itemPointDict,
@@ -51,6 +52,7 @@ export const ResultBoard = () => {
       <EvaluationBoard
         boardSize={350}
         boardInformation={boardInformation}
+        itemSummaryDict={itemSummaryDict}
         itemList={itemList}
         itemPointDict={itemPointDict}
       >

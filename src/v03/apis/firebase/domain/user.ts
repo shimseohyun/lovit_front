@@ -5,10 +5,8 @@ import type { AxisData, BoardAxisType } from "@interfacesV03/type";
 import type { ItemIDList } from "@interfacesV03/data/user";
 
 import { convertRoughToAxisData } from "@utilsV03/convertRoughToAxisData";
-import { getItemCount } from "@dataV03/itemSummary";
 
 export type GetUserBoardDataReturn = {
-  // cusor: number;
   isMore: boolean;
   itemList: ItemIDList;
   axis: Record<BoardAxisType, AxisData>;
@@ -29,6 +27,7 @@ const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
 export const getUserBoardData = async (
   uid: string,
+  itemCount: number,
 ): Promise<GetUserBoardDataReturn> => {
   try {
     const docRef = doc(firestoreDb, "userBoardData", uid);
@@ -43,7 +42,8 @@ export const getUserBoardData = async (
     const vertical = parsingData(data["axis"]["VERTICAL"]);
     const preference = parsingData(data["axis"]["PREFERENCE"]);
 
-    const isMore = getItemCount() > itemList.length;
+    const isMore = itemCount > itemList.length;
+
     return {
       isMore,
       itemList,

@@ -1,11 +1,14 @@
 import * as htmlToImage from "html-to-image";
 
 import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
-import type { GetUserBoardDataReturn } from "@apisV03/firebase/domain/user";
+
 import { createStrictContext } from "@hooksV01/board/context/createStrictContext";
 import useGetBoardPoint from "@hooksV03/board/useGetBoardPoint";
 import useGetBoardResult from "@hooksV03/board/useGetBoardResult";
-import type { BoardInformation } from "@interfacesV03/data/system";
+import type {
+  BoardInformation,
+  ItemSummaryDict,
+} from "@interfacesV03/data/system";
 import type {
   ItemIDList,
   UserAxisItemPositionDict,
@@ -19,8 +22,14 @@ import {
   type PropsWithChildren,
   type RefObject,
 } from "react";
+import { useGetTotalBoardData } from "@hooksV03/api/userTotalData";
+import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
+import { useAuth } from "@hooksV03/auth/useAuth";
+import { getItemCount } from "@dataV03/itemSummary";
 
 type ResultValue = {
+  isFetching: boolean;
+  isMore: boolean;
   hasNoCalcData: boolean;
   resultLabel: string;
   resultImgURL: string;
@@ -30,6 +39,7 @@ type ResultValue = {
   totalBoardDataDict: GetTotalBoardDataReturn;
   itemPositionDict: Record<BoardAxisType, UserAxisItemPositionDict>;
   boardInformation: BoardInformation;
+  itemSummaryDict: ItemSummaryDict;
 
   captureRef: RefObject<HTMLDivElement | null>;
   handleCapture: () => Promise<void>;
@@ -40,14 +50,20 @@ export const [ResultContext, useResultContext] =
   createStrictContext<ResultValue>("useResultContext");
 
 type Parms = PropsWithChildren<{
-  userBoardData: GetUserBoardDataReturn;
-  totalBoardDataDict: GetTotalBoardDataReturn;
   boardInformation: BoardInformation;
+  itemSummaryDict: ItemSummaryDict;
 }>;
 
 export const ResultProvider = (parms: Parms) => {
-  const { userBoardData, totalBoardDataDict, boardInformation, children } =
-    parms;
+  const { user } = useAuth();
+  const uid = user?.uid;
+  const { boardInformation, children, itemSummaryDict } = parms;
+
+  const { data: userBoardData, isFetching: isUserBoardFetching } =
+    useGetUserBoardData(uid, getItemCount(itemSummaryDict));
+  const { data: totalBoardDataDict, isFetching: isTotalBoardFetching } =
+    useGetTotalBoardData();
+
   const { itemList, axis } = userBoardData;
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
@@ -252,7 +268,10 @@ export const ResultProvider = (parms: Parms) => {
   return (
     <ResultContext.Provider
       value={{
+        isFetching: isUserBoardFetching || isTotalBoardFetching,
+        isMore: userBoardData.isMore,
         boardInformation,
+        itemSummaryDict,
         hasNoCalcData,
         resultLabel: result().label,
         resultImgURL: result().img,

@@ -31,7 +31,7 @@ const HomePage = () => {
           <FillButton
             buttonType="PRIMARY"
             onClick={() => {
-              navigate("/evaluate");
+              navigate("/evaluate/0");
             }}
           >
             진단 시작하기
@@ -39,7 +39,7 @@ const HomePage = () => {
           {isLoggedIn && (
             <FillButton
               onClick={() => {
-                navigate("/result");
+                navigate("/result/0");
               }}
             >
               내 사분면 확인하기

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import ServiceRoute from "./ServiceRoute";
 
@@ -11,9 +11,11 @@ const router = createBrowserRouter([
     path: "/",
     element: <ServiceRoute />,
     children: [
-      { path: "/", element: <HomePage /> },
-      { path: "/evaluate", element: <EvaluationPage /> },
-      { path: "/result", element: <ResultPage /> },
+      { index: true, element: <HomePage /> },
+      { path: "evaluate/:boardID", element: <EvaluationPage /> },
+      { path: "result/:boardID", element: <ResultPage /> },
+
+      { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
 ]);

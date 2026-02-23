@@ -15,8 +15,14 @@ import { useEffect, useState } from "react";
 import FullSpinner from "@componentsV03/spinner/Spinner";
 
 const TouchEvaluationBoard = () => {
-  const { vertical, horizontal, preference, itemList, boardInformation } =
-    useBoardStaticContext();
+  const {
+    vertical,
+    horizontal,
+    preference,
+    itemList,
+    boardInformation,
+    itemSummaryDict,
+  } = useBoardStaticContext();
 
   const { points } = useGetBoardPoint({
     vertical,
@@ -71,6 +77,7 @@ const TouchEvaluationBoard = () => {
         itemList={itemList}
         itemPointDict={points}
         boardInformation={boardInformation}
+        itemSummaryDict={itemSummaryDict}
       />
       <Spacing size={20} />
     </>

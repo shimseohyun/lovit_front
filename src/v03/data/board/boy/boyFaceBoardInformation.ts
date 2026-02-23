@@ -277,7 +277,7 @@ const FACE_AXIS: Axis = {
       groupIcon: "🩷",
       intensityLabel: "4.5",
       groupLabel: "취향",
-      groupDescription: "거의 완전 취향이에요",
+      groupDescription: "완전 취향이에요",
       iconIntensity: 91,
       labelColorLight: "#F42572",
       labelColorLightest: "#FEF4F8",
@@ -287,7 +287,7 @@ const FACE_AXIS: Axis = {
       groupIcon: "🩷",
       intensityLabel: "5",
       groupLabel: "취향",
-      groupDescription: "완전 마음을 울려요!",
+      groupDescription: "내 마음에 안착...🩷",
       iconIntensity: 100,
       labelColorLight: "#F42572",
       labelColorLightest: "#FEF4F8",
@@ -295,7 +295,7 @@ const FACE_AXIS: Axis = {
   ],
 };
 
-export const FACE_BOARD_INFO: BoardInformation = {
+export const BOY_FACE_BOARD_INFO: BoardInformation = {
   boardID: 0,
 
   axisDict: {

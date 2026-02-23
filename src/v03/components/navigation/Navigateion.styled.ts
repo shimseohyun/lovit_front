@@ -1,3 +1,4 @@
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const Container = styled.nav`
@@ -14,4 +15,23 @@ export const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  button .label {
+    ${(p) => css`
+      ${p.theme.fonts.body3B}
+      color: ${p.theme.fontColors.textLighter};
+      background-color: ${p.theme.foregroundColors.foregroundLighter};
+      padding: 4px 8px;
+      border-radius: 8px;
+    `}
+  }
+`;
+
+export const LabelButton = styled.button`
+  ${(p) => css`
+    ${p.theme.fonts.body3B}
+    color: ${p.theme.fontColors.textLighter};
+    background-color: ${p.theme.foregroundColors.foregroundLighter};
+    padding: 4px 8px;
+    border-radius: 8px;
+  `}
 `;

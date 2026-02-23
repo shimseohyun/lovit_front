@@ -11,7 +11,7 @@ type Parms = {
 
 const useSwipeBoard = (parms: Parms) => {
   const { slot, getSlot, dataDict } = parms;
-  const { stepPX } = useBoardStaticContext();
+  const { stepPX, itemSummaryDict } = useBoardStaticContext();
 
   const horizontal = useMemo(() => dataDict.HORIZONTAL, [dataDict]);
   const vertical = useMemo(() => dataDict.VERTICAL, [dataDict]);
@@ -54,6 +54,7 @@ const useSwipeBoard = (parms: Parms) => {
     bind,
     onPointerDown,
     onTransitionEnd,
+    itemSummaryDict,
   };
 
   return {

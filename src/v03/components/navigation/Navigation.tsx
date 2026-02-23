@@ -22,9 +22,9 @@ const Navigation = () => {
       <S.Content>
         <span onClick={onClickLogo}>lovit</span>
         {isLoggedIn ? (
-          <button onClick={onClickLogout}>로그아웃</button>
+          <S.LabelButton onClick={onClickLogout}>로그아웃</S.LabelButton>
         ) : (
-          <button onClick={onClickLogin}>로그인</button>
+          <S.LabelButton onClick={onClickLogin}>로그인</S.LabelButton>
         )}
       </S.Content>
     </S.Container>

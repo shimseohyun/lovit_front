@@ -132,7 +132,7 @@ const useBoardControl = () => {
   const navigate = useNavigate();
   // 결과 페이지로 이동
   const navigateResult = () => {
-    navigate("/result", { replace: true });
+    navigate("/result/0", { replace: true });
   };
 
   const navigateMore = () => {

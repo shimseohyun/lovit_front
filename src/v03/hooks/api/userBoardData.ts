@@ -9,7 +9,8 @@ import {
   getUserBoardDataLocal,
   postUseBoardDataLocal,
 } from "@apisV03/localstorage/user";
-import { getItemIDList } from "@dataV03/itemSummary";
+import { getItemCount, getItemIDList } from "@dataV03/itemSummary";
+import type { ItemSummaryDict } from "@interfacesV03/data/system";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { convertRoughToAxisData } from "@utilsV03/convertRoughToAxisData";
@@ -52,11 +53,15 @@ const initialData: GetUserBoardDataReturn = {
   },
 };
 
-export const useGetUserBoardData = (uid: string | undefined, id?: number) => {
+export const useGetUserBoardData = (
+  uid: string | undefined,
+  itemCount: number,
+  id?: number,
+) => {
   return useQuery<GetUserBoardDataReturn>({
     queryKey: ["USER_BOARD", id, uid],
     queryFn: async () =>
-      uid ? getUserBoardData(uid) : getUserBoardDataLocal(),
+      uid ? getUserBoardData(uid, itemCount) : getUserBoardDataLocal(),
     initialData: initialData,
   });
 };
@@ -64,6 +69,7 @@ export const useGetUserBoardData = (uid: string | undefined, id?: number) => {
 export const useGetPendingItemList = (
   uid: string | undefined,
   maxCount: number,
+  itemSummaryDict: ItemSummaryDict,
 ) => {
   return useQuery({
     initialData: { list: [], isLast: false },
@@ -73,7 +79,10 @@ export const useGetPendingItemList = (
     queryFn: async () => {
       let data: number[];
       if (uid) {
-        const userData = await getUserBoardData(uid);
+        const userData = await getUserBoardData(
+          uid,
+          getItemCount(itemSummaryDict),
+        );
         data = userData.itemList ?? [];
       } else {
         data = getUserBoardDataLocal().itemList;
@@ -82,7 +91,7 @@ export const useGetPendingItemList = (
 
       const checkedItemList = data;
 
-      const itemIDList = getItemIDList();
+      const itemIDList = getItemIDList(itemSummaryDict);
 
       const checkedItemIDSet = new Set(checkedItemList);
 

@@ -51,7 +51,7 @@ const TestTool = () => {
       <ResetLocalSorage />
       <ResetDatabase />
       <button onClick={() => navigate("/evaluate")}> 평가보드</button>
-      <button onClick={() => navigate("/result")}> 결과</button>
+      <button onClick={() => navigate("/result/0")}> 결과</button>
       <button onClick={() => openBottomSheet(<LoginBottomsheet />)}>
         바텀시트 열기
       </button>

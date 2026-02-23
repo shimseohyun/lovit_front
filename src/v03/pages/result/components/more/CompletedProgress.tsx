@@ -83,8 +83,8 @@ const PulseBar = styled.div<{ $width: number; $isActive: boolean }>`
 `;
 
 const CompletedProgress = () => {
-  const { itemList } = useResultContext();
-  const totalCount = getItemCount();
+  const { itemList, itemSummaryDict } = useResultContext();
+  const totalCount = getItemCount(itemSummaryDict);
   const currentCount = itemList.length;
 
   console.log(totalCount, currentCount);

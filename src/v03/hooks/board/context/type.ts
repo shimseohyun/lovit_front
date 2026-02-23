@@ -1,6 +1,9 @@
 import type { PropsWithChildren } from "react";
 
-import type { BoardInformation } from "@interfacesV03/data/system";
+import type {
+  BoardInformation,
+  ItemSummaryDict,
+} from "@interfacesV03/data/system";
 
 import type { UseBoardDataReturn } from "@hooksV03/board/context/useBoardData";
 import type { UseBoardSlotReturn } from "@hooksV03/board/context/useBoardSlot";
@@ -8,10 +11,12 @@ import type { UseBoardStepReturn } from "@hooksV03/board/context/useBoardStep";
 
 export type ProviderParams = {
   boardInformation: BoardInformation;
+  itemSummaryDict: ItemSummaryDict;
 };
 
 export type BoardStaticValue = {
   boardInformation: BoardInformation;
+  itemSummaryDict: ItemSummaryDict;
   stepPX: number;
 } & UseBoardDataReturn;
 

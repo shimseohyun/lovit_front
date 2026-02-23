@@ -9,14 +9,20 @@ import TotalResultCell from "./TotalResultCell";
 import useTotalResultCell from "./useTotalResult";
 
 const TotalResultList = () => {
-  const { itemList, boardInformation, itemPositionDict, totalBoardDataDict } =
-    useResultContext();
+  const {
+    itemList,
+    boardInformation,
+    itemSummaryDict,
+    itemPositionDict,
+    totalBoardDataDict,
+  } = useResultContext();
 
   const { resultDict } = useTotalResultCell({
     data: totalBoardDataDict,
     itemList,
     boardInformation,
     itemPositionDict,
+    itemSummaryDict: itemSummaryDict,
   });
 
   return (

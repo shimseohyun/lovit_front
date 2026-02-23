@@ -5,19 +5,16 @@ import { useAuth } from "@hooksV03/auth/useAuth";
 import { useBottomSheet } from "@hooksV03/bottomsheet/useBottomsheet";
 import { useNavigate } from "react-router-dom";
 import CompletedProgress from "./CompletedProgress";
+import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 
-type Parms = {
-  isMore: boolean;
-};
-
-const MoreButton = (parms: Parms) => {
-  const { isMore } = parms;
+const MoreButton = () => {
+  const { isMore } = useResultContext();
   const { isLoggedIn } = useAuth();
   const { openBottomSheet } = useBottomSheet();
 
   const navigate = useNavigate();
   const navigateEvaluationBoard = () => {
-    navigate("/evaluate");
+    navigate("/evaluate/0");
   };
 
   if (isMore)

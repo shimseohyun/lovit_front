@@ -3,11 +3,39 @@ import { css } from "@emotion/react";
 export const global = (maxWidth: string) => css`
   ${resetCSS}
 
+  @font-face {
+    font-family: "Pretendard";
+    src: url("/fonts/Pretendard-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Pretendard";
+    src: url("/fonts/Pretendard-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Pretendard";
+    src: url("/fonts/Pretendard-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
   body {
     width: 100vw;
     display: flex;
     justify-content: center;
-    font-family: "Pretendard Variable", sans-serif;
+    font-family:
+      "Pretendard",
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
   #root {

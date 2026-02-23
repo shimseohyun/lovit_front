@@ -13,15 +13,16 @@ import useBoardSlot from "@hooksV03/board/context/useBoardSlot";
 import useBoardStep from "@hooksV03/board/context/useBoardStep";
 
 export const BoardDataProvider = (props: ProviderProps) => {
-  const { children, boardInformation } = props;
+  const { children, boardInformation, itemSummaryDict } = props;
 
   const boardSlot = useBoardSlot();
-  const boardStep = useBoardStep({});
+  const boardStep = useBoardStep({ itemSummaryDict });
   const boardData = useBoardData(boardStep.currentItemID);
 
   const staticValue: BoardStaticValue = useMemo(
     () => ({
       boardInformation,
+      itemSummaryDict,
       stepPX: defaultStepPx,
       ...boardData,
     }),

@@ -1,45 +1,22 @@
-import {
-  PageContainer,
-  PageViewPortScroll,
-} from "@componentsV03/layout/DefaultLayout";
-import Result from "./components/Result";
-import Navigation from "@componentsV03/navigation/Navigation";
-import BottomButton from "@componentsV03/button/BottomButton";
-
-import { useAuth } from "@hooksV03/auth/useAuth";
-import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
-import { useGetTotalBoardData } from "@hooksV03/api/userTotalData";
-import FullSpinner from "@componentsV03/spinner/Spinner";
-import MoreButton from "./components/more/MoreButton";
 import { ResultProvider } from "./context/ResultProvider";
-import { FACE_BOARD_INFO } from "@dataV03/boardInfoDummy";
 
+import { useParams } from "react-router-dom";
+import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
+import ResultPageContent from "./components/ResultPageContent";
+
+// /result/:boardID
 const ResultPage = () => {
-  const { user } = useAuth();
-  const uid = user?.uid;
-
-  const { data: userBoardData, isFetching: isUserBoardFetching } =
-    useGetUserBoardData(uid);
-  const { data: totalBoardDataDict, isFetching: isTotalBoardFetching } =
-    useGetTotalBoardData();
-
-  if (isUserBoardFetching || isTotalBoardFetching) return <FullSpinner />;
+  const { boardID } = useParams<{ boardID: string }>();
+  const parsedID = Number(boardID);
+  const board = Number.isInteger(parsedID) ? BOARD_INFO_DICT[parsedID] : null;
+  if (board === null) return;
 
   return (
     <ResultProvider
-      userBoardData={userBoardData}
-      totalBoardDataDict={totalBoardDataDict}
-      boardInformation={FACE_BOARD_INFO}
+      boardInformation={board.boardInformation}
+      itemSummaryDict={board.itemSummary}
     >
-      <PageContainer>
-        <Navigation />
-        <PageViewPortScroll>
-          <Result />
-        </PageViewPortScroll>
-        <BottomButton>
-          <MoreButton isMore={userBoardData.isMore} />
-        </BottomButton>
-      </PageContainer>
+      <ResultPageContent />
     </ResultProvider>
   );
 };

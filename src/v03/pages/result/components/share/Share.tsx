@@ -43,7 +43,7 @@ const Share = () => {
       {isLoading && <FullSpinner />}
 
       <Label font="body1" color="textLight">
-        결과를 공유할 수 있어요
+        결과를 공유할 수 있어요!
       </Label>
 
       <Flex width="100%" gap="8px" alignItem="center" justifyContent="center">

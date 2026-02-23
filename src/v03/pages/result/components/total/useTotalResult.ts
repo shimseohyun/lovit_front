@@ -8,12 +8,14 @@ import { getItemSummary } from "@dataV03/itemSummary";
 import type {
   BoardInformation,
   BoardResultDict,
+  ItemSummaryDict,
 } from "@interfacesV03/data/system";
 import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
 
 type Parms = {
   itemList: ItemIDList;
   boardInformation: BoardInformation;
+  itemSummaryDict: ItemSummaryDict;
   itemPositionDict: Record<BoardAxisType, UserAxisItemPositionDict>;
   data: GetTotalBoardDataReturn;
 };
@@ -44,6 +46,7 @@ const useTotalResultCell = (parms: Parms) => {
   const {
     itemList,
     boardInformation,
+    itemSummaryDict,
     itemPositionDict,
     data: originData,
   } = parms;
@@ -54,7 +57,7 @@ const useTotalResultCell = (parms: Parms) => {
     const result = data[itemID];
     if (result === undefined) return;
 
-    const item = getItemSummary(itemID);
+    const item = getItemSummary(itemID, itemSummaryDict);
 
     const horizontalAvgResult = getPercent(getAvg(result.HORIZONTAL), 6);
     const verticalAvgResult = getPercent(getAvg(result.VERTICAL), 6);

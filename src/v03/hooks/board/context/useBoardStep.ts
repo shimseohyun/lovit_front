@@ -3,6 +3,7 @@ import { maxItemCount } from "@constantsV03/auth";
 import { getItemSummary } from "@dataV03/itemSummary";
 import { useGetPendingItemList } from "@hooksV03/api/userBoardData";
 import { useAuth } from "@hooksV03/auth/useAuth";
+import type { ItemSummaryDict } from "@interfacesV03/data/system";
 import { useEffect, useState } from "react";
 
 type BoardStep =
@@ -13,16 +14,21 @@ type BoardStep =
 
 type Parms = {
   maxCount?: number;
+  itemSummaryDict: ItemSummaryDict;
 };
 
 const useBoardStep = (parms: Parms) => {
-  const { maxCount = maxItemCount } = parms;
+  const { maxCount = maxItemCount, itemSummaryDict } = parms;
 
   const [isFin, setIsFin] = useState<boolean>(true);
 
   const { user } = useAuth();
 
-  const { data, isFetching } = useGetPendingItemList(user?.uid, maxCount);
+  const { data, isFetching } = useGetPendingItemList(
+    user?.uid,
+    maxCount,
+    itemSummaryDict,
+  );
 
   const pendingItemIDList = data.list;
   const isLast = data.isLast;
@@ -61,7 +67,7 @@ const useBoardStep = (parms: Parms) => {
     isLast,
 
     currentStep,
-    currentItem: getItemSummary(currentItemID),
+    currentItem: getItemSummary(currentItemID, itemSummaryDict),
     currentItemID: currentItemID,
     currentItemIDX: currentItemIDX,
     totalStepIDX: pendingItemIDList.length,
