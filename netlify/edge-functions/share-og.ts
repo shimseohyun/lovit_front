@@ -56,7 +56,7 @@ export default async (req: Request, _context: Context) => {
   const imgPath = `${BOARD_IMAGE_BASE[boardID]}${fileName}`;
   const ogImage = new URL(imgPath, url.origin).toString();
 
-  const title = "러빗 결과";
+  const title = "lovt";
   const desc = "러빗과 함께 나의 취향 사분면을 찾아보세요";
 
   const html = `<!doctype html>
