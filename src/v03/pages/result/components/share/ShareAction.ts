@@ -3,10 +3,10 @@ const { origin } = window.location;
 const makeShareUrlFromImg = (boardID: number, imgURL: string) => {
   const last = imgURL.split("/").pop() ?? "";
   const file = last.split(".")[0]; // 쿼리/해시 제거
-  const baseName = file.replace("_", ""); // 확장자 제거(.png 등)
+  const baseName = file.replace("_", "");
 
   if (!baseName) return origin;
-  return `${origin}/share/${boardID}/${encodeURIComponent(baseName)}`;
+  return `${origin}/share/${boardID}/${encodeURIComponent(baseName.replace("_", ""))}`;
 };
 
 const getContents = (label: string, shareUrl: string) => {
