@@ -80,6 +80,20 @@ export const BoardTitleImg = styled.div<{ $imgURL: string }>`
   `}
 `;
 
+export const BoardTitleImgTag = styled.img`
+  flex-grow: 1;
+
+  border-radius: 8px;
+  aspect-ratio: 3/4;
+
+  height: 160px;
+  width: 120px;
+
+  object-fit: cover;
+
+  margin-bottom: 8px;
+`;
+
 export const BoardTitleSubContainer = styled.h1`
   width: 100%;
 

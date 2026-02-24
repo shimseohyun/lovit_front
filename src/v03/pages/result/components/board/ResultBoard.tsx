@@ -61,7 +61,7 @@ export const ResultBoard = () => {
     );
   };
 
-  const ResultCaptrueTitle = () => {
+  const ResultCaptureTitle = () => {
     if (hasNoCalcData) {
       return (
         <Title.BoardTitleContainer
@@ -80,11 +80,9 @@ export const ResultBoard = () => {
           className="capture"
           style={{ display: "none" }}
         >
-          <Title.BoardTitleImg
-            className="resultImg"
-            $imgURL={resultImgURL}
+          <Title.BoardTitleImgTag
+            src={resultImgURL}
             data-capture="result-img"
-            style={{ minHeight: 160, height: 160, minWidth: 10 }}
           />
           <Label font="head2" color="textStrongest">
             {resultLabel}
@@ -114,7 +112,7 @@ export const ResultBoard = () => {
         }}
       >
         {/* 상단 결과 */}
-        <ResultCaptrueTitle />
+        <ResultCaptureTitle />
 
         <Board />
         <Spacing size={12} />
