@@ -5,8 +5,19 @@ import useBoardControl from "@hooksV03/board/useBoardControl";
 import IconBox from "@componentsV03/icon/IconBox";
 
 const EvaluationNavigation = () => {
-  const { currentItemIDX, totalStepIDX, currentStep } = useBoardStepContext();
+  const { currentItemIDX, totalStepIDX, currentStep, isFin } =
+    useBoardStepContext();
   const { navigateEvaluationTouch } = useBoardControl();
+
+  if (isFin)
+    return (
+      <>
+        <S.Container>
+          <Progress totalCount={1} currentCount={1} />
+          <S.Content />
+        </S.Container>
+      </>
+    );
   return (
     <>
       <S.Container>

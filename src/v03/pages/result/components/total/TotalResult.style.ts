@@ -97,41 +97,6 @@ export const BoardAxis = styled.div<{ $axis: AxisType }>`
   }}
 `;
 
-export const Contents = styled.div`
-  flex-grow: 1;
-  padding-top: 4px;
-  display: flex;
-  flex-direction: column;
-
-  > .name {
-    ${(p) => css`
-      ${p.theme.fonts.head3}
-      color: ${p.theme.fontColors.titleStrongest};
-    `}
-  }
-  > .evaluation {
-    ${(p) => css`
-      ${p.theme.fonts.body1}
-      color: ${p.theme.fontColors.textLighter};
-    `}
-  }
-`;
-
-export const Preference = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-
-  > .preferenceTitle {
-    margin-bottom: 4px;
-    ${(p) => css`
-      ${p.theme.fonts.body3}
-      color: ${p.theme.fontColors.textLightest};
-    `}
-  }
-`;
-
 export const PreferenceBar = styled.div`
   position: relative;
   width: 100%;

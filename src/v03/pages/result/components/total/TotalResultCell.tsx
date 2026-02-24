@@ -1,16 +1,20 @@
 import type { BoardAxisType } from "@interfacesV03/type";
 import * as S from "./TotalResult.style";
+import Label from "@componentsV03/label/Label";
+import Flex from "@componentsV03/flex/Flex";
 
 export type TotalResultCellParms = {
   itemResult: string;
   itemName: string;
   itemImg: string;
+  avgCount: number;
   avg: Record<BoardAxisType, number>;
   user: Record<BoardAxisType, number>;
 };
 
 const TotalResultCell = (parms: TotalResultCellParms) => {
-  const { itemImg, itemName, itemResult, avg, user } = parms;
+  const { itemImg, itemName, itemResult, avg, user, avgCount } = parms;
+  console.log(avg);
   return (
     <S.Container>
       <S.Board>
@@ -24,20 +28,37 @@ const TotalResultCell = (parms: TotalResultCellParms) => {
         <S.BoardPointUser $x={user.HORIZONTAL} $y={user.VERTICAL} />
       </S.Board>
 
-      <S.Contents>
-        <span className="name">{itemName}</span>
-        <span className="evaluation">{itemResult}</span>
+      <Flex flexGrow={1} direction="column" style={{ paddingTop: "4px" }}>
+        <Label font="head3" color="titleStrongest">
+          {itemName}
+        </Label>
+        <Label font="body1" color="textLighter">
+          {itemResult}
+        </Label>
 
-        <S.Preference>
-          <div className="preferenceTitle ">호감도</div>
+        <Flex flexGrow={1} direction="column" justifyContent="flex-end">
+          <Flex width="100%" justifyContent="space-between">
+            <Label
+              font="body3"
+              color="textLightest"
+              style={{ marginBottom: "8px" }}
+              className="preferenceTitle "
+            >
+              호감도
+            </Label>
+            <Label font="body3B" color="textLighter">
+              {avgCount}명 참여
+            </Label>
+          </Flex>
+
           <S.PreferenceBar>
             <S.PreferenceBarValue $value={avg.PREFERENCE} />
 
             <S.PreferenceBarPoint $value={avg.PREFERENCE} $isAvg={true} />
             <S.PreferenceBarPoint $value={user.PREFERENCE} $isAvg={false} />
           </S.PreferenceBar>
-        </S.Preference>
-      </S.Contents>
+        </Flex>
+      </Flex>
     </S.Container>
   );
 };

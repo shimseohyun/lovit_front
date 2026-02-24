@@ -70,6 +70,7 @@ const useTotalResultCell = (parms: Parms) => {
         horizontalAvgResult,
         boardInformation.avgResultDict,
       ),
+      avgCount: result.PREFERENCE.length,
       avg: {
         HORIZONTAL: horizontalAvgResult,
         VERTICAL: verticalAvgResult,
