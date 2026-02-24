@@ -67,7 +67,9 @@ const TouchEvaluationBoard = () => {
         <span className="category">{currentItem.category}</span>
         <span className="name">{currentItem.name}</span>
 
-        <Title.BoardTitleImg $imgURL={currentItem.thumbnailURL} />
+        <Title.BoardTitleImg>
+          <img src={currentItem.thumbnailURL} />
+        </Title.BoardTitleImg>
       </Title.BoardTitleContainer>
       <Title.BoardDescription>
         사분면 중 어디에 속하는지 선택해주세요.

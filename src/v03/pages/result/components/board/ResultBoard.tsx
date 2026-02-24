@@ -39,9 +39,10 @@ export const ResultBoard = () => {
           <Spacing size={8} />
 
           <Title.BoardTitleImg
-            $imgURL={resultImgURL}
             style={{ minHeight: 260, height: 260, minWidth: 10 }}
-          />
+          >
+            <img src={resultImgURL} />
+          </Title.BoardTitleImg>
         </Title.BoardTitleContainer>
       </>
     );
@@ -81,10 +82,12 @@ export const ResultBoard = () => {
           style={{ display: "none" }}
         >
           <Title.BoardTitleImg
-            $imgURL={resultImgURL}
             data-capture="result-img"
             style={{ minHeight: 160, height: 160, minWidth: 10 }}
-          />
+          >
+            <img src={resultImgURL} />
+          </Title.BoardTitleImg>
+
           <Label font="head2" color="textStrongest">
             {resultLabel}
           </Label>
