@@ -17,7 +17,10 @@ const MoreButton = () => {
     navigate("/evaluate/0");
   };
 
-  if (isMore)
+  const isMoreItem = (isMore && isLoggedIn) || (!isMore && !isLoggedIn);
+  const isNeedLoginLogin = !isLoggedIn && !isMore;
+
+  if (isMoreItem)
     return (
       <>
         <CompletedProgress />
@@ -25,7 +28,7 @@ const MoreButton = () => {
         <FillButton
           buttonType="PRIMARY"
           onClick={
-            isLoggedIn
+            !isNeedLoginLogin
               ? navigateEvaluationBoard
               : () => openBottomSheet(<LoginBottomsheet />)
           }
