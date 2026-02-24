@@ -39,10 +39,9 @@ export const ResultBoard = () => {
           <Spacing size={8} />
 
           <Title.BoardTitleImg
+            $imgURL={resultImgURL}
             style={{ minHeight: 260, height: 260, minWidth: 10 }}
-          >
-            <img src={resultImgURL} />
-          </Title.BoardTitleImg>
+          />
         </Title.BoardTitleContainer>
       </>
     );
@@ -66,7 +65,7 @@ export const ResultBoard = () => {
     if (hasNoCalcData) {
       return (
         <Title.BoardTitleContainer
-          className="captrue"
+          className="capture"
           style={{ display: "none" }}
         >
           <h2>아직 취향을 발견하지 못했어요.</h2>
@@ -78,16 +77,15 @@ export const ResultBoard = () => {
     return (
       <>
         <Title.BoardTitleContainer
-          className="captrue"
+          className="capture"
           style={{ display: "none" }}
         >
           <Title.BoardTitleImg
+            className="resultImg"
+            $imgURL={resultImgURL}
             data-capture="result-img"
             style={{ minHeight: 160, height: 160, minWidth: 10 }}
-          >
-            <img src={resultImgURL} />
-          </Title.BoardTitleImg>
-
+          />
           <Label font="head2" color="textStrongest">
             {resultLabel}
           </Label>

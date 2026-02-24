@@ -63,7 +63,7 @@ export const BoardTitleContainer = styled.div`
   }
 `;
 
-export const BoardTitleImg = styled.div`
+export const BoardTitleImg = styled.div<{ $imgURL: string }>`
   flex-grow: 1;
 
   border-radius: 8px;
@@ -71,15 +71,13 @@ export const BoardTitleImg = styled.div`
 
   margin-bottom: 8px;
 
-  overflow: hidden;
   ${(p) => css`
     background-color: ${p.theme.foregroundColors.foregroundLighter};
+
+    background-image: url(${p.$imgURL});
+    background-size: cover;
+    background-position: center center;
   `}
-  > img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 `;
 
 export const BoardTitleSubContainer = styled.h1`

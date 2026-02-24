@@ -68,7 +68,29 @@ export const ResultProvider = (parms: Parms) => {
   const { data: totalBoardDataDict, isFetching: isTotalBoardFetching } =
     useGetTotalBoardData();
 
-  const { itemList, axis } = userBoardData;
+  const isFetching = isUserBoardFetching || isTotalBoardFetching;
+
+  // 로딩 중에도 훅 호출 순서를 유지하기 위해 안전 기본값 준비
+  const safeUserBoardData = userBoardData ?? {
+    isMore: false,
+    itemList: [] as ItemIDList,
+    axis: {
+      HORIZONTAL: {
+        itemPositionDict: {} as UserAxisItemPositionDict,
+      },
+      VERTICAL: {
+        itemPositionDict: {} as UserAxisItemPositionDict,
+      },
+      PREFERENCE: {
+        itemPositionDict: {} as UserAxisItemPositionDict,
+      },
+    },
+  };
+
+  const safeTotalBoardDataDict =
+    totalBoardDataDict ?? ({} as GetTotalBoardDataReturn);
+
+  const { itemList, axis } = safeUserBoardData;
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({
@@ -111,17 +133,19 @@ export const ResultProvider = (parms: Parms) => {
   const [isCaptureLoading, setIsCaptureLoading] = useState(false);
 
   const nextFrame = () =>
-    new Promise<void>((r) => requestAnimationFrame(() => r()));
+    new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
   const extractBgUrls = (bg: string) => {
     const urls: string[] = [];
     const re = /url\(\s*['"]?([^'")]+)['"]?\s*\)/g;
     let m: RegExpExecArray | null;
+
     while ((m = re.exec(bg))) {
       const u = m[1];
       if (!u || u.startsWith("data:")) continue;
       urls.push(u);
     }
+
     return urls;
   };
 
@@ -133,7 +157,7 @@ export const ResultProvider = (parms: Parms) => {
         img.loading = "eager";
         img.decoding = "sync";
 
-        // 현재 로딩된 리소스로 고정 (srcset/sizes 변경으로 누락되는 케이스 방지)
+        // 현재 로딩된 리소스로 고정 (srcset/sizes 변경 타이밍 이슈 방지)
         const stableSrc = img.currentSrc || img.src;
         if (stableSrc) img.src = stableSrc;
 
@@ -168,8 +192,12 @@ export const ResultProvider = (parms: Parms) => {
     );
   };
 
-  const preloadBackgroundImages = async (root: HTMLElement) => {
-    const all = Array.from(root.querySelectorAll("*")) as HTMLElement[];
+  // selector 기반 background-image 프리로드 (기본값: 전체)
+  const preloadBackgroundImages = async (
+    root: HTMLElement,
+    selector: string = "*",
+  ) => {
+    const all = Array.from(root.querySelectorAll(selector)) as HTMLElement[];
     const urls = new Set<string>();
 
     for (const el of all) {
@@ -191,6 +219,47 @@ export const ResultProvider = (parms: Parms) => {
     );
   };
 
+  // 특정 background-image 엘리먼트가 실제 렌더 반영될 때까지 한 번 더 안정화
+  const waitForBackgroundImageElements = async (
+    root: HTMLElement,
+    selector: string,
+  ) => {
+    await preloadBackgroundImages(root, selector);
+    await nextFrame();
+    await nextFrame();
+  };
+
+  const prepareForCapture = async (cloned: HTMLDivElement) => {
+    try {
+      // @ts-ignore
+      await (document.fonts?.ready ?? Promise.resolve());
+    } catch {}
+
+    cloned.querySelectorAll(".capture").forEach((el) => {
+      (el as HTMLElement).style.display = "flex";
+    });
+
+    cloned.querySelectorAll(".display").forEach((el) => {
+      (el as HTMLElement).style.display = "none";
+    });
+
+    await nextFrame();
+    await nextFrame();
+
+    // 1) 일반 img 태그 대기
+    await waitForImgs(cloned);
+
+    // 2) 핵심 background-image(div.resultImg) 먼저 명시 대기
+    await waitForBackgroundImageElements(cloned, ".resultImg");
+
+    // 3) 나머지 background-image 전체 프리로드
+    await preloadBackgroundImages(cloned);
+
+    // 4) 최종 렌더 안정화
+    await nextFrame();
+    await nextFrame();
+  };
+
   const handleCapture = async () => {
     if (isCaptureLoading) return;
 
@@ -200,19 +269,20 @@ export const ResultProvider = (parms: Parms) => {
     setIsCaptureLoading(true);
 
     try {
-      try {
-        // @ts-ignore
-        await (document.fonts?.ready ?? Promise.resolve());
-      } catch {}
-
       const host = document.createElement("div");
       host.style.position = "fixed";
       host.style.left = "-10000px";
       host.style.top = "0";
-
       host.style.pointerEvents = "none";
+      host.style.zIndex = "-1";
 
       const cloned = node.cloneNode(true) as HTMLDivElement;
+
+      // 필요하면 원본 너비 기준 유지 (레이아웃 흔들림 방지)
+      const sourceRect = node.getBoundingClientRect();
+      if (sourceRect.width > 0) {
+        cloned.style.width = `${Math.round(sourceRect.width)}px`;
+      }
 
       host.appendChild(cloned);
       document.body.appendChild(host);
@@ -220,32 +290,21 @@ export const ResultProvider = (parms: Parms) => {
       let blob: Blob | null = null;
 
       try {
-        cloned.querySelectorAll(".captrue").forEach((el) => {
-          (el as HTMLElement).style.display = "flex";
-        });
+        await prepareForCapture(cloned);
 
-        cloned.querySelectorAll(".display").forEach((el) => {
-          (el as HTMLElement).style.display = "none";
-        });
-
-        await nextFrame();
-        await nextFrame();
-
-        await waitForImgs(cloned);
-        await preloadBackgroundImages(cloned);
-
-        await nextFrame();
-
-        // 4) 최종 캡쳐 사이즈 계산
         const rect = cloned.getBoundingClientRect();
         const targetW = 500;
-        const targetH = Math.round(rect.height * (targetW / rect.width));
+        const safeWidth = rect.width || sourceRect.width || 1;
+        const safeHeight = rect.height || sourceRect.height || 1;
+        const targetH = Math.max(
+          1,
+          Math.round(safeHeight * (targetW / safeWidth)),
+        );
 
         blob = await htmlToImage.toBlob(cloned, {
           backgroundColor: "#fff",
           cacheBust: true,
           includeQueryParams: true,
-
           pixelRatio: Math.min(4, (window.devicePixelRatio || 1) * 2),
           canvasWidth: targetW,
           canvasHeight: targetH,
@@ -272,8 +331,8 @@ export const ResultProvider = (parms: Parms) => {
   return (
     <ResultContext.Provider
       value={{
-        isFetching: isUserBoardFetching || isTotalBoardFetching,
-        isMore: userBoardData.isMore,
+        isFetching,
+        isMore: safeUserBoardData.isMore,
         boardID,
         boardInformation,
         itemSummaryDict,
@@ -284,7 +343,7 @@ export const ResultProvider = (parms: Parms) => {
         itemList,
         itemPointDict,
         likedItemPointList,
-        totalBoardDataDict,
+        totalBoardDataDict: safeTotalBoardDataDict,
         itemPositionDict,
         captureRef,
         handleCapture,
