@@ -68,7 +68,7 @@ export type UserAxisPointDict = Record<ItemSummaryID, UserAxisPoint>;
 export type UserPoint = {
   id: number;
   verticalPos: number;
-  horizontaPos: number;
+  horizontalPos: number;
   preferenceSize?: number;
   isLiked: boolean;
 };

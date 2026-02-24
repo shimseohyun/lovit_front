@@ -19,12 +19,12 @@ type Parms = {
 const orderClockwise = (pts: UserPoint[]) => {
   if (pts.length <= 2) return [...pts];
 
-  const cx = pts.reduce((s, p) => s + p.horizontaPos, 0) / pts.length;
+  const cx = pts.reduce((s, p) => s + p.horizontalPos, 0) / pts.length;
   const cy = pts.reduce((s, p) => s + p.verticalPos, 0) / pts.length;
 
   return [...pts].sort((a, b) => {
-    const aa = Math.atan2(a.verticalPos - cy, a.horizontaPos - cx);
-    const bb = Math.atan2(b.verticalPos - cy, b.horizontaPos - cx);
+    const aa = Math.atan2(a.verticalPos - cy, a.horizontalPos - cx);
+    const bb = Math.atan2(b.verticalPos - cy, b.horizontalPos - cx);
     return aa - bb;
   });
 };
@@ -34,7 +34,7 @@ const ResultPoly = ({ points }: Parms) => {
   const color = theme.foregroundColors.mainLight;
 
   const toPolygonPoints = (pts: UserPoint[]) =>
-    pts.map((p) => `${p.horizontaPos},${p.verticalPos}`).join(" ");
+    pts.map((p) => `${p.horizontalPos},${p.verticalPos}`).join(" ");
 
   const polygonPoints = useMemo(() => {
     if (points.length < 3) return "";

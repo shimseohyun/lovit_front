@@ -86,10 +86,11 @@ const EvaluationBoard = (parms: Parms) => {
         </S.BoardGrid>
         {children}
         {itemList.map((itemID, i) => {
+          if (!itemPointDict || !itemPointDict[itemID]) return;
           return (
             <BoardMarker
               key={i}
-              left={itemPointDict[itemID].horizontaPos}
+              left={itemPointDict[itemID].horizontalPos}
               top={itemPointDict[itemID].verticalPos}
               preferencePercent={
                 itemPointDict[itemID].isLiked

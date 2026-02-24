@@ -10,10 +10,10 @@ const initialEvaluation = [[], [], [], [], [], []];
 const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
 export const getUserBoardDataLocal = (): GetUserBoardDataReturn => {
-  const i = window.localStorage.getItem("itemList");
-  const h = window.localStorage.getItem("horizontal");
-  const v = window.localStorage.getItem("vertical");
-  const p = window.localStorage.getItem("preference");
+  const i = window.localStorage.getItem("itemList_0");
+  const h = window.localStorage.getItem("horizontal_0");
+  const v = window.localStorage.getItem("vertical_0");
+  const p = window.localStorage.getItem("preference_0");
 
   const itemList: ItemIDList = i ? JSON.parse(i) : [];
   const horizontal: RoughAxisData = h ? JSON.parse(h) : [...initialEvaluation];
@@ -34,8 +34,8 @@ export const getUserBoardDataLocal = (): GetUserBoardDataReturn => {
 };
 
 export const postUseBoardDataLocal = (body: PostUserBoardDataBody) => {
-  window.localStorage.setItem("itemList", body.itemList);
-  window.localStorage.setItem("horizontal", body.axis.HORIZONTAL);
-  window.localStorage.setItem("vertical", body.axis.VERTICAL);
-  window.localStorage.setItem("preference", body.axis.PREFERENCE);
+  window.localStorage.setItem("itemList_0", body.itemList);
+  window.localStorage.setItem("horizontal_0", body.axis.HORIZONTAL);
+  window.localStorage.setItem("vertical_0", body.axis.VERTICAL);
+  window.localStorage.setItem("preference_0", body.axis.PREFERENCE);
 };

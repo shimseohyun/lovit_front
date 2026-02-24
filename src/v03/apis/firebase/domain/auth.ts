@@ -12,10 +12,10 @@ const initialEvaluation = [[], [], [], [], [], []];
 const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
 const postPrevData = async (uid: string) => {
-  const i = window.localStorage.getItem("itemList");
-  const h = window.localStorage.getItem("horizontal");
-  const v = window.localStorage.getItem("vertical");
-  const p = window.localStorage.getItem("preference");
+  const i = window.localStorage.getItem("itemList_0");
+  const h = window.localStorage.getItem("horizontal_0");
+  const v = window.localStorage.getItem("vertical_0");
+  const p = window.localStorage.getItem("preference_0");
 
   const itemList: ItemIDList = i ? JSON.parse(i) : [];
   const horizontal: RoughAxisData = h ? JSON.parse(h) : initialEvaluation;

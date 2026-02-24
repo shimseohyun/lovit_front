@@ -19,7 +19,7 @@ const EvaluationPageContent = () => {
   const { isFetching: isDataLoading } = useBoardStaticContext();
   const { isFetching: isItemListLoading } = useBoardStepContext();
 
-  const isLoading = !(!isAuthLoading && !isDataLoading && !isItemListLoading);
+  const isLoading = isAuthLoading || isDataLoading || isItemListLoading;
   if (isLoading) return <FullSpinner />;
 
   return (

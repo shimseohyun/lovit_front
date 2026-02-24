@@ -92,7 +92,7 @@ const useGetBoardPoint = (parms: Parms) => {
 
       const point: UserPoint = {
         id: itemID,
-        horizontaPos: x,
+        horizontalPos: x,
         verticalPos: y,
         isLiked: isLiked,
         ...(isResult ? { preferenceSize: pre! } : {}),
