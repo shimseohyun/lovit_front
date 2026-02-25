@@ -30,10 +30,7 @@ export const ResultBoard = () => {
 
     return (
       <>
-        <Title.BoardTitleContainer
-          className="display"
-          style={{ display: "flex" }}
-        >
+        <Title.BoardTitleContainer className="display">
           <h6>나의 취향은...</h6>
           <h1>{resultLabel}</h1>
           <Spacing size={8} />

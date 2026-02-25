@@ -63,7 +63,7 @@ const TouchEvaluationBoard = () => {
         <FullSpinner isBackground={true} label="다음 인물을 불러오고 있어요" />
       )}
 
-      <Title.BoardTitleContainer style={{ flexGrow: 1 }}>
+      <Title.BoardTitleContainer style={{ flexGrow: 1, maxHeight: 240 }}>
         <span className="category">{currentItem.category}</span>
         <span className="name">{currentItem.name}</span>
 
