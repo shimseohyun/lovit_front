@@ -1,8 +1,15 @@
+[[edge_functions]]
+function = "share-og"
+path = "/share/*"
+
+[[redirects]]
+  from = "/share/*"
+  to = "/share/:splat"
+  status = 200
+  force = true
+
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[[edge_functions]]
-function = "share-og"
-path = "/share/*"
