@@ -1,5 +1,4 @@
 import { FixedPageContainer } from "@componentsV01/board/Board.styled";
-import FillButton from "@componentsV03/button/FillButton";
 import Flex from "@componentsV03/flex/Flex";
 import Label from "@componentsV03/label/Label";
 
