@@ -48,33 +48,53 @@ const InAppPage = (parms: Parms) => {
         height="100%"
         padding="16px"
       >
-        <img style={{ width: 120 }} src="/logo.svg" />
-        <Spacing size={20} />
+        <img style={{ width: 100 }} src="/logo.svg" />
+        <Spacing size={10} />
         <Label style={{ textAlign: "center" }} font="head2">
           {"lovit\n내가 만드는 취향 사분면"}
         </Label>
 
-        <Spacing size={40} />
-        <FillButton buttonType="ASSISTIVE" onClick={() => copyLink()}>
-          점 3개 버튼을 누르고 외부 브라우저에서 열기
-        </FillButton>
+        <Spacing size={24} />
+        <Flex direction="column" alignItem="center" onClick={() => copyLink()}>
+          <Label
+            font="body2B"
+            color="textLighter"
+            style={{ textAlign: "center" }}
+          >
+            {`${appKey === "kakaotalk" ? "공유하기" : "점 3개"} 버튼을 누르고\n외부 브라우저에서 열어주세요`}
+          </Label>
+          <Spacing size={8} />
+          <img src="/hint.png" width={"60%"} style={{ borderRadius: 12 }} />
 
-        <Spacing size={8} />
-        <Label font={"body2"} color="textLighter">
-          혹은
-        </Label>
-        <Spacing size={8} />
+          <Spacing size={16} />
+          <Label font={"body3"} color="textDisable">
+            혹은
+          </Label>
+          <Spacing size={16} />
 
-        <FillButton buttonType="PRIMARY" onClick={() => copyLink()}>
-          클립보드에 링크 복사하기
-        </FillButton>
+          <Label
+            font="body1B"
+            color="textLighter"
+            style={{
+              textDecoration: "underline",
+              textDecorationThickness: "1px",
+              textUnderlineOffset: "4px",
+            }}
+          >
+            클립보드에 링크 복사하기
+          </Label>
+        </Flex>
 
-        <Spacing size={40} />
-        <Label font="body2B" color="textLight">
+        <Spacing size={32} />
+        <Label font="body2B" color="textLightest">
           {appKey} 안에서 열려 있어요
         </Label>
         <Spacing size={4} />
-        <Label font="body2" color="textLighter" style={{ textAlign: "center" }}>
+        <Label
+          font="body2"
+          color="textLightest"
+          style={{ textAlign: "center" }}
+        >
           {`다른 어플 안에서는 일부 기능이 작동하지 않아요.\n외부 브라우저에서 다시 이용해주세요!`}
         </Label>
       </Flex>

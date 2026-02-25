@@ -25,7 +25,7 @@ const App = () => {
         <AuthProvider>
           <ThemeProvider theme={theme(maxWidth)}>
             <Global styles={global(maxWidth)} />
-            {inAppBrowser.isInApp ? (
+            {!inAppBrowser.isInApp ? (
               <InAppPage appKey={inAppBrowser.appKey} />
             ) : (
               <RouterProvider router={router} />
