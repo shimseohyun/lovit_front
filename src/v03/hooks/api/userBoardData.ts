@@ -59,7 +59,7 @@ export const useGetUserBoardData = (
   id?: number,
 ) => {
   return useQuery<GetUserBoardDataReturn>({
-    queryKey: ["USER_BOARD", id, uid],
+    queryKey: ["USER_BOARD", uid, id],
     queryFn: async () =>
       uid ? getUserBoardData(uid, itemCount) : getUserBoardDataLocal(),
     initialData: initialData,

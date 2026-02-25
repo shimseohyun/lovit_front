@@ -12,6 +12,7 @@ import useBoardData from "@hooksV03/board/context/useBoardData";
 import useBoardSlot from "@hooksV03/board/context/useBoardSlot";
 import useBoardStep from "@hooksV03/board/context/useBoardStep";
 import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
+import { getItemCount } from "@dataV03/itemSummary";
 
 export const BoardDataProvider = (props: ProviderProps) => {
   const { children, boardID } = props;
@@ -19,7 +20,10 @@ export const BoardDataProvider = (props: ProviderProps) => {
 
   const boardSlot = useBoardSlot();
   const boardStep = useBoardStep({ itemSummaryDict });
-  const boardData = useBoardData(boardStep.currentItemID);
+  const boardData = useBoardData(
+    getItemCount(itemSummaryDict),
+    boardStep.currentItemID,
+  );
 
   const staticValue: BoardStaticValue = useMemo(
     () => ({

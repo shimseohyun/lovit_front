@@ -8,8 +8,6 @@ import Spacing from "@componentsV03/spacing/Spacing";
 export const copyLink = async () => {
   const shareUrl = window.location.href;
 
-  console.log(shareUrl);
-
   try {
     await navigator.clipboard.writeText(shareUrl);
     alert("링크가 복사되었어요!");

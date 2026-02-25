@@ -16,20 +16,22 @@ import FullSpinner from "@componentsV03/spinner/Spinner";
 
 const TouchEvaluationBoard = () => {
   const {
+    boardInformation,
+    itemSummaryDict,
+
+    itemList,
     vertical,
     horizontal,
     preference,
-    itemList,
-    boardInformation,
-    itemSummaryDict,
   } = useBoardStaticContext();
 
   const { points } = useGetBoardPoint({
+    itemList,
     vertical,
     horizontal,
     preference,
-    itemList,
   });
+
   const { currentItem } = useBoardStepContext();
   const { navigateEvaluationTouchNext } = useBoardControl();
 
@@ -37,8 +39,10 @@ const TouchEvaluationBoard = () => {
     navigateEvaluationTouchNext(v, h);
   };
 
-  // ✅ 로딩 상태 네이밍
   const [isThumbnailLoading, setIsThumbnailLoading] = useState(true);
+  const isPointsLoading = Object.keys(points).length !== itemList.length;
+
+  const isLoading = isPointsLoading || isThumbnailLoading;
 
   useEffect(() => {
     // 새 아이템이면 다시 로딩 시작
@@ -57,12 +61,12 @@ const TouchEvaluationBoard = () => {
     img.onerror = () => setIsThumbnailLoading(false);
   }, [currentItem?.thumbnailURL]);
 
+  if (isLoading)
+    return (
+      <FullSpinner isBackground={true} label="다음 인물을 불러오고 있어요" />
+    );
   return (
     <>
-      {isThumbnailLoading && (
-        <FullSpinner isBackground={true} label="다음 인물을 불러오고 있어요" />
-      )}
-
       <Title.BoardTitleContainer style={{ flexGrow: 1, maxHeight: 240 }}>
         <span className="category">{currentItem.category}</span>
         <span className="name">{currentItem.name}</span>

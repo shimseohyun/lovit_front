@@ -87,7 +87,6 @@ const CompletedProgress = () => {
   const totalCount = getItemCount(itemSummaryDict);
   const currentCount = itemList.length;
 
-  console.log(totalCount, currentCount);
   const safeTotal = Math.max(totalCount, 1);
   const percent = Math.max(0, Math.min(100, (currentCount / safeTotal) * 100));
 
