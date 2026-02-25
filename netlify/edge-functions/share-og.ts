@@ -36,19 +36,21 @@ function codeToFileName(codeRaw: string) {
   return n ? `${a}_${b}_${n}.png` : `${a}_${b}.png`;
 }
 
-// ✅ OG 스크래퍼/봇 판별 (넓게)
 function isOgBot(uaRaw: string) {
   const ua = (uaRaw ?? "").toLowerCase();
+
   return (
+    // ✅ 카카오 스크랩봇 (정확히)
+    ua.includes("kakaotalk-scrap") ||
+    // ✅ 카카오 스크랩봇 UA에 같이 붙는 경우가 많음
     ua.includes("facebookexternalhit") ||
+    // 기타 스크래퍼
     ua.includes("facebot") ||
     ua.includes("twitterbot") ||
     ua.includes("slackbot") ||
     ua.includes("discordbot") ||
     ua.includes("telegrambot") ||
-    ua.includes("kakaotalk") ||
-    ua.includes("naver") ||
-    ua.includes("daum") ||
+    // 검색봇
     ua.includes("googlebot") ||
     ua.includes("bingbot")
   );
@@ -81,10 +83,7 @@ export default async (req: Request, _context: Context) => {
   const desc = "러빗과 함께 나의 취향 사분면을 찾아보세요";
 
   // ✅ 기본 이미지(없는 링크에서도 미리보기는 떠야 하니까)
-  const fallbackOgImage = new URL(
-    "/assets/og/default.png",
-    url.origin,
-  ).toString();
+  const fallbackOgImage = new URL("/ogtag.jpg", url.origin).toString();
 
   const ogImage =
     base && fileName
