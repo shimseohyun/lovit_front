@@ -10,8 +10,10 @@ import router from "@routersV03/router";
 import { AuthProvider } from "@hooksV03/auth/context/AuthProvider";
 import useInAppBrowser from "@hooksV03/useInAppBrowser";
 import InAppPage from "@pagesV03/InApp/InAppPage";
+import useGetLocalVersion from "@hooksV03/useGetLocalVersion";
 
 const App = () => {
+  useGetLocalVersion();
   const queryClient = new QueryClient();
   const maxWidth = "500px";
 
