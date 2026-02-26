@@ -15,9 +15,9 @@ function escapeHtml(s: string) {
 }
 
 /**
- * ENDEND -> END_END.png
- * STARTMIDDLE -> START_MIDDLE.png
- * MIDDLEMIDDLE0 -> MIDDLE_MIDDLE_0.png
+ * ENDEND -> END_END.jpg
+ * STARTMIDDLE -> START_MIDDLE.jpg
+ * MIDDLEMIDDLE0 -> MIDDLE_MIDDLE_0.jpg
  */
 function codeToFileName(codeRaw: string) {
   const code = codeRaw
@@ -33,7 +33,7 @@ function codeToFileName(codeRaw: string) {
   const b = m[2];
   const n = m[3];
 
-  return n ? `${a}_${b}_${n}.png` : `${a}_${b}.png`;
+  return n ? `${a}_${b}_${n}.jpg` : `${a}_${b}.jpg`;
 }
 
 function isOgBot(uaRaw: string) {
@@ -83,7 +83,7 @@ export default async (req: Request, _context: Context) => {
   const desc = "러빗과 함께 나의 취향 사분면을 찾아보세요";
 
   // ✅ 기본 이미지(없는 링크에서도 미리보기는 떠야 하니까)
-  const fallbackOgImage = new URL("/ogtag.jpg", url.origin).toString();
+  const fallbackOgImage = new URL("/OG_TAG_DEFAULT.jpg", url.origin).toString();
 
   const ogImage =
     base && fileName

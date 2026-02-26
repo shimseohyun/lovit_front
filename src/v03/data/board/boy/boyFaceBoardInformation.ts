@@ -309,16 +309,16 @@ export const BOY_FACE_BOARD_INFO: BoardInformation = {
     START: {
       START: [
         {
-          img: "/assets/result/idol/START_START.png",
+          img: "/assets/result/idol/START_START.jpg",
           label: "두부 고양이 콜렉터",
         },
       ],
       MIDDLE: [
-        { img: "/assets/result/idol/START_MIDDLE.png", label: "두부 콜렉터" },
+        { img: "/assets/result/idol/START_MIDDLE.jpg", label: "두부 콜렉터" },
       ],
       END: [
         {
-          img: "/assets/result/idol/START_END.png",
+          img: "/assets/result/idol/START_END.jpg",
           label: "두부 강아지 콜렉터",
         },
       ],
@@ -326,23 +326,23 @@ export const BOY_FACE_BOARD_INFO: BoardInformation = {
     MIDDLE: {
       START: [
         {
-          img: "/assets/result/idol/MIDDLE_START.png",
+          img: "/assets/result/idol/MIDDLE_START.jpg",
           label: "고양이 콜렉터",
         },
       ],
       MIDDLE: [
         {
-          img: "/assets/result/idol/MIDDLE_MIDDLE_1.png",
+          img: "/assets/result/idol/MIDDLE_MIDDLE_1.jpg",
           label: "균형 잡힌 미남이 좋아!",
         },
         {
-          img: "/assets/result/idol/MIDDLE_MIDDLE_0.png",
+          img: "/assets/result/idol/MIDDLE_MIDDLE_0.jpg",
           label: "미남이면 다 좋아!",
         },
       ],
       END: [
         {
-          img: "/assets/result/idol/MIDDLE_END.png",
+          img: "/assets/result/idol/MIDDLE_END.jpg",
           label: "강아지 콜렉터",
         },
       ],
@@ -350,16 +350,16 @@ export const BOY_FACE_BOARD_INFO: BoardInformation = {
     END: {
       START: [
         {
-          img: "/assets/result/idol/END_START.png",
+          img: "/assets/result/idol/END_START.jpg",
           label: "버터 고양이 콜렉터",
         },
       ],
       MIDDLE: [
-        { img: "/assets/result/idol/END_MIDDLE.png", label: "버터 콜렉터" },
+        { img: "/assets/result/idol/END_MIDDLE.jpg", label: "버터 콜렉터" },
       ],
       END: [
         {
-          img: "/assets/result/idol/END_END.png",
+          img: "/assets/result/idol/END_END.jpg",
           label: "버터 강아지 콜렉터",
         },
       ],

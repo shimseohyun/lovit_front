@@ -14,7 +14,7 @@ export type TotalResultCellParms = {
 
 const TotalResultCell = (parms: TotalResultCellParms) => {
   const { itemImg, itemName, itemResult, avg, user, avgCount } = parms;
-  console.log(avg);
+
   return (
     <S.Container>
       <S.Board>

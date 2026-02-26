@@ -47,7 +47,7 @@ const InAppPage = (parms: Parms) => {
         height="100%"
         padding="16px"
       >
-        <img style={{ width: 100 }} src="/logo.svg" />
+        <img style={{ width: 100 }} src="/LOGO.svg" />
         <Spacing size={10} />
         <Label style={{ textAlign: "center" }} font="head2">
           {"lovit\n내가 만드는 취향 사분면"}
@@ -63,7 +63,11 @@ const InAppPage = (parms: Parms) => {
             {`${appKey === "kakaotalk" ? "공유하기" : "점 3개"} 버튼을 누르고\n외부 브라우저에서 열어주세요`}
           </Label>
           <Spacing size={8} />
-          <img src="/hint.png" width={"60%"} style={{ borderRadius: 12 }} />
+          <img
+            src="/hint/BROWSER_HINT.jpg"
+            width={"60%"}
+            style={{ borderRadius: 12 }}
+          />
 
           <Spacing size={16} />
           <Label font={"body3"} color="textDisable">
