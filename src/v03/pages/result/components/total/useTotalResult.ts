@@ -12,7 +12,11 @@ import type {
 } from "@interfacesV03/data/system";
 import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
 
-const clamp0to100 = (n: number) => Math.min(100, Math.max(0, n));
+const clamp0to100 = (n: number) => {
+  if (n < 50) return Math.max(0, n * 0.8);
+  else if (n > 50) return Math.min(90, n * 1.2);
+  else return n;
+};
 type Parms = {
   itemList: ItemIDList;
   boardInformation: BoardInformation;

@@ -374,7 +374,7 @@ export const BOY_FACE_BOARD_INFO: BoardInformation = {
           label: "두부 고양이",
         },
       ],
-      MIDDLE: [{ img: "", label: "균형의 두부" }],
+      MIDDLE: [{ img: "", label: "두부 🍚" }],
       END: [
         {
           img: "",
@@ -386,7 +386,7 @@ export const BOY_FACE_BOARD_INFO: BoardInformation = {
       START: [
         {
           img: "",
-          label: "고양이",
+          label: "고양이 🐱",
         },
       ],
       MIDDLE: [
@@ -398,7 +398,7 @@ export const BOY_FACE_BOARD_INFO: BoardInformation = {
       END: [
         {
           img: "",
-          label: "강아지",
+          label: "강아지 🐶",
         },
       ],
     },
@@ -409,7 +409,7 @@ export const BOY_FACE_BOARD_INFO: BoardInformation = {
           label: "버터 고양이",
         },
       ],
-      MIDDLE: [{ img: "", label: "균형의 버터" }],
+      MIDDLE: [{ img: "", label: "버터 🥞" }],
       END: [
         {
           img: "",

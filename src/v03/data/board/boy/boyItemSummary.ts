@@ -224,7 +224,7 @@ export const BOY_SUMMARY_LIST: ItemSummaryDict = {
     thumbnailURL: "/assets/item/idol/BOYNEXTDOOR_JAEHYUN.jpg",
   },
   37: {
-    itemSummaryID: 38,
+    itemSummaryID: 37,
     name: "정한",
     category: "세븐틴",
     thumbnailURL: "/assets/item/idol/SVT_JEONGHAN.jpg",
@@ -236,7 +236,7 @@ export const BOY_SUMMARY_LIST: ItemSummaryDict = {
     thumbnailURL: "/assets/item/idol/RIIZE_SUNGCHAN.jpg",
   },
   39: {
-    itemSummaryID: 38,
+    itemSummaryID: 39,
     name: "안신",
     category: "알파드라이브원",
     thumbnailURL: "/assets/item/idol/ALPHADRIVEONE_ANXIN.jpg",
