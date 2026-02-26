@@ -13,12 +13,13 @@ type BoardStep =
   | "PREFERENCE";
 
 type Parms = {
-  maxCount?: number;
   itemSummaryDict: ItemSummaryDict;
 };
 
 const useBoardStep = (parms: Parms) => {
-  const { maxCount = maxItemCount, itemSummaryDict } = parms;
+  const { itemSummaryDict } = parms;
+
+  const maxCount = maxItemCount;
 
   const [isFin, setIsFin] = useState<boolean>(true);
 

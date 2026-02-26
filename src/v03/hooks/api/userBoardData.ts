@@ -78,15 +78,17 @@ export const useGetPendingItemList = (
     refetchOnReconnect: false,
     queryFn: async () => {
       let data: number[];
+      let endSlice: number;
       if (uid) {
         const userData = await getUserBoardData(
           uid,
           getItemCount(itemSummaryDict),
         );
         data = userData.itemList ?? [];
+        endSlice = maxCount;
       } else {
         data = getUserBoardDataLocal().itemList;
-        if (data.length >= maxCount) return { list: [], isLast: true };
+        endSlice = maxCount - data.length;
       }
 
       const checkedItemList = data;
@@ -99,8 +101,9 @@ export const useGetPendingItemList = (
         (id) => !checkedItemIDSet.has(id),
       );
 
-      const pendingItemIDList = pendingItemIDAllList.slice(0, maxCount);
-      const isLast = pendingItemIDAllList.length <= maxCount;
+      const pendingItemIDList = pendingItemIDAllList.slice(0, endSlice);
+      console.log(pendingItemIDList);
+      const isLast = endSlice <= 0 || pendingItemIDAllList.length <= maxCount;
       return { list: pendingItemIDList, isLast };
     },
   });

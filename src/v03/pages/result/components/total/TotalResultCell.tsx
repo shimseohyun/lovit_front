@@ -44,7 +44,7 @@ const TotalResultCell = (parms: TotalResultCellParms) => {
               style={{ marginBottom: "8px" }}
               className="preferenceTitle "
             >
-              호감도
+              취향
             </Label>
             <Label font="body3B" color="textLighter">
               {avgCount}명 참여
