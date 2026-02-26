@@ -13,7 +13,9 @@ const Overlay = styled.div<{ $isBackground: boolean }>`
   z-index: 9999;
 
   ${({ $isBackground }) => css`
-    background: ${$isBackground ? "rgba(0, 0, 0, 100)" : "rgba(0, 0, 0, 0)"};
+    background: ${$isBackground
+      ? "rgba(255, 255, 255, 100)"
+      : "rgba(255, 255, 255, 0)"};
   `}
 
   pointer-events: auto;

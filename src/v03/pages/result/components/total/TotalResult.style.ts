@@ -200,3 +200,28 @@ export const BoardPoint = styled.div<{ $isUser: boolean }>`
           border: 1.5px solid ${p.theme.foregroundColors.mainStrongest};
         `}
 `;
+
+export const ResultGradient = styled.div`
+  touch-action: none;
+  pointer-events: none;
+
+  width: 100%;
+  height: calc(120px + 24px);
+  transform: translate(-50%, 0%);
+
+  padding-top: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  position: absolute;
+  left: 50%;
+  bottom: 0px;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 10%,
+    rgba(255, 255, 255, 100) 50%
+  );
+`;

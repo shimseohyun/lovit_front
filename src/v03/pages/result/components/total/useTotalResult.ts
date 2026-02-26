@@ -33,8 +33,8 @@ const getAvg = (data: number[]): number => {
 };
 
 const getAvgResultType = (num: number): ResultType => {
-  if (num < 100 / 3) return "START";
-  else if (num < (100 / 3) * 2) return "MIDDLE";
+  if (num < 100 / 3 + 10) return "START";
+  else if (num < (100 / 3) * 2 - 10) return "MIDDLE";
   else return "END";
 };
 

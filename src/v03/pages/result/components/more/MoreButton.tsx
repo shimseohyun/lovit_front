@@ -17,7 +17,7 @@ const MoreButton = () => {
     navigate("/evaluate/0");
   };
 
-  const isMoreItem = (isMore && isLoggedIn) || (!isMore && !isLoggedIn);
+  const isMoreItem = (isMore && isLoggedIn) || !isLoggedIn;
   const isNeedLoginLogin = !isLoggedIn && !isMore;
 
   if (isMoreItem)
