@@ -105,7 +105,7 @@ export const ResultBoard = () => {
           boxSizing: "border-box",
           paddingLeft: 16,
           paddingRight: 16,
-          backgroundColor: "#fff",
+          backgroundColor: "white",
         }}
       >
         {/* 상단 결과 */}

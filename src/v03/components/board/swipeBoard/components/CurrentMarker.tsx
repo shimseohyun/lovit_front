@@ -1,4 +1,4 @@
-import { css } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { AxisType, DirectionType } from "@interfacesV03/type";
 
@@ -80,6 +80,7 @@ const pointSvgByAxis: Record<
 
 const AxisPoint = ({ axis }: { axis: AxisType }) => {
   const svg = pointSvgByAxis[axis];
+  const theme = useTheme();
   return (
     <PointContainer $axis={axis}>
       <svg
@@ -89,7 +90,7 @@ const AxisPoint = ({ axis }: { axis: AxisType }) => {
         viewBox={svg.viewBox}
         fill="none"
       >
-        <path d={svg.path} fill="#212730" />
+        <path d={svg.path} fill={theme.strokeColors.strokeStorngest} />
       </svg>
     </PointContainer>
   );

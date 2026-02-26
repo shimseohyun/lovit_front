@@ -70,7 +70,7 @@ export const BoardPointAvg = styled.img<{
     background-image: url(${p.$imgURL});
     background-size: cover;
     background-position: center center;
-    border: solid 1.5px ${p.theme.foregroundColors.mainLight};
+    border: solid 1.5px ${p.theme.foregroundColors.mainStrongest};
   `}
 `;
 
@@ -181,7 +181,7 @@ export const PreferenceBarPoint = styled.div<{
   ${({ $isAvg, ...p }) => {
     if ($isAvg)
       return css`
-        border: 1.5px solid ${p.theme.foregroundColors.mainLight};
+        border: 1.5px solid ${p.theme.foregroundColors.mainStrongest};
       `;
     else
       return css`
@@ -254,6 +254,6 @@ export const BoardPoint = styled.div<{ $isUser: boolean }>`
           border: 1.5px solid ${p.theme.foregroundColors.foregroundStrongest};
         `
       : css`
-          border: 1.5px solid ${p.theme.foregroundColors.mainLight};
+          border: 1.5px solid ${p.theme.foregroundColors.mainStrongest};
         `}
 `;

@@ -46,10 +46,12 @@ const Bar = styled.div<{ $width: number }>`
     width: ${$width}%;
   `}
 
-  ${(p) => css`
-    /* background-color: #fcbed5; */
-    /* background-color: ${p.theme.foregroundColors.mainLight}; */
-    background: linear-gradient(90deg, #fef4f8 0%, #f42572 100%);
+  ${({ theme }) => css`
+    background: linear-gradient(
+      90deg,
+      ${theme.foregroundColors.mainLightest} 0%,
+      ${theme.foregroundColors.mainStrongest} 100%
+    );
   `}
 `;
 
@@ -76,9 +78,8 @@ const PulseBar = styled.div<{ $width: number; $isActive: boolean }>`
       animation: ${pulseGrow($width)} 2s ease-in-out infinite;
     `}
 
-  ${(p) => css`
-    background-color: #fcbed5;
-    /* background-color: ${p.theme.foregroundColors.mainLight}; */
+  ${({ theme }) => css`
+    background-color: ${theme.foregroundColors.mainLighter};
   `}
 `;
 

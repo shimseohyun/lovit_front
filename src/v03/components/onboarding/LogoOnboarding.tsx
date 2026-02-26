@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 
 const blink = keyframes`
   0%, 100% { opacity: 0.1; }
@@ -30,7 +30,9 @@ const Container = styled.div`
 const Item = styled.div`
   border-radius: 12px;
   opacity: 0.1;
-  background: var(--main-main-600, #f42572);
+  ${(p) => css`
+    background-color: ${p.theme.foregroundColors.mainStrongest};
+  `}
 
   /* 4번째만 깜빡 */
   &:nth-of-type(4) {

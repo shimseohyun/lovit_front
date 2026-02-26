@@ -13,7 +13,7 @@ const Overlay = styled.div<{ $isBackground: boolean }>`
   z-index: 9999;
 
   ${({ $isBackground }) => css`
-    background: ${$isBackground ? "#fff" : "rgba(0, 0, 0, 0)"};
+    background: ${$isBackground ? "rgba(0, 0, 0, 100)" : "rgba(0, 0, 0, 0)"};
   `}
 
   pointer-events: auto;
@@ -31,9 +31,10 @@ const Spinner = styled.div`
   height: 44px;
   border-radius: 9999px;
 
-  /* 기본 스피너 */
-  border: 4px solid #f4257220;
-  border-top-color: #f42572ff;
+  ${(p) => css`
+    border: 4px solid ${p.theme.foregroundColors.mainLightest};
+    border-top-color: ${p.theme.foregroundColors.mainStrongest};
+  `}
 
   animation: ${spin} 800ms linear infinite;
 `;

@@ -56,7 +56,7 @@ export const Marker = styled.img<{
     return css`
       border: solid ${p.$isLiked ? 2 : 1}px;
       border-color: ${p.$isLiked
-        ? p.theme.foregroundColors.mainLight
+        ? p.theme.foregroundColors.mainStrongest
         : p.theme.strokeColors.strokeLight};
     `;
   }}

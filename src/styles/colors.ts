@@ -13,6 +13,13 @@ export const colors = {
   mono800: "#2E343D",
   mono900: "#212730",
   monoBlack: "#191F28",
+
+  pink050: "#FEF4F8",
+  pink100: "#FFEAF2",
+  pink200: "#FCBED5",
+  pink300: "#FF98BE",
+  pink400: "#FF5594",
+  pink500: "#F42572",
 } as const;
 
 export const fontColors = {
@@ -27,6 +34,8 @@ export const fontColors = {
 
   textDisable: colors.mono300,
   textInverseLight: colors.monoWhite,
+
+  mainStrongest: colors.pink500,
 } as const;
 
 export const strokeColors = {
@@ -42,8 +51,9 @@ export const foregroundColors = {
   foregroundLighter: colors.mono050,
   foregroundStrongest: colors.mono900,
 
-  mainLight: "#F42572",
-  mainLightest: "#FEF4F8",
+  mainStrongest: colors.pink500,
+  mainLightest: colors.pink050,
+  mainLighter: colors.pink200,
 } as const;
 
 export const iconColors = {

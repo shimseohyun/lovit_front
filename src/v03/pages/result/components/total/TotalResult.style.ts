@@ -70,7 +70,7 @@ export const BoardPointAvg = styled.img<{
     background-image: url(${p.$imgURL});
     background-size: cover;
     background-position: center center;
-    border: solid 1.5px ${p.theme.foregroundColors.mainLight};
+    border: solid 1.5px ${p.theme.foregroundColors.mainStrongest};
   `}
 `;
 
@@ -121,8 +121,13 @@ export const PreferenceBarValue = styled.div<{ $value: number }>`
   ${({ $value }) => css`
     width: ${$value}%;
   `}
-  ${() => css`
-    background: linear-gradient(90deg, #fef4f8 0%, #fcbed5 100%);
+
+  ${({ theme }) => css`
+    background: linear-gradient(
+      90deg,
+      ${theme.foregroundColors.mainLightest} 0%,
+      ${theme.foregroundColors.mainLighter} 100%
+    );
   `}
 `;
 
@@ -146,7 +151,7 @@ export const PreferenceBarPoint = styled.div<{
   ${({ $isAvg, ...p }) => {
     if ($isAvg)
       return css`
-        border: 1.5px solid ${p.theme.foregroundColors.mainLight};
+        border: 1.5px solid ${p.theme.foregroundColors.mainStrongest};
       `;
     else
       return css`
@@ -192,6 +197,6 @@ export const BoardPoint = styled.div<{ $isUser: boolean }>`
           border: 1.5px solid ${p.theme.foregroundColors.foregroundStrongest};
         `
       : css`
-          border: 1.5px solid ${p.theme.foregroundColors.mainLight};
+          border: 1.5px solid ${p.theme.foregroundColors.mainStrongest};
         `}
 `;

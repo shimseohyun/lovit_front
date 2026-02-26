@@ -12,7 +12,11 @@ export const BottomButtonGradient = styled.div`
   position: absolute;
   left: 50%;
   top: -40px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 100) 100%
+  );
 `;
 export const BottomButtonContainer = styled.div`
   position: relative;
@@ -31,6 +35,7 @@ export const BottomButtonContainer = styled.div`
   white-space: pre-wrap;
   text-align: center;
 
+  background-color: white;
   ${(p) => css`
     ${p.theme.fonts.body2}
     color: ${p.theme.fontColors.textLighter};
@@ -62,6 +67,16 @@ export const Button = styled.button<{
       return css`
         background-color: ${p.theme.foregroundColors.foregroundStrongest};
         color: ${p.theme.fontColors.textInverseLight};
+      `;
+    } else if ($buttonType === "MAIN_PRIMARY") {
+      return css`
+        background-color: ${p.theme.foregroundColors.mainStrongest};
+        color: ${p.theme.fontColors.textInverseLight};
+      `;
+    } else if ($buttonType === "MAIN_ASSISTIVE") {
+      return css`
+        background-color: ${p.theme.foregroundColors.mainLightest};
+        color: ${p.theme.fontColors.mainStrongest};
       `;
     }
   }}

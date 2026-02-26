@@ -16,6 +16,7 @@ import Navigation from "@componentsV03/navigation/Navigation";
 import { useResultContext } from "../context/ResultProvider";
 import FullSpinner from "@componentsV03/spinner/Spinner";
 import ResultBoard from "./board/ResultBoard";
+import Footer from "./footer/Footer";
 
 const ResultPageContent = () => {
   const { isFetching } = useResultContext();
@@ -30,7 +31,8 @@ const ResultPageContent = () => {
           <Share />
           <Separator $size={8} />
           <TotalResultList />
-          <Spacing size={40} />
+          <Spacing size={20} />
+          <Footer />
         </PageViewPortScroll>
         <BottomButton>
           <MoreButton />

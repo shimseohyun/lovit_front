@@ -70,7 +70,7 @@ const ActionButton = () => {
         <>
           {isPushingItem && <FullSpinner />}
           <FillButton
-            buttonType="PRIMARY"
+            buttonType="MAIN_ASSISTIVE"
             onClick={confirmCurrentItem}
             disabled={isPushingItem}
             children={ACTION_LABEL}

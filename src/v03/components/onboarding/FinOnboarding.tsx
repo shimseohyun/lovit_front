@@ -1,3 +1,4 @@
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 const Viewport = styled.div`
@@ -22,7 +23,9 @@ const Container = styled.div`
 
 const Item = styled.div<{ $delayMs: number }>`
   border-radius: 12px;
-  background: var(--main-main-600, #f42572);
+  ${(p) => css`
+    background-color: ${p.theme.foregroundColors.mainStrongest};
+  `}
 
   /* 기본 상태 */
   opacity: 0.1;

@@ -17,7 +17,7 @@ const Shape = styled.svg`
 const Poly = styled.polygon`
   ${(p) => css`
     fill: ${p.theme.foregroundColors.mainLightest};
-    stroke: ${p.theme.foregroundColors.mainLight};
+    stroke: ${p.theme.foregroundColors.mainStrongest};
   `}
   stroke-width: 0.5;
   stroke-linejoin: round;

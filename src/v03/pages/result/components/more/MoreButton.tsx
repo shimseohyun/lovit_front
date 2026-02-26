@@ -26,13 +26,12 @@ const MoreButton = () => {
         <CompletedProgress />
 
         <FillButton
-          buttonType="PRIMARY"
+          buttonType="MAIN_PRIMARY"
           onClick={
             !isNeedLoginLogin
               ? navigateEvaluationBoard
               : () => openBottomSheet(<LoginBottomsheet />)
           }
-          style={{ backgroundColor: "#F42572" }}
         >
           더 많은 인물 분류하기
         </FillButton>

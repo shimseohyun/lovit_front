@@ -1,7 +1,9 @@
+import { useTheme } from "@emotion/react";
 import type { IconAssetProps } from "../IconBox";
 
 const LeftIcon = (props: IconAssetProps) => {
-  const { color = "#C2C5C9", size = 24 } = props;
+  const theme = useTheme();
+  const { color = theme.foregroundColors.foregroundLight, size = 24 } = props;
 
   return (
     <svg

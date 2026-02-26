@@ -2,7 +2,11 @@ import * as S from "./Button.styled";
 
 import type { ComponentPropsWithoutRef } from "react";
 
-export type FillButtonType = "ASSISTIVE" | "PRIMARY";
+export type FillButtonType =
+  | "ASSISTIVE"
+  | "PRIMARY"
+  | "MAIN_PRIMARY"
+  | "MAIN_ASSISTIVE";
 
 type Parms = ComponentPropsWithoutRef<"button"> & {
   buttonType?: FillButtonType;

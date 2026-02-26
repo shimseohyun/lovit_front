@@ -21,7 +21,7 @@ const Bar = styled.div<{ $width: number }>`
   `}
 
   ${(p) => css`
-    background-color: ${p.theme.foregroundColors.mainLight};
+    background-color: ${p.theme.foregroundColors.mainStrongest};
   `}
 `;
 

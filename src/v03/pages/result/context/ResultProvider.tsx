@@ -302,7 +302,7 @@ export const ResultProvider = (parms: Parms) => {
         );
 
         blob = await htmlToImage.toBlob(cloned, {
-          backgroundColor: "#fff",
+          backgroundColor: "white",
           cacheBust: true,
           includeQueryParams: true,
           pixelRatio: Math.min(4, (window.devicePixelRatio || 1) * 2),

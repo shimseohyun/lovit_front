@@ -31,7 +31,7 @@ const orderClockwise = (pts: UserPoint[]) => {
 
 const ResultPoly = ({ points }: Parms) => {
   const theme = useTheme();
-  const color = theme.foregroundColors.mainLight;
+  const color = theme.foregroundColors.mainStrongest;
 
   const toPolygonPoints = (pts: UserPoint[]) =>
     pts.map((p) => `${p.horizontalPos},${p.verticalPos}`).join(" ");
