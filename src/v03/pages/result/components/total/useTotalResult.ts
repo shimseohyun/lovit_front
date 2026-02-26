@@ -12,6 +12,7 @@ import type {
 } from "@interfacesV03/data/system";
 import type { GetTotalBoardDataReturn } from "@apisV03/firebase/domain/total";
 
+const clamp0to100 = (n: number) => Math.min(100, Math.max(0, n));
 type Parms = {
   itemList: ItemIDList;
   boardInformation: BoardInformation;
@@ -33,8 +34,8 @@ const getAvg = (data: number[]): number => {
 };
 
 const getAvgResultType = (num: number): ResultType => {
-  if (num < 100 / 3 + 10) return "START";
-  else if (num < (100 / 3) * 2 - 10) return "MIDDLE";
+  if (num < 100 / 3) return "START";
+  else if (num < (100 / 3) * 2) return "MIDDLE";
   else return "END";
 };
 
@@ -59,8 +60,12 @@ const useTotalResultCell = (parms: Parms) => {
 
     const item = getItemSummary(itemID, itemSummaryDict);
 
-    const horizontalAvgResult = getPercent(getAvg(result.HORIZONTAL), 6);
-    const verticalAvgResult = getPercent(getAvg(result.VERTICAL), 6);
+    const horizontalAvgResult = clamp0to100(
+      getPercent(getAvg(result.HORIZONTAL), 6) * 1.1,
+    );
+    const verticalAvgResult = clamp0to100(
+      getPercent(getAvg(result.VERTICAL), 6) * 1.1,
+    );
 
     resultDict[itemID] = {
       itemImg: item.thumbnailURL,
@@ -74,7 +79,9 @@ const useTotalResultCell = (parms: Parms) => {
       avg: {
         HORIZONTAL: horizontalAvgResult,
         VERTICAL: verticalAvgResult,
-        PREFERENCE: getPercent(getAvg(result.PREFERENCE), 11),
+        PREFERENCE: clamp0to100(
+          getPercent(getAvg(result.PREFERENCE), 11) * 1.2,
+        ),
       },
       user: {
         HORIZONTAL: getPercent(
