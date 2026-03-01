@@ -24,8 +24,7 @@ import {
 } from "react";
 import { useGetTotalBoardData } from "@hooksV03/api/userTotalData";
 import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
-import { useAuth } from "@hooksV03/auth/useAuth";
-import { getItemCount } from "@dataV03/itemSummary";
+
 import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
 
 type ResultValue = {
@@ -57,40 +56,17 @@ type Parms = PropsWithChildren<{
 }>;
 
 export const ResultProvider = (parms: Parms) => {
-  const { user } = useAuth();
-  const uid = user?.uid;
-
   const { children, boardID } = parms;
   const { boardInformation, itemSummaryDict } = BOARD_INFO_DICT[boardID];
 
   const { data: userBoardData, isFetching: isUserBoardFetching } =
-    useGetUserBoardData(uid, getItemCount(itemSummaryDict));
+    useGetUserBoardData(boardID);
   const { data: totalBoardDataDict, isFetching: isTotalBoardFetching } =
     useGetTotalBoardData();
 
   const isFetching = isUserBoardFetching || isTotalBoardFetching;
 
-  // 로딩 중에도 훅 호출 순서를 유지하기 위해 안전 기본값 준비
-  const safeUserBoardData = userBoardData ?? {
-    isMore: false,
-    itemList: [] as ItemIDList,
-    axis: {
-      HORIZONTAL: {
-        itemPositionDict: {} as UserAxisItemPositionDict,
-      },
-      VERTICAL: {
-        itemPositionDict: {} as UserAxisItemPositionDict,
-      },
-      PREFERENCE: {
-        itemPositionDict: {} as UserAxisItemPositionDict,
-      },
-    },
-  };
-
-  const safeTotalBoardDataDict =
-    totalBoardDataDict ?? ({} as GetTotalBoardDataReturn);
-
-  const { itemList, axis } = safeUserBoardData;
+  const { itemList, axis } = userBoardData;
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({
@@ -332,7 +308,7 @@ export const ResultProvider = (parms: Parms) => {
     <ResultContext.Provider
       value={{
         isFetching,
-        isMore: safeUserBoardData.isMore,
+        isMore: userBoardData.isMore,
         boardID,
         boardInformation,
         itemSummaryDict,
@@ -343,7 +319,7 @@ export const ResultProvider = (parms: Parms) => {
         itemList,
         itemPointDict,
         likedItemPointList,
-        totalBoardDataDict: safeTotalBoardDataDict,
+        totalBoardDataDict,
         itemPositionDict,
         captureRef,
         handleCapture,

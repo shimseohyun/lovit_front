@@ -6,34 +6,35 @@ import BoardMarker from "./marker/BoardMarker";
 
 import type { AxisType } from "@interfacesV03/type";
 import type { ItemIDList, UserPointDict } from "@interfacesV03/data/user";
-import type {
-  BoardInformation,
-  ItemSummaryDict,
-} from "@interfacesV03/data/system";
 
 import useViewport from "@hooksV03/useViewPort";
 import { getItemSummary } from "@dataV03/itemSummary";
+import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
 
 type Parms = {
+  boardID: number;
   boardSize?: number;
-  onClickGridItem?: (r: number, c: number) => void;
-  boardInformation: BoardInformation;
-  itemSummaryDict: ItemSummaryDict;
 
   itemList: ItemIDList;
   itemPointDict: UserPointDict;
+
+  onClickGridItem?: (r: number, c: number) => void;
 } & PropsWithChildren;
 
 const EvaluationBoard = (parms: Parms) => {
   const {
+    boardID,
     boardSize,
-    onClickGridItem,
-    boardInformation,
-    itemSummaryDict,
+
     itemList,
     itemPointDict,
+
     children,
+    onClickGridItem,
   } = parms;
+
+  const boardInformation = BOARD_INFO_DICT[boardID].boardInformation;
+  if (!boardInformation) return;
 
   const { width } = useViewport();
   const CENTER_SIZE = 20;
@@ -98,7 +99,7 @@ const EvaluationBoard = (parms: Parms) => {
                   : itemPointDict[itemID].preferenceSize
               }
               isLiked={itemPointDict[itemID].isLiked}
-              img={getItemSummary(itemID, itemSummaryDict).thumbnailURL}
+              img={getItemSummary(boardID, itemID).thumbnailURL}
             />
           );
         })}

@@ -11,6 +11,7 @@ import type { UseBoardStepReturn } from "@hooksV03/board/context/useBoardStep";
 
 export type ProviderParams = {
   boardID: number;
+  groupID?: number;
 };
 
 export type BoardStaticValue = {

@@ -5,6 +5,8 @@ import type { AxisData, BoardAxisType } from "@interfacesV03/type";
 import type { ItemIDList } from "@interfacesV03/data/user";
 
 import { convertRoughToAxisData } from "@utilsV03/convertRoughToAxisData";
+import { USER_BOARD } from "../path";
+import { getItemCount } from "@dataV03/itemSummary";
 
 export type GetUserBoardDataReturn = {
   isMore: boolean;
@@ -26,11 +28,11 @@ const initialEvaluation = [[], [], [], [], [], []];
 const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
 export const getUserBoardData = async (
+  boardID: number,
   uid: string,
-  itemCount: number,
 ): Promise<GetUserBoardDataReturn> => {
   try {
-    const docRef = doc(firestoreDb, "userBoardData", uid);
+    const docRef = doc(firestoreDb, USER_BOARD(boardID), uid);
     const snap = await getDoc(docRef);
     const data = snap.data();
 
@@ -42,6 +44,7 @@ export const getUserBoardData = async (
     const vertical = parsingData(data["axis"]["VERTICAL"]);
     const preference = parsingData(data["axis"]["PREFERENCE"]);
 
+    const itemCount = getItemCount(boardID);
     const isMore = itemCount > itemList.length;
 
     return {
@@ -54,23 +57,25 @@ export const getUserBoardData = async (
       },
     };
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };
 
 export const postUserBoardData = async (
+  boardID: number,
   uid: string,
   body: PostUserBoardDataBody,
 ) => {
   try {
-    const docRef = doc(firestoreDb, "userBoardData", uid);
+    const docRef = doc(firestoreDb, USER_BOARD(boardID), uid);
     await setDoc(docRef, body);
   } catch (err) {
     console.log(err);
   }
 };
 
-export const resetUserBoardData = async (uid: string) => {
+export const resetUserBoardData = async (boardID: number, uid: string) => {
   const initialData: PostUserBoardDataBody = {
     itemList: "[]",
     axis: {
@@ -80,7 +85,7 @@ export const resetUserBoardData = async (uid: string) => {
     },
   };
   try {
-    const docRef = doc(firestoreDb, "userBoardData", uid);
+    const docRef = doc(firestoreDb, USER_BOARD(boardID), uid);
     await setDoc(docRef, initialData);
   } catch (err) {
     console.log(err);

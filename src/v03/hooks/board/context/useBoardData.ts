@@ -2,15 +2,9 @@
 export type UseBoardDataReturn = ReturnType<typeof useBoardData>;
 
 import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
-import { useAuth } from "@hooksV03/auth/useAuth";
 
-const useBoardData = (itemCount: number, currentStep?: number) => {
-  const { user } = useAuth();
-  const { data, isFetching } = useGetUserBoardData(
-    user?.uid,
-    itemCount,
-    currentStep,
-  );
+const useBoardData = (boardID: number, currentStep: number) => {
+  const { data, isFetching } = useGetUserBoardData(boardID, currentStep);
 
   const horizontal = data.axis.HORIZONTAL;
   const vertical = data.axis.VERTICAL;

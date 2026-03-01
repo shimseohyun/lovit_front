@@ -5,15 +5,18 @@ import type {
 import { maxItemCount } from "@constantsV03/auth";
 import type { ItemIDList, RoughAxisData } from "@interfacesV03/data/user";
 import { convertRoughToAxisData } from "@utilsV03/convertRoughToAxisData";
+import { HORIZONTAL, ITEM_LIST, PREFERENCE, VERTICAL } from "./path";
 
 const initialEvaluation = [[], [], [], [], [], []];
 const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
-export const getUserBoardDataLocal = (): GetUserBoardDataReturn => {
-  const i = window.localStorage.getItem("itemList_0");
-  const h = window.localStorage.getItem("horizontal_0");
-  const v = window.localStorage.getItem("vertical_0");
-  const p = window.localStorage.getItem("preference_0");
+export const getUserBoardDataLocal = (
+  boardID: number,
+): GetUserBoardDataReturn => {
+  const i = window.localStorage.getItem(ITEM_LIST(boardID));
+  const h = window.localStorage.getItem(HORIZONTAL(boardID));
+  const v = window.localStorage.getItem(VERTICAL(boardID));
+  const p = window.localStorage.getItem(PREFERENCE(boardID));
 
   const itemList: ItemIDList = i ? JSON.parse(i) : [];
   const horizontal: RoughAxisData = h ? JSON.parse(h) : [...initialEvaluation];
@@ -33,9 +36,12 @@ export const getUserBoardDataLocal = (): GetUserBoardDataReturn => {
   };
 };
 
-export const postUseBoardDataLocal = (body: PostUserBoardDataBody) => {
-  window.localStorage.setItem("itemList_0", body.itemList);
-  window.localStorage.setItem("horizontal_0", body.axis.HORIZONTAL);
-  window.localStorage.setItem("vertical_0", body.axis.VERTICAL);
-  window.localStorage.setItem("preference_0", body.axis.PREFERENCE);
+export const postUseBoardDataLocal = (
+  boardID: number,
+  body: PostUserBoardDataBody,
+) => {
+  window.localStorage.setItem(ITEM_LIST(boardID), body.itemList);
+  window.localStorage.setItem(HORIZONTAL(boardID), body.axis.HORIZONTAL);
+  window.localStorage.setItem(VERTICAL(boardID), body.axis.VERTICAL);
+  window.localStorage.setItem(PREFERENCE(boardID), body.axis.PREFERENCE);
 };

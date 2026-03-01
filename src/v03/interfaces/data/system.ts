@@ -4,6 +4,7 @@ import type {
   ResultType,
 } from "@interfacesV03/type";
 import type { PrimaryKey } from ".";
+import type { ItemIDList } from "@interfacesV03/data/user";
 
 type AxisSideSummary = {
   icon: string;
@@ -63,3 +64,10 @@ export type ItemSummary = {
 };
 
 export type ItemSummaryDict = Record<number, ItemSummary>;
+
+export type ItemGroup = {
+  id: PrimaryKey;
+  name: string;
+  itemIDList: ItemIDList;
+};
+export type ItemGroupDict = Record<PrimaryKey, ItemGroup>;

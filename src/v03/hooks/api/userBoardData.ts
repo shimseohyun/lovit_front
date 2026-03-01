@@ -9,18 +9,21 @@ import {
   getUserBoardDataLocal,
   postUseBoardDataLocal,
 } from "@apisV03/localstorage/user";
-import { getItemCount, getItemIDList } from "@dataV03/itemSummary";
-import type { ItemSummaryDict } from "@interfacesV03/data/system";
+import { getItemGroupList, getItemIDList } from "@dataV03/itemSummary";
+import { useAuth } from "@hooksV03/auth/useAuth";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { convertRoughToAxisData } from "@utilsV03/convertRoughToAxisData";
 
-export const useResetUserBoardData = (uid: string | undefined) => {
+export const useResetUserBoardData = (boardID: number) => {
+  const { user } = useAuth();
+  const uid = user?.uid;
+
   return useMutation({
     mutationKey: ["POST_BOARD_DATA"],
     mutationFn: async () => {
       if (uid) {
-        return resetUserBoardData(uid);
+        return resetUserBoardData(boardID, uid);
       } else {
         return;
       }
@@ -28,14 +31,17 @@ export const useResetUserBoardData = (uid: string | undefined) => {
   });
 };
 
-export const usePostUserBoardData = (uid: string | undefined) => {
+export const usePostUserBoardData = (boardID: number) => {
+  const { user } = useAuth();
+  const uid = user?.uid;
+
   return useMutation({
     mutationKey: ["POST_BOARD_DATA"],
     mutationFn: async (body: PostUserBoardDataBody) => {
       if (uid) {
-        return postUserBoardData(uid!, body);
+        return postUserBoardData(boardID, uid!, body);
       } else {
-        return postUseBoardDataLocal(body);
+        return postUseBoardDataLocal(boardID, body);
       }
     },
   });
@@ -53,56 +59,56 @@ const initialData: GetUserBoardDataReturn = {
   },
 };
 
-export const useGetUserBoardData = (
-  uid: string | undefined,
-  itemCount: number,
-  id?: number,
-) => {
+export const useGetUserBoardData = (boardID: number, step?: number) => {
+  const { user } = useAuth();
+  const uid = user?.uid;
+
   return useQuery<GetUserBoardDataReturn>({
-    queryKey: ["USER_BOARD", uid, id],
+    queryKey: ["USER_BOARD", boardID, uid, step],
     queryFn: async () =>
-      uid ? getUserBoardData(uid, itemCount) : getUserBoardDataLocal(),
+      uid ? getUserBoardData(boardID, uid) : getUserBoardDataLocal(boardID),
     initialData: initialData,
   });
 };
 
 export const useGetPendingItemList = (
-  uid: string | undefined,
   maxCount: number,
-  itemSummaryDict: ItemSummaryDict,
+  boardID: number,
+  groupID: number | undefined,
 ) => {
+  const { user } = useAuth();
+  const uid = user?.uid;
+
   return useQuery({
     initialData: { list: [], isLast: false },
-    queryKey: ["PENDLING_ITEM_LIST", uid],
+    queryKey: ["PENDLING_ITEM_LIST", boardID, groupID, uid],
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     queryFn: async () => {
       let data: number[];
       let endSlice: number;
+
       if (uid) {
-        const userData = await getUserBoardData(
-          uid,
-          getItemCount(itemSummaryDict),
-        );
+        const userData = await getUserBoardData(boardID, uid);
         data = userData.itemList ?? [];
         endSlice = maxCount;
       } else {
-        data = getUserBoardDataLocal().itemList;
+        data = getUserBoardDataLocal(boardID).itemList;
         endSlice = maxCount - data.length;
       }
 
       const checkedItemList = data;
 
-      const itemIDList = getItemIDList(itemSummaryDict);
+      const itemIDList =
+        groupID !== undefined
+          ? getItemGroupList(boardID, groupID)
+          : getItemIDList(boardID);
 
       const checkedItemIDSet = new Set(checkedItemList);
-
       const pendingItemIDAllList = itemIDList.filter(
         (id) => !checkedItemIDSet.has(id),
       );
-
       const pendingItemIDList = pendingItemIDAllList.slice(0, endSlice);
-      console.log(pendingItemIDList);
       const isLast = endSlice <= 0 || pendingItemIDAllList.length <= maxCount;
       return { list: pendingItemIDList, isLast };
     },

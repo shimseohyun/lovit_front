@@ -84,8 +84,8 @@ const PulseBar = styled.div<{ $width: number; $isActive: boolean }>`
 `;
 
 const CompletedProgress = () => {
-  const { itemList, itemSummaryDict } = useResultContext();
-  const totalCount = getItemCount(itemSummaryDict);
+  const { itemList, boardID } = useResultContext();
+  const totalCount = getItemCount(boardID);
   const currentCount = itemList.length;
 
   const safeTotal = Math.max(totalCount, 1);

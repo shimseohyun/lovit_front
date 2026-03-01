@@ -1,20 +1,24 @@
 import { BoardDataProvider } from "@hooksV03/board/context/BoardDataProvider";
 import EvaluationPageContent from "./components/EvaluationPageContent";
-import { useParams } from "react-router-dom";
-import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
 
-// /evaluate/:boardID
+import useCheckBoard from "@routersV03/checkingBoard";
+import { Navigate } from "react-router-dom";
+
+// /evaluate/:boardID/:groupID
 const EvaluationPage = () => {
-  const { boardID } = useParams<{ boardID: string }>();
-  const parsedID = Number(boardID);
-  const board = Number.isInteger(parsedID) ? BOARD_INFO_DICT[parsedID] : null;
-  if (board === null) return;
+  const { isTrue, boardID, groupID } = useCheckBoard();
 
-  return (
-    <BoardDataProvider boardID={parsedID}>
-      <EvaluationPageContent />
-    </BoardDataProvider>
-  );
+  if (isTrue)
+    return (
+      <>
+        <BoardDataProvider boardID={boardID} groupID={groupID}>
+          <EvaluationPageContent />
+        </BoardDataProvider>
+      </>
+    );
+  else {
+    return <Navigate to={"/"} replace={true} />;
+  }
 };
 
 export default EvaluationPage;

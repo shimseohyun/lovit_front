@@ -1,21 +1,22 @@
 import { ResultProvider } from "./context/ResultProvider";
 
-import { useParams } from "react-router-dom";
-import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
+import { Navigate } from "react-router-dom";
 import ResultPageContent from "./components/ResultPageContent";
+import useCheckBoard from "@routersV03/checkingBoard";
 
 // /result/:boardID
 const ResultPage = () => {
-  const { boardID } = useParams<{ boardID: string }>();
-  const parsedID = Number(boardID);
-  const board = Number.isInteger(parsedID) ? BOARD_INFO_DICT[parsedID] : null;
-  if (board === null) return;
+  const { isTrue, boardID } = useCheckBoard();
 
-  return (
-    <ResultProvider boardID={parsedID}>
-      <ResultPageContent />
-    </ResultProvider>
-  );
+  if (isTrue)
+    return (
+      <ResultProvider boardID={boardID}>
+        <ResultPageContent />
+      </ResultProvider>
+    );
+  else {
+    return <Navigate to={"/"} replace={true} />;
+  }
 };
 
 export default ResultPage;

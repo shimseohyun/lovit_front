@@ -8,11 +8,10 @@ import Label from "@componentsV03/label/Label";
 
 export const ResultBoard = () => {
   const {
+    boardID,
     hasNoCalcData,
     resultImgURL,
     resultLabel,
-    itemSummaryDict,
-    boardInformation,
     itemList,
     itemPointDict,
     likedItemPointList,
@@ -47,9 +46,8 @@ export const ResultBoard = () => {
   const Board = () => {
     return (
       <EvaluationBoard
+        boardID={boardID}
         boardSize={350}
-        boardInformation={boardInformation}
-        itemSummaryDict={itemSummaryDict}
         itemList={itemList}
         itemPointDict={itemPointDict}
       >

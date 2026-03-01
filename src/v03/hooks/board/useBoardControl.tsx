@@ -9,12 +9,12 @@ import getNewRoughData from "@utilsV03/getNewRoughData";
 
 import { useNavigate } from "react-router-dom";
 import { usePostUserBoardData } from "@hooksV03/api/userBoardData";
-import { useAuth } from "@hooksV03/auth/useAuth";
+
 import { usePostUserDataToTotalBoardData } from "@hooksV03/api/userTotalData";
 import type { AxisType } from "@interfacesV03/type";
 
 const useBoardControl = () => {
-  const { preference, vertical, horizontal, itemList } =
+  const { boardID, preference, vertical, horizontal, itemList } =
     useBoardStaticContext();
 
   const {
@@ -28,9 +28,8 @@ const useBoardControl = () => {
   const { currentItemID, navigateNextItemIDX, navigateStep, reset } =
     useBoardStepContext();
 
-  const { user } = useAuth();
   const { mutateAsync: postUserData, isPending: isUserDataPending } =
-    usePostUserBoardData(user?.uid);
+    usePostUserBoardData(boardID);
   const { mutateAsync: postTotalData, isPending: isTotalDataPending } =
     usePostUserDataToTotalBoardData();
 

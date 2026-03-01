@@ -22,14 +22,13 @@ import AxisMarker from "./components/AxisMarker";
 import CurrentMarker from "./components/CurrentMarker";
 import { getItemSummary } from "@dataV03/itemSummary";
 import AxisMarkerLabel from "./components/AxisMarkerLabel";
-import type { ItemSummaryDict } from "@interfacesV03/data/system";
 
 type Params = {
   stepPX: number;
   slot: SlotDict;
   slotCount: SlotCount;
   dataDict: BoardAxisDict;
-  itemSummaryDict: ItemSummaryDict;
+
   dragAxis: AxisType | null;
   dragDirection: BoardDirection | null;
   isSolo: boolean;
@@ -53,10 +52,10 @@ const SwipeBoard = (props: Params) => {
     dataDict,
     dragDirection,
     slot,
-    itemSummaryDict,
   } = props;
 
-  const { boardInformation } = useBoardStaticContext();
+  const { boardInformation, boardID } = useBoardStaticContext();
+
   const { currentItem } = useBoardStepContext();
 
   const availableAxes = axisList.filter((axis) => dataDict[axis] !== undefined);
@@ -127,9 +126,7 @@ const SwipeBoard = (props: Params) => {
       const lastItemID = itemList?.[itemList.length - 1];
 
       const item =
-        lastItemID != null
-          ? getItemSummary(lastItemID, itemSummaryDict)
-          : undefined;
+        lastItemID != null ? getItemSummary(boardID, lastItemID) : undefined;
       if (!item) return null;
 
       return (

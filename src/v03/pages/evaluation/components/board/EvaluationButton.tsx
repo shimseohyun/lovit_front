@@ -1,15 +1,14 @@
 import BottomButton from "@componentsV03/button/BottomButton";
 import FillButton from "@componentsV03/button/FillButton";
 import FullSpinner from "@componentsV03/spinner/Spinner";
-import { useAuth } from "@hooksV03/auth/useAuth";
+
 import { useBoardStepContext } from "@hooksV03/board/context/context";
 import useBoardControl from "@hooksV03/board/useBoardControl";
 
 const ACTION_LABEL = "이렇게 할게요!";
 
 const ActionButton = () => {
-  const { isLoggedIn } = useAuth();
-  const { isFin, isLast, currentStep } = useBoardStepContext();
+  const { isFin, currentStep } = useBoardStepContext();
 
   const {
     navigateEvaluationSwipeNext,
@@ -17,21 +16,11 @@ const ActionButton = () => {
     navigateResult,
     isPushingItem,
     confirmCurrentItem,
-    navigateMore,
   } = useBoardControl();
 
   if (isFin) {
     return (
       <>
-        {!isLast && isLoggedIn && (
-          <FillButton
-            buttonType="ASSISTIVE"
-            onClick={navigateMore}
-            type="button"
-            children="더하기"
-          />
-        )}
-
         <FillButton
           buttonType="PRIMARY"
           type="button"
