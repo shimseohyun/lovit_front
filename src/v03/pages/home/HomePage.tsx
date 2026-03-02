@@ -8,7 +8,7 @@ import Navigation from "@componentsV03/navigation/Navigation";
 import Label from "@componentsV03/label/Label";
 import Spacing from "@componentsV03/spacing/Spacing";
 import Flex from "@componentsV03/flex/Flex";
-import HomeCard from "./components/HomeCard";
+import BoardCard from "./components/BoardCard";
 
 const HomePage = () => {
   return (
@@ -30,8 +30,13 @@ const HomePage = () => {
               children={`나의 취향 대삼각형을 찾아서...`}
             />
           </Flex>
+
           <Section>
-            <HomeCard />
+            <Flex direction="column" gap="20px" width="100%">
+              {[0, 1].map((boardID) => {
+                return <BoardCard key={boardID} boardID={boardID} />;
+              })}
+            </Flex>
           </Section>
         </PageViewPortScroll>
       </PageContainer>

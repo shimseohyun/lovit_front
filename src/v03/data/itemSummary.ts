@@ -5,7 +5,7 @@ import type {
   ItemSummaryDict,
 } from "@interfacesV03/data/system";
 import type { ItemIDList } from "@interfacesV03/data/user";
-import { BOARD_INFO_DICT } from "./boardInformation";
+import { BOARD_INFO_DICT, type BoardDict } from "./boardInformation";
 
 export const getItemCount = (boardID: number) => {
   return getItemIDList(boardID).length;
@@ -69,6 +69,11 @@ export const getItemIDList = (boardID: number): ItemIDList => {
   const list = BOARD_INFO_DICT[boardID]?.itemIDList;
   if (!list) return [];
   return list;
+};
+
+export const getBoard = (boardID: number): BoardDict => {
+  const info = BOARD_INFO_DICT[boardID];
+  return info;
 };
 
 export const getBoardInformation = (

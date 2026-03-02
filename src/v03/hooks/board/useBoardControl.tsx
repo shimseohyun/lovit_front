@@ -14,7 +14,7 @@ import { usePostUserDataToTotalBoardData } from "@hooksV03/api/userTotalData";
 import type { AxisType } from "@interfacesV03/type";
 
 const useBoardControl = () => {
-  const { boardID, preference, vertical, horizontal, itemList } =
+  const { boardID, groupID, preference, vertical, horizontal, itemList } =
     useBoardStaticContext();
 
   const {
@@ -131,7 +131,12 @@ const useBoardControl = () => {
   const navigate = useNavigate();
   // 결과 페이지로 이동
   const navigateResult = () => {
-    navigate("/result/0", { replace: true });
+    navigate(
+      groupID !== undefined
+        ? `/result/${boardID}/${groupID}`
+        : `/result/${boardID}`,
+      { replace: true },
+    );
   };
 
   const navigateMore = () => {

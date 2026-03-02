@@ -31,7 +31,7 @@ type Parms = {
 };
 
 const Progress = (parms: Parms) => {
-  const { totalCount, currentCount } = parms;
+  const { totalCount = 10, currentCount = 0 } = parms;
   return (
     <Container>
       <Bar $width={(currentCount / totalCount) * 100} />

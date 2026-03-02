@@ -1,6 +1,5 @@
 import type { ItemSummaryDict } from "@interfacesV03/data/system";
 
-// (참고) BOY_SUMMARY_LIST 전체(0~39) 전부 쓰고 싶으면
 export const BOY_ITEM_ID_LIST_ALL = [
   0, // 재현
   1, // 박보검 (배우)

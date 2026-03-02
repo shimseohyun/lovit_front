@@ -15,13 +15,13 @@ const GroupList = (parms: Parms) => {
 
   const GroupItemList = () =>
     groupList.map((groupID, _) => {
-      return <GroupCard boardID={boardID} groupID={groupID} />;
+      return <GroupCard key={groupID} boardID={boardID} groupID={groupID} />;
     });
 
   return (
     <Flex width="100%" direction="column">
       <GroupAllCard boardID={boardID} />
-      <Spacing size={20} />
+      <Spacing size={24} />
       <Continaer>
         <GroupItemList />
       </Continaer>
@@ -35,8 +35,8 @@ const Continaer = styled.section`
   width: 100%;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 
-  row-gap: 16px;
-  column-gap: 12px;
+  row-gap: 12px;
+  column-gap: 8px;
 `;

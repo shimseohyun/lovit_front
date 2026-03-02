@@ -295,7 +295,7 @@ const FACE_AXIS: Axis = {
   ],
 };
 
-export const BOY_FACE_BOARD_INFO: BoardInformation = {
+export const FACE_BOARD_INFO: BoardInformation = {
   boardID: 0,
 
   axisDict: {

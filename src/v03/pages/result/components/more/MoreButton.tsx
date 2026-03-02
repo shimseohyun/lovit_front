@@ -9,15 +9,16 @@ import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 import Flex from "@componentsV03/flex/Flex";
 
 const MoreButton = () => {
-  const { isMore, groupID } = useResultContext();
+  const { isMore, boardID, groupID } = useResultContext();
   const { isLoggedIn } = useAuth();
   const { openBottomSheet } = useBottomSheet();
 
+  // TODO: 고민좀 해보기..
   const navigate = useNavigate();
   const navigateEvaluationBoard = () => {
     groupID !== undefined
-      ? navigate(`/evaluate/0/${groupID}`)
-      : navigate("/evaluate/0");
+      ? navigate(`/evaluate/${boardID}/${groupID}`)
+      : navigate(`/evaluate/${boardID}`);
   };
 
   const isMoreItem = (isMore && isLoggedIn) || !isLoggedIn;
@@ -59,13 +60,6 @@ const MoreButton = () => {
     return (
       <>
         <span>대단해요 모든 인물을 추가했어요!</span>
-        {/* <FillButton
-          disabled={true}
-          onClick={navigateEvaluationBoard}
-          buttonType="PRIMARY"
-        >
-          사분면에 인물 추가하기
-        </FillButton> */}
       </>
     );
   }
