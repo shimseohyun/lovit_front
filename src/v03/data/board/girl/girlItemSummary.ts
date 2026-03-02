@@ -9,6 +9,6 @@ export const GIRL_SUMMARY_LIST: ItemSummaryDict = {
     itemSummaryID: 0,
     name: "재현",
     category: "엔시티",
-    thumbnailURL: "/assets/item/idol/NCT_JAEHYUN.png",
+    thumbnailURL: "/assets/item/boy/NCT127_JAEHYUN.png",
   },
 };

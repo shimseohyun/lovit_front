@@ -10,12 +10,13 @@ import {
 } from "./board/boy/boyItemSummary";
 import type { ItemIDList } from "@interfacesV03/data/user";
 import { BOY_ITEM_GROUP_DICT } from "./board/boy/boyItemGroup";
-import { FACE_BOARD_INFO } from "@dataV02/boardInfoDummy";
+
 import { GIRL_ITEM_GROUP_DICT } from "./board/girl/girlItemGroup";
 import {
   GIRL_ITEM_ID_LIST_ALL,
   GIRL_SUMMARY_LIST,
 } from "./board/girl/girlItemSummary";
+import { FACE_BOARD_INFO } from "./board/faceBoardInformation";
 
 export type BoardDict = {
   title: string;
