@@ -19,11 +19,15 @@ const HomeCard = () => {
       <Spacing size={10} />
       <Flex padding="0px 12px" width="100%" direction="row" gap="8px">
         <FillButton
-          onClick={() => navigate("/evaluate/0")}
+          onClick={() => navigate("/select/0")}
           buttonType="MAIN_ASSISTIVE"
-          children="랜덤으로"
+          children="취향 찾으러 가기"
         />
-        <FillButton style={{ width: 160 }} children="그룹 별로" />
+        <FillButton
+          onClick={() => navigate("/result/0")}
+          style={{ width: 160 }}
+          children="결과 보기"
+        />
       </Flex>
       <Spacing size={12} />
     </S.Container>

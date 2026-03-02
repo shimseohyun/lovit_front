@@ -59,14 +59,24 @@ const initialData: GetUserBoardDataReturn = {
   },
 };
 
-export const useGetUserBoardData = (boardID: number, step?: number) => {
+export const useGetUserBoardData = (parms: {
+  boardID: number;
+  groupID?: number;
+  step?: number;
+}) => {
+  const { boardID, groupID, step } = parms;
   const { user } = useAuth();
   const uid = user?.uid;
 
   return useQuery<GetUserBoardDataReturn>({
-    queryKey: ["USER_BOARD", boardID, uid, step],
-    queryFn: async () =>
-      uid ? getUserBoardData(boardID, uid) : getUserBoardDataLocal(boardID),
+    queryKey: ["USER_BOARD", boardID, groupID, uid, step],
+    queryFn: async () => {
+      const data = uid
+        ? getUserBoardData(boardID, uid)
+        : getUserBoardDataLocal(boardID);
+
+      return data;
+    },
     initialData: initialData,
   });
 };
@@ -89,8 +99,13 @@ export const useGetPendingItemList = (
       let endSlice: number;
 
       if (uid) {
-        const userData = await getUserBoardData(boardID, uid);
-        data = userData.itemList ?? [];
+        try {
+          const userData = await getUserBoardData(boardID, uid);
+          data = userData.itemList ?? [];
+        } catch {
+          data = [];
+        }
+
         endSlice = maxCount;
       } else {
         data = getUserBoardDataLocal(boardID).itemList;
@@ -110,6 +125,7 @@ export const useGetPendingItemList = (
       );
       const pendingItemIDList = pendingItemIDAllList.slice(0, endSlice);
       const isLast = endSlice <= 0 || pendingItemIDAllList.length <= maxCount;
+
       return { list: pendingItemIDList, isLast };
     },
   });

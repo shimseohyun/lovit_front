@@ -69,5 +69,6 @@ export type ItemGroup = {
   id: PrimaryKey;
   name: string;
   itemIDList: ItemIDList;
+  logoURL: string;
 };
 export type ItemGroupDict = Record<PrimaryKey, ItemGroup>;

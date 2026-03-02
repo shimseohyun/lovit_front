@@ -16,6 +16,7 @@ export type ProviderParams = {
 
 export type BoardStaticValue = {
   boardID: number;
+  groupID?: number;
   boardInformation: BoardInformation;
   itemSummaryDict: ItemSummaryDict;
   stepPX: number;

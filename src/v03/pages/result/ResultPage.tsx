@@ -6,11 +6,11 @@ import useCheckBoard from "@routersV03/checkingBoard";
 
 // /result/:boardID
 const ResultPage = () => {
-  const { isTrue, boardID } = useCheckBoard();
+  const { isTrue, boardID, groupID } = useCheckBoard();
 
   if (isTrue)
     return (
-      <ResultProvider boardID={boardID}>
+      <ResultProvider boardID={boardID} groupID={groupID}>
         <ResultPageContent />
       </ResultProvider>
     );

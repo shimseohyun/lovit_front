@@ -17,6 +17,7 @@ const router = createBrowserRouter([
       { path: "evaluate/:boardID", element: <EvaluationPage /> },
       { path: "evaluate/:boardID/:groupID", element: <EvaluationPage /> },
       { path: "result/:boardID", element: <ResultPage /> },
+      { path: "result/:boardID/:groupID", element: <ResultPage /> },
 
       { path: "share/*", element: <Navigate to="/" replace /> },
       { path: "*", element: <Navigate to="/" replace /> },

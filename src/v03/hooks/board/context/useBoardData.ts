@@ -3,8 +3,16 @@ export type UseBoardDataReturn = ReturnType<typeof useBoardData>;
 
 import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
 
-const useBoardData = (boardID: number, currentStep: number) => {
-  const { data, isFetching } = useGetUserBoardData(boardID, currentStep);
+const useBoardData = (
+  currentStep: number,
+  boardID: number,
+  groupID?: number,
+) => {
+  const { data, isFetching } = useGetUserBoardData({
+    boardID: boardID,
+    groupID: groupID,
+    step: currentStep,
+  });
 
   const horizontal = data.axis.HORIZONTAL;
   const vertical = data.axis.VERTICAL;

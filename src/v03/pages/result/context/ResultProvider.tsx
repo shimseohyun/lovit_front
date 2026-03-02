@@ -26,6 +26,7 @@ import { useGetTotalBoardData } from "@hooksV03/api/userTotalData";
 import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
 
 import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
+import { getItemGroupList } from "@dataV03/itemSummary";
 
 type ResultValue = {
   isFetching: boolean;
@@ -40,6 +41,7 @@ type ResultValue = {
   totalBoardDataDict: GetTotalBoardDataReturn;
   itemPositionDict: Record<BoardAxisType, UserAxisItemPositionDict>;
   boardID: number;
+  groupID?: number;
   boardInformation: BoardInformation;
   itemSummaryDict: ItemSummaryDict;
 
@@ -53,20 +55,32 @@ export const [ResultContext, useResultContext] =
 
 type Parms = PropsWithChildren<{
   boardID: number;
+  groupID?: number;
 }>;
 
 export const ResultProvider = (parms: Parms) => {
-  const { children, boardID } = parms;
+  const { children, boardID, groupID } = parms;
   const { boardInformation, itemSummaryDict } = BOARD_INFO_DICT[boardID];
 
   const { data: userBoardData, isFetching: isUserBoardFetching } =
-    useGetUserBoardData(boardID);
+    useGetUserBoardData({
+      boardID: boardID,
+      groupID: groupID,
+    });
+
   const { data: totalBoardDataDict, isFetching: isTotalBoardFetching } =
     useGetTotalBoardData();
 
   const isFetching = isUserBoardFetching || isTotalBoardFetching;
 
-  const { itemList, axis } = userBoardData;
+  const { itemList: origonItemList, axis } = userBoardData;
+
+  const checkedGroupIDSet =
+    groupID !== undefined
+      ? new Set(getItemGroupList(boardID, groupID))
+      : new Set(origonItemList);
+
+  const itemList = origonItemList.filter((id) => checkedGroupIDSet.has(id));
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({
@@ -310,6 +324,7 @@ export const ResultProvider = (parms: Parms) => {
         isFetching,
         isMore: userBoardData.isMore,
         boardID,
+        groupID,
         boardInformation,
         itemSummaryDict,
         hasNoCalcData,

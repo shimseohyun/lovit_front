@@ -19,11 +19,12 @@ export const BoardDataProvider = (props: ProviderProps) => {
 
   const boardSlot = useBoardSlot();
   const boardStep = useBoardStep({ boardID, groupID });
-  const boardData = useBoardData(boardID, boardStep.currentItemID);
+  const boardData = useBoardData(boardStep.currentItemID, boardID, groupID);
 
   const staticValue: BoardStaticValue = useMemo(
     () => ({
       boardID,
+      groupID,
       boardInformation,
       itemSummaryDict,
       stepPX: defaultStepPx,

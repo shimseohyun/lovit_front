@@ -85,8 +85,19 @@ const TotalResultList = () => {
             </Flex>
           </Flex>
 
+          {/* TODO: - 토글 기능 */}
           {Object.entries(resultDict)
             .sort(([a], [b]) => Number(a) - Number(b))
+            // .sort(
+            //   ([a], [b]) =>
+            //     resultDict[Number(b)].user.PREFERENCE -
+            //     resultDict[Number(a)].user.PREFERENCE,
+            // )
+            // .sort(
+            //   ([a], [b]) =>
+            //     resultDict[Number(b)].avg.PREFERENCE -
+            //     resultDict[Number(a)].avg.PREFERENCE,
+            // )
             .map(([idx, cell]) => {
               if (!cell) return null;
               return <TotalResultCell key={idx} {...cell} />;

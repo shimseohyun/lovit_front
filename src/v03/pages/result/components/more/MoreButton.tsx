@@ -6,15 +6,18 @@ import { useBottomSheet } from "@hooksV03/bottomsheet/useBottomsheet";
 import { useNavigate } from "react-router-dom";
 import CompletedProgress from "./CompletedProgress";
 import { useResultContext } from "@pagesV03/result/context/ResultProvider";
+import Flex from "@componentsV03/flex/Flex";
 
 const MoreButton = () => {
-  const { isMore } = useResultContext();
+  const { isMore, groupID } = useResultContext();
   const { isLoggedIn } = useAuth();
   const { openBottomSheet } = useBottomSheet();
 
   const navigate = useNavigate();
   const navigateEvaluationBoard = () => {
-    navigate("/evaluate/0");
+    groupID !== undefined
+      ? navigate(`/evaluate/0/${groupID}`)
+      : navigate("/evaluate/0");
   };
 
   const isMoreItem = (isMore && isLoggedIn) || !isLoggedIn;
@@ -25,16 +28,30 @@ const MoreButton = () => {
       <>
         <CompletedProgress />
 
-        <FillButton
-          buttonType="MAIN_PRIMARY"
-          onClick={
-            !isNeedLoginLogin
-              ? navigateEvaluationBoard
-              : () => openBottomSheet(<LoginBottomsheet />)
-          }
-        >
-          더 많은 인물 분류하기
-        </FillButton>
+        <Flex width="100%" direction="row" gap="10px">
+          <FillButton
+            buttonType="MAIN_PRIMARY"
+            onClick={
+              !isNeedLoginLogin
+                ? navigateEvaluationBoard
+                : () => openBottomSheet(<LoginBottomsheet />)
+            }
+          >
+            더 많은 인물 분류하기
+          </FillButton>
+          {groupID !== undefined && (
+            <FillButton
+              buttonType="ASSISTIVE"
+              onClick={
+                !isNeedLoginLogin
+                  ? navigateEvaluationBoard
+                  : () => openBottomSheet(<LoginBottomsheet />)
+              }
+            >
+              전체 결과
+            </FillButton>
+          )}
+        </Flex>
       </>
     );
 

@@ -3,11 +3,128 @@ import type { ItemGroupDict } from "@interfacesV03/data/system";
 export const BOY_ITEM_GROUP_DICT: ItemGroupDict = {
   0: {
     id: 0,
-    name: "세븐틴",
-    itemIDList: [
-      20, // 원우
-      25, // 민규
-      37, // 정한
-    ],
+    name: "배우 20대",
+    logoURL: "",
+    itemIDList: [3],
+  },
+  1: {
+    id: 0,
+    name: "배우 30대",
+    logoURL: "",
+    itemIDList: [1, 13, 16, 32, 34],
+  },
+  2: {
+    id: 0,
+    name: "배우 40대 ↑",
+    logoURL: "",
+    itemIDList: [21, 31],
+  },
+  3: {
+    id: 0,
+    name: "밴드맨",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  4: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  5: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  6: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  7: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  8: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  9: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  10: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  11: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  12: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  13: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  14: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  15: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  16: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  17: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  18: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  19: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
+  },
+  20: {
+    id: 0,
+    name: "고로고로만두",
+    logoURL: "",
+    itemIDList: [6, 27, 30],
   },
 };

@@ -83,6 +83,7 @@ const PulseBar = styled.div<{ $width: number; $isActive: boolean }>`
   `}
 `;
 
+// TODO: - 그룹, 전체 고민좀...
 const CompletedProgress = () => {
   const { itemList, boardID } = useResultContext();
   const totalCount = getItemCount(boardID);

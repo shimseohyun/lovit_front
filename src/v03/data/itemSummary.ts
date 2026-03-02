@@ -39,6 +39,7 @@ export const getItemGroup = (boardID: number, groupID: number): ItemGroup => {
       id: 0,
       name: "",
       itemIDList: [],
+      logoURL: "",
     };
   const dict = groupDict[groupID];
   if (!dict)
@@ -46,6 +47,7 @@ export const getItemGroup = (boardID: number, groupID: number): ItemGroup => {
       id: 0,
       name: "",
       itemIDList: [],
+      logoURL: "",
     };
   else {
     return dict;

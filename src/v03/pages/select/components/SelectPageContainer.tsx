@@ -1,36 +1,46 @@
 import Flex from "@componentsV03/flex/Flex";
 import Label from "@componentsV03/label/Label";
-import { PageContainer } from "@componentsV03/layout/DefaultLayout";
+import {
+  PageContainer,
+  PageViewPortScroll,
+  Section,
+} from "@componentsV03/layout/DefaultLayout";
+import Navigation from "@componentsV03/navigation/Navigation";
 import Spacing from "@componentsV03/spacing/Spacing";
-import { getItemGroup, getItemGroupIDList } from "@dataV03/itemSummary";
+import GroupList from "./groupList/GroupList";
 
 type Parms = {
   boardID: number;
 };
 const SelectPageContainer = (parms: Parms) => {
   const { boardID } = parms;
-  const groupList = getItemGroupIDList(boardID);
-  console.log(groupList);
+
+  const Title = () => (
+    <Flex width="100%" direction="column" padding="10px 16px 0px 16px">
+      <Label
+        font="head1"
+        color={"textStrongest"}
+        children={`관심있는 분야를 골라주세요!`}
+      />
+      <Spacing size={4} />
+      <Label
+        font="body1"
+        color="textLight"
+        children={`해당 그룹군으로 분류를 시작합니다.`}
+      />
+    </Flex>
+  );
+
   return (
     <PageContainer>
-      <Flex width="100%" direction="column" padding="10px 16px 0px 16px">
-        <Label
-          font="head1"
-          color={"textStrongest"}
-          children={`내 손으로 채우는\n나만의 취향 사분면`}
-        />
-        <Spacing size={4} />
-        <Label
-          font="body1"
-          color="textLight"
-          children={`나의 취향 대삼각형을 찾아서...`}
-        />
-      </Flex>
-      {groupList.map((groupID, _) => {
-        const group = getItemGroup(boardID, groupID);
-        console.log(group);
-        return <div>{group.name}</div>;
-      })}
+      <Navigation />
+
+      <PageViewPortScroll>
+        <Title />
+        <Section>
+          <GroupList boardID={boardID} />
+        </Section>
+      </PageViewPortScroll>
     </PageContainer>
   );
 };
