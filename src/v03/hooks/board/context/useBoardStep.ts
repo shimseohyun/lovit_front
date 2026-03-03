@@ -1,5 +1,5 @@
 export type UseBoardStepReturn = ReturnType<typeof useBoardStep>;
-import { maxItemCount } from "@constantsV03/auth";
+
 import { getItemSummary } from "@dataV03/itemSummary";
 import { useGetPendingItemList } from "@hooksV03/api/userBoardData";
 
@@ -19,18 +19,11 @@ type Parms = {
 const useBoardStep = (parms: Parms) => {
   const { boardID, groupID } = parms;
 
-  const maxCount = maxItemCount;
-
   const [isFin, setIsFin] = useState<boolean>(true);
 
-  const { data, isFetching } = useGetPendingItemList(
-    maxCount,
-    boardID,
-    groupID,
-  );
+  const { data, isFetching } = useGetPendingItemList(boardID, groupID);
 
   const pendingItemIDList = data.list;
-  const isLast = data.isLast;
 
   const [currentItemIDX, setCurrentItemIDX] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<BoardStep>("EVALUATION_TOUCH");
@@ -50,7 +43,6 @@ const useBoardStep = (parms: Parms) => {
 
     if (next === final) {
       setIsFin(true);
-      setCurrentItemIDX(next);
     } else {
       setCurrentItemIDX(next);
       setCurrentStep("EVALUATION_TOUCH");
@@ -63,7 +55,6 @@ const useBoardStep = (parms: Parms) => {
 
   return {
     isFin,
-    isLast,
 
     currentStep,
     currentItem: getItemSummary(boardID, currentItemID),

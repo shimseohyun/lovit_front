@@ -5,6 +5,7 @@ import FillButton from "@componentsV03/button/FillButton";
 import Spacing from "@componentsV03/spacing/Spacing";
 import { useNavigate } from "react-router-dom";
 import { getBoard } from "@dataV03/itemSummary";
+import { SELECT } from "@routersV03/path";
 
 type Parms = {
   boardID: number;
@@ -27,7 +28,7 @@ const BoardCard = (parms: Parms) => {
       <Spacing size={10} />
       <Flex padding="0px 12px" width="100%" direction="row" gap="8px">
         <FillButton
-          onClick={() => navigate(`/select/${boardID}`)}
+          onClick={() => navigate(SELECT(boardID))}
           buttonType="MAIN_ASSISTIVE"
           children="취향 찾으러 가기"
         />

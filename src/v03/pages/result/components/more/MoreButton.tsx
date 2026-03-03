@@ -4,64 +4,62 @@ import FillButton from "@componentsV03/button/FillButton";
 import { useAuth } from "@hooksV03/auth/useAuth";
 import { useBottomSheet } from "@hooksV03/bottomsheet/useBottomsheet";
 import { useNavigate } from "react-router-dom";
-import CompletedProgress from "./CompletedProgress";
+
 import { useResultContext } from "@pagesV03/result/context/ResultProvider";
-import Flex from "@componentsV03/flex/Flex";
+
+import { maxItemCount } from "@constantsV03/auth";
+import Label from "@componentsV03/label/Label";
+import { getItemGroup } from "@dataV03/itemSummary";
+import CompletedProgress from "./CompletedProgress";
+import { EVALUATE, SELECT } from "@routersV03/path";
 
 const MoreButton = () => {
-  const { isMore, boardID, groupID } = useResultContext();
+  const { isMore, boardID, groupID, totalItemCount } = useResultContext();
   const { isLoggedIn } = useAuth();
   const { openBottomSheet } = useBottomSheet();
 
-  // TODO: 고민좀 해보기..
+  const isGroup = groupID !== undefined;
+
   const navigate = useNavigate();
-  const navigateEvaluationBoard = () => {
-    groupID !== undefined
-      ? navigate(`/evaluate/${boardID}/${groupID}`)
-      : navigate(`/evaluate/${boardID}`);
+
+  const isFin = !isGroup && !isMore;
+  const isNeedLogin = !isLoggedIn && totalItemCount >= maxItemCount;
+
+  const onClickButton = (link: string) => {
+    if (isNeedLogin) {
+      openBottomSheet(<LoginBottomsheet />);
+    } else {
+      navigate(link);
+    }
   };
 
-  const isMoreItem = (isMore && isLoggedIn) || !isLoggedIn;
-  const isNeedLoginLogin = !isLoggedIn && !isMore;
+  return (
+    <>
+      <Label>
+        {isGroup ? getItemGroup(boardID, groupID).name : "전체 결과"}
+      </Label>
 
-  if (isMoreItem)
-    return (
-      <>
-        <CompletedProgress />
+      {!isFin && <CompletedProgress />}
 
-        <Flex width="100%" direction="row" gap="10px">
-          <FillButton
-            buttonType="MAIN_PRIMARY"
-            onClick={
-              !isNeedLoginLogin
-                ? navigateEvaluationBoard
-                : () => openBottomSheet(<LoginBottomsheet />)
-            }
-          >
-            더 많은 인물 분류하기
-          </FillButton>
-          {groupID !== undefined && (
-            <FillButton
-              buttonType="ASSISTIVE"
-              onClick={
-                !isNeedLoginLogin
-                  ? navigateEvaluationBoard
-                  : () => openBottomSheet(<LoginBottomsheet />)
-              }
-            >
-              전체 결과
-            </FillButton>
-          )}
-        </Flex>
-      </>
-    );
-
-  if (isLoggedIn && !isMore) {
-    return (
-      <>
-        <span>대단해요 모든 인물을 추가했어요!</span>
-      </>
-    );
-  }
+      {isFin ? (
+        <span>추천 인물 분류를 완료했어요!</span>
+      ) : (
+        <FillButton
+          onClick={() =>
+            onClickButton(
+              isGroup && !isMore ? SELECT(boardID) : EVALUATE(boardID, groupID),
+            )
+          }
+          buttonType={isMore ? "MAIN_PRIMARY" : "MAIN_ASSISTIVE"}
+        >
+          {isGroup
+            ? isMore
+              ? "계속 분류하기"
+              : "다른 그룹 분류하기"
+            : "더 많은 인물 분류하기"}
+        </FillButton>
+      )}
+    </>
+  );
 };
 export default MoreButton;

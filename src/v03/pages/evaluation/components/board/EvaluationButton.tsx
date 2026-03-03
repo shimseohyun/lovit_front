@@ -25,7 +25,7 @@ const ActionButton = () => {
           buttonType="PRIMARY"
           type="button"
           onClick={navigateResult}
-          children="결과보기"
+          children="결과 보기"
         />
       </>
     );

@@ -26,13 +26,15 @@ import { useGetTotalBoardData } from "@hooksV03/api/userTotalData";
 import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
 
 import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
-import { getItemGroupList } from "@dataV03/itemSummary";
 
 type ResultValue = {
   isFetching: boolean;
   isMore: boolean;
   hasNoCalcData: boolean;
   resultLabel: string;
+
+  groupItemCount: number;
+  totalItemCount: number;
 
   resultImgURL: string;
   itemList: ItemIDList;
@@ -73,14 +75,13 @@ export const ResultProvider = (parms: Parms) => {
 
   const isFetching = isUserBoardFetching || isTotalBoardFetching;
 
-  const { itemList: origonItemList, axis } = userBoardData;
-
-  const checkedGroupIDSet =
-    groupID !== undefined
-      ? new Set(getItemGroupList(boardID, groupID))
-      : new Set(origonItemList);
-
-  const itemList = origonItemList.filter((id) => checkedGroupIDSet.has(id));
+  const {
+    filteredItemList: itemList,
+    groupItemCount,
+    totalItemCount,
+    isMore,
+    axis,
+  } = userBoardData;
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({
@@ -322,7 +323,10 @@ export const ResultProvider = (parms: Parms) => {
     <ResultContext.Provider
       value={{
         isFetching,
-        isMore: userBoardData.isMore,
+        isMore,
+        groupItemCount,
+        totalItemCount,
+        itemList,
         boardID,
         groupID,
         boardInformation,
@@ -331,7 +335,7 @@ export const ResultProvider = (parms: Parms) => {
 
         resultLabel: result().label,
         resultImgURL: result().img,
-        itemList,
+
         itemPointDict,
         likedItemPointList,
         totalBoardDataDict,

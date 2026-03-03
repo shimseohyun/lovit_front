@@ -19,7 +19,15 @@ const useBoardData = (
   const preference = data.axis.PREFERENCE;
   const itemList = data.itemList;
 
-  return { horizontal, vertical, preference, itemList, isFetching };
+  return {
+    horizontal,
+    vertical,
+    preference,
+    itemList,
+
+    filteredItemList: data.filteredItemList,
+    isFetching,
+  };
 };
 
 export default useBoardData;

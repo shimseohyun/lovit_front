@@ -6,10 +6,13 @@ import type { ItemIDList } from "@interfacesV03/data/user";
 
 import { convertRoughToAxisData } from "@utilsV03/convertRoughToAxisData";
 import { USER_BOARD } from "../path";
-import { getItemCount } from "@dataV03/itemSummary";
+import { getItemGroupList, getItemIDList } from "@dataV03/itemSummary";
 
 export type GetUserBoardDataReturn = {
   isMore: boolean;
+  groupItemCount: number;
+  totalItemCount: number;
+  filteredItemList: ItemIDList;
   itemList: ItemIDList;
   axis: Record<BoardAxisType, AxisData>;
 };
@@ -27,10 +30,12 @@ const parsingData = (data: string) => {
 const initialEvaluation = [[], [], [], [], [], []];
 const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
-export const getUserBoardData = async (
-  boardID: number,
-  uid: string,
-): Promise<GetUserBoardDataReturn> => {
+export const getUserBoardData = async (parms: {
+  boardID: number;
+  groupID?: number;
+  uid: string;
+}): Promise<GetUserBoardDataReturn> => {
+  const { boardID, groupID, uid } = parms;
   try {
     const docRef = doc(firestoreDb, USER_BOARD(boardID), uid);
     const snap = await getDoc(docRef);
@@ -39,17 +44,27 @@ export const getUserBoardData = async (
     if (!data) throw "NO_DATA";
 
     // const itemCusor = data["cusor"];
-    const itemList = parsingData(data["itemList"]);
+    const itemList: ItemIDList = parsingData(data["itemList"]);
     const horizontal = parsingData(data["axis"]["HORIZONTAL"]);
     const vertical = parsingData(data["axis"]["VERTICAL"]);
     const preference = parsingData(data["axis"]["PREFERENCE"]);
 
-    const itemCount = getItemCount(boardID);
-    const isMore = itemCount > itemList.length;
+    const list =
+      groupID !== undefined
+        ? getItemGroupList(boardID, groupID)
+        : getItemIDList(boardID);
 
+    const groupItemCount = list.length;
+
+    const checkedGroupIDSet = new Set(list);
+    const filteredItemList = itemList.filter((id) => checkedGroupIDSet.has(id));
+    const isMore = groupItemCount > filteredItemList.length;
     return {
       isMore,
       itemList,
+      groupItemCount,
+      totalItemCount: itemList.length,
+      filteredItemList,
       axis: {
         HORIZONTAL: convertRoughToAxisData("HORIZONTAL", horizontal),
         VERTICAL: convertRoughToAxisData("VERTICAL", vertical),

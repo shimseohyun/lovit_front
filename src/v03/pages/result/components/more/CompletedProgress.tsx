@@ -1,6 +1,6 @@
 import Flex from "@componentsV03/flex/Flex";
 import Label from "@componentsV03/label/Label";
-import { getItemCount } from "@dataV03/itemSummary";
+
 import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { useResultContext } from "@pagesV03/result/context/ResultProvider";
@@ -85,11 +85,11 @@ const PulseBar = styled.div<{ $width: number; $isActive: boolean }>`
 
 // TODO: - 그룹, 전체 고민좀...
 const CompletedProgress = () => {
-  const { itemList, boardID } = useResultContext();
-  const totalCount = getItemCount(boardID);
+  const { itemList, groupItemCount } = useResultContext();
+
   const currentCount = itemList.length;
 
-  const safeTotal = Math.max(totalCount, 1);
+  const safeTotal = Math.max(groupItemCount, 1);
   const percent = Math.max(0, Math.min(100, (currentCount / safeTotal) * 100));
 
   // 0% 또는 100%일 때는 굳이 펄스 안 돌려도 됨

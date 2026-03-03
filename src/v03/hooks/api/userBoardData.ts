@@ -9,6 +9,7 @@ import {
   getUserBoardDataLocal,
   postUseBoardDataLocal,
 } from "@apisV03/localstorage/user";
+import { maxItemCount } from "@constantsV03/auth";
 import { getItemGroupList, getItemIDList } from "@dataV03/itemSummary";
 import { useAuth } from "@hooksV03/auth/useAuth";
 
@@ -51,6 +52,9 @@ const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
 const initialData: GetUserBoardDataReturn = {
   isMore: true,
+  groupItemCount: 0,
+  totalItemCount: 0,
+  filteredItemList: [],
   itemList: [],
   axis: {
     HORIZONTAL: convertRoughToAxisData("HORIZONTAL", [...initialEvaluation]),
@@ -72,8 +76,8 @@ export const useGetUserBoardData = (parms: {
     queryKey: ["USER_BOARD", boardID, groupID, uid, step],
     queryFn: async () => {
       const data = uid
-        ? getUserBoardData(boardID, uid)
-        : getUserBoardDataLocal(boardID);
+        ? getUserBoardData({ boardID, groupID, uid })
+        : getUserBoardDataLocal({ boardID, groupID });
 
       return data;
     },
@@ -82,7 +86,6 @@ export const useGetUserBoardData = (parms: {
 };
 
 export const useGetPendingItemList = (
-  maxCount: number,
   boardID: number,
   groupID: number | undefined,
 ) => {
@@ -100,16 +103,16 @@ export const useGetPendingItemList = (
 
       if (uid) {
         try {
-          const userData = await getUserBoardData(boardID, uid);
+          const userData = await getUserBoardData({ boardID, groupID, uid });
           data = userData.itemList ?? [];
         } catch {
           data = [];
         }
 
-        endSlice = maxCount;
+        endSlice = maxItemCount;
       } else {
-        data = getUserBoardDataLocal(boardID).itemList;
-        endSlice = maxCount - data.length;
+        data = getUserBoardDataLocal({ boardID, groupID }).itemList;
+        endSlice = maxItemCount - data.length;
       }
 
       const checkedItemList = data;
@@ -124,7 +127,9 @@ export const useGetPendingItemList = (
         (id) => !checkedItemIDSet.has(id),
       );
       const pendingItemIDList = pendingItemIDAllList.slice(0, endSlice);
-      const isLast = endSlice <= 0 || pendingItemIDAllList.length <= maxCount;
+
+      const isLast =
+        endSlice <= 0 || pendingItemIDAllList.length <= maxItemCount;
 
       return { list: pendingItemIDList, isLast };
     },

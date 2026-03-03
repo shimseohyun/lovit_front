@@ -3,7 +3,7 @@ import type { IconAssetProps } from "../IconBox";
 
 const LeftIcon = (props: IconAssetProps) => {
   const theme = useTheme();
-  const { color = theme.foregroundColors.foregroundLight, size = 24 } = props;
+  const { color = theme.strokeColors.strokeLight, size = 24 } = props;
 
   return (
     <svg

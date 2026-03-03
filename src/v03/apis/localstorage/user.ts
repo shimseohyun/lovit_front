@@ -2,17 +2,20 @@ import type {
   GetUserBoardDataReturn,
   PostUserBoardDataBody,
 } from "@apisV03/firebase/domain/user";
-import { maxItemCount } from "@constantsV03/auth";
+
 import type { ItemIDList, RoughAxisData } from "@interfacesV03/data/user";
 import { convertRoughToAxisData } from "@utilsV03/convertRoughToAxisData";
 import { HORIZONTAL, ITEM_LIST, PREFERENCE, VERTICAL } from "./path";
+import { getItemGroupList, getItemIDList } from "@dataV03/itemSummary";
 
 const initialEvaluation = [[], [], [], [], [], []];
 const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
-export const getUserBoardDataLocal = (
-  boardID: number,
-): GetUserBoardDataReturn => {
+export const getUserBoardDataLocal = (parms: {
+  boardID: number;
+  groupID?: number;
+}): GetUserBoardDataReturn => {
+  const { boardID, groupID } = parms;
   const i = window.localStorage.getItem(ITEM_LIST(boardID));
   const h = window.localStorage.getItem(HORIZONTAL(boardID));
   const v = window.localStorage.getItem(VERTICAL(boardID));
@@ -23,11 +26,24 @@ export const getUserBoardDataLocal = (
   const vertical: RoughAxisData = v ? JSON.parse(v) : [...initialEvaluation];
   const preference: RoughAxisData = p ? JSON.parse(p) : [...initialPreference];
 
-  const isMore = maxItemCount > itemList.length;
+  const list =
+    groupID !== undefined
+      ? getItemGroupList(boardID, groupID)
+      : getItemIDList(boardID);
+
+  const groupItemCount = list.length;
+
+  const checkedGroupIDSet = new Set(list);
+  const filteredItemList = itemList.filter((id) => checkedGroupIDSet.has(id));
+
+  const isMore = groupItemCount > filteredItemList.length;
 
   return {
-    isMore: isMore,
-    itemList: itemList,
+    isMore,
+    itemList,
+    groupItemCount,
+    totalItemCount: itemList.length,
+    filteredItemList,
     axis: {
       HORIZONTAL: convertRoughToAxisData("HORIZONTAL", horizontal),
       VERTICAL: convertRoughToAxisData("VERTICAL", vertical),
