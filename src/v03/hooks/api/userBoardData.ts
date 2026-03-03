@@ -55,6 +55,7 @@ const initialData: GetUserBoardDataReturn = {
   groupItemCount: 0,
   totalItemCount: 0,
   filteredItemList: [],
+  pendingItemList: [],
   itemList: [],
   axis: {
     HORIZONTAL: convertRoughToAxisData("HORIZONTAL", [...initialEvaluation]),

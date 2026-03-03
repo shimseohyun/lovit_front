@@ -227,6 +227,12 @@ export const ResultGradient = styled.div`
 `;
 
 export const SortToggle = styled.button<{ $isSelected: boolean }>`
+  transition:
+    background-color 120ms ease-out,
+    color 120ms ease-out;
+
+  cursor: pointer;
+
   display: flex;
   gap: 4px;
   align-items: center;

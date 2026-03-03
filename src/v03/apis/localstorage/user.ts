@@ -25,7 +25,6 @@ export const getUserBoardDataLocal = (parms: {
   const horizontal: RoughAxisData = h ? JSON.parse(h) : [...initialEvaluation];
   const vertical: RoughAxisData = v ? JSON.parse(v) : [...initialEvaluation];
   const preference: RoughAxisData = p ? JSON.parse(p) : [...initialPreference];
-
   const list =
     groupID !== undefined
       ? getItemGroupList(boardID, groupID)
@@ -33,8 +32,17 @@ export const getUserBoardDataLocal = (parms: {
 
   const groupItemCount = list.length;
 
-  const checkedGroupIDSet = new Set(list);
-  const filteredItemList = itemList.filter((id) => checkedGroupIDSet.has(id));
+  const itemSet = new Set(itemList);
+  const filteredItemList: ItemIDList = [];
+  const pendingItemList: ItemIDList = [];
+
+  list.forEach((id) => {
+    if (itemSet.has(id)) {
+      filteredItemList.push(id);
+    } else {
+      pendingItemList.push(id);
+    }
+  });
 
   const isMore = groupItemCount > filteredItemList.length;
 
@@ -44,6 +52,7 @@ export const getUserBoardDataLocal = (parms: {
     groupItemCount,
     totalItemCount: itemList.length,
     filteredItemList,
+    pendingItemList,
     axis: {
       HORIZONTAL: convertRoughToAxisData("HORIZONTAL", horizontal),
       VERTICAL: convertRoughToAxisData("VERTICAL", vertical),

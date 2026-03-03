@@ -13,6 +13,7 @@ export type GetUserBoardDataReturn = {
   groupItemCount: number;
   totalItemCount: number;
   filteredItemList: ItemIDList;
+  pendingItemList: ItemIDList;
   itemList: ItemIDList;
   axis: Record<BoardAxisType, AxisData>;
 };
@@ -56,15 +57,27 @@ export const getUserBoardData = async (parms: {
 
     const groupItemCount = list.length;
 
-    const checkedGroupIDSet = new Set(list);
-    const filteredItemList = itemList.filter((id) => checkedGroupIDSet.has(id));
+    const itemSet = new Set(itemList);
+    const filteredItemList: ItemIDList = [];
+    const pendingItemList: ItemIDList = [];
+
+    list.forEach((id) => {
+      if (itemSet.has(id)) {
+        filteredItemList.push(id);
+      } else {
+        pendingItemList.push(id);
+      }
+    });
+
     const isMore = groupItemCount > filteredItemList.length;
+
     return {
       isMore,
       itemList,
       groupItemCount,
       totalItemCount: itemList.length,
       filteredItemList,
+      pendingItemList,
       axis: {
         HORIZONTAL: convertRoughToAxisData("HORIZONTAL", horizontal),
         VERTICAL: convertRoughToAxisData("VERTICAL", vertical),

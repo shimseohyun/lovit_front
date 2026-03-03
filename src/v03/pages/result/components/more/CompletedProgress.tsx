@@ -85,9 +85,8 @@ const PulseBar = styled.div<{ $width: number; $isActive: boolean }>`
 
 // TODO: - 그룹, 전체 고민좀...
 const CompletedProgress = () => {
-  const { itemList, groupItemCount } = useResultContext();
-
-  const currentCount = itemList.length;
+  const { filteredItemCount: currentCount, groupItemCount } =
+    useResultContext();
 
   const safeTotal = Math.max(groupItemCount, 1);
   const percent = Math.max(0, Math.min(100, (currentCount / safeTotal) * 100));

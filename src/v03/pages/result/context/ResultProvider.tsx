@@ -35,7 +35,9 @@ type ResultValue = {
 
   groupItemCount: number;
   totalItemCount: number;
+  filteredItemCount: number;
 
+  pendingItemList: ItemIDList;
   resultImgURL: string;
   itemList: ItemIDList;
   itemPointDict: UserPointDict;
@@ -76,12 +78,16 @@ export const ResultProvider = (parms: Parms) => {
   const isFetching = isUserBoardFetching || isTotalBoardFetching;
 
   const {
-    filteredItemList: itemList,
+    itemList: originItemList,
+    filteredItemList,
+    pendingItemList,
     groupItemCount,
     totalItemCount,
     isMore,
     axis,
   } = userBoardData;
+
+  const itemList = groupID !== undefined ? originItemList : filteredItemList;
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({
@@ -326,7 +332,9 @@ export const ResultProvider = (parms: Parms) => {
         isMore,
         groupItemCount,
         totalItemCount,
+        filteredItemCount: filteredItemList.length,
         itemList,
+        pendingItemList,
         boardID,
         groupID,
         boardInformation,
