@@ -225,3 +225,26 @@ export const ResultGradient = styled.div`
     rgba(255, 255, 255, 100) 50%
   );
 `;
+
+export const SortToggle = styled.button<{ $isSelected: boolean }>`
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 80px;
+
+  ${({ theme, $isSelected }) => css`
+    ${theme.fonts.body2B}
+    background-color: ${$isSelected
+      ? theme.foregroundColors.foregroundLighter
+      : "#fff"};
+    color: ${$isSelected
+      ? theme.fontColors.textLight
+      : theme.fontColors.textLightest};
+
+    border: 2px solid ${theme.foregroundColors.foregroundLight};
+  `}
+  > span {
+    padding: 0px 2px;
+  }
+`;
