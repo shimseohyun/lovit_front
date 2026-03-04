@@ -35,7 +35,7 @@ const HomePage = () => {
           <Spacing size={12} />
           <Section>
             <Flex direction="column" gap="20px" width="100%">
-              {[0, 1].map((boardID) => {
+              {[0].map((boardID) => {
                 return (
                   <Fragment key={boardID}>
                     <BoardCard boardID={boardID} />
