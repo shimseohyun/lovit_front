@@ -9,12 +9,13 @@ import getNewRoughData from "@utilsV03/getNewRoughData";
 
 import { useNavigate } from "react-router-dom";
 import { usePostUserBoardData } from "@hooksV03/api/userBoardData";
-import { useAuth } from "@hooksV03/auth/useAuth";
+
 import { usePostUserDataToTotalBoardData } from "@hooksV03/api/userTotalData";
 import type { AxisType } from "@interfacesV03/type";
+import { RESULT } from "@routersV03/path";
 
 const useBoardControl = () => {
-  const { preference, vertical, horizontal, itemList } =
+  const { boardID, groupID, preference, vertical, horizontal, itemList } =
     useBoardStaticContext();
 
   const {
@@ -28,9 +29,8 @@ const useBoardControl = () => {
   const { currentItemID, navigateNextItemIDX, navigateStep, reset } =
     useBoardStepContext();
 
-  const { user } = useAuth();
   const { mutateAsync: postUserData, isPending: isUserDataPending } =
-    usePostUserBoardData(user?.uid);
+    usePostUserBoardData(boardID);
   const { mutateAsync: postTotalData, isPending: isTotalDataPending } =
     usePostUserDataToTotalBoardData();
 
@@ -132,7 +132,7 @@ const useBoardControl = () => {
   const navigate = useNavigate();
   // 결과 페이지로 이동
   const navigateResult = () => {
-    navigate("/result/0", { replace: true });
+    navigate(RESULT(boardID, groupID), { replace: true });
   };
 
   const navigateMore = () => {

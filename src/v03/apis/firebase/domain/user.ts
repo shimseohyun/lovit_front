@@ -5,9 +5,15 @@ import type { AxisData, BoardAxisType } from "@interfacesV03/type";
 import type { ItemIDList } from "@interfacesV03/data/user";
 
 import { convertRoughToAxisData } from "@utilsV03/convertRoughToAxisData";
+import { USER_BOARD } from "../path";
+import { getItemGroupList, getItemIDList } from "@dataV03/itemSummary";
 
 export type GetUserBoardDataReturn = {
   isMore: boolean;
+  groupItemCount: number;
+  totalItemCount: number;
+  filteredItemList: ItemIDList;
+  pendingItemList: ItemIDList;
   itemList: ItemIDList;
   axis: Record<BoardAxisType, AxisData>;
 };
@@ -25,28 +31,53 @@ const parsingData = (data: string) => {
 const initialEvaluation = [[], [], [], [], [], []];
 const initialPreference = [[], [], [], [], [], [], [], [], [], [], []];
 
-export const getUserBoardData = async (
-  uid: string,
-  itemCount: number,
-): Promise<GetUserBoardDataReturn> => {
+export const getUserBoardData = async (parms: {
+  boardID: number;
+  groupID?: number;
+  uid: string;
+}): Promise<GetUserBoardDataReturn> => {
+  const { boardID, groupID, uid } = parms;
   try {
-    const docRef = doc(firestoreDb, "userBoardData", uid);
+    const docRef = doc(firestoreDb, USER_BOARD(boardID), uid);
     const snap = await getDoc(docRef);
     const data = snap.data();
 
     if (!data) throw "NO_DATA";
 
     // const itemCusor = data["cusor"];
-    const itemList = parsingData(data["itemList"]);
+    const itemList: ItemIDList = parsingData(data["itemList"]);
     const horizontal = parsingData(data["axis"]["HORIZONTAL"]);
     const vertical = parsingData(data["axis"]["VERTICAL"]);
     const preference = parsingData(data["axis"]["PREFERENCE"]);
 
-    const isMore = itemCount > itemList.length;
+    const list =
+      groupID !== undefined
+        ? getItemGroupList(boardID, groupID)
+        : getItemIDList(boardID);
+
+    const groupItemCount = list.length;
+
+    const itemSet = new Set(itemList);
+    const filteredItemList: ItemIDList = [];
+    const pendingItemList: ItemIDList = [];
+
+    list.forEach((id) => {
+      if (itemSet.has(id)) {
+        filteredItemList.push(id);
+      } else {
+        pendingItemList.push(id);
+      }
+    });
+
+    const isMore = groupItemCount > filteredItemList.length;
 
     return {
       isMore,
       itemList,
+      groupItemCount,
+      totalItemCount: itemList.length,
+      filteredItemList,
+      pendingItemList,
       axis: {
         HORIZONTAL: convertRoughToAxisData("HORIZONTAL", horizontal),
         VERTICAL: convertRoughToAxisData("VERTICAL", vertical),
@@ -54,23 +85,25 @@ export const getUserBoardData = async (
       },
     };
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };
 
 export const postUserBoardData = async (
+  boardID: number,
   uid: string,
   body: PostUserBoardDataBody,
 ) => {
   try {
-    const docRef = doc(firestoreDb, "userBoardData", uid);
+    const docRef = doc(firestoreDb, USER_BOARD(boardID), uid);
     await setDoc(docRef, body);
   } catch (err) {
     console.log(err);
   }
 };
 
-export const resetUserBoardData = async (uid: string) => {
+export const resetUserBoardData = async (boardID: number, uid: string) => {
   const initialData: PostUserBoardDataBody = {
     itemList: "[]",
     axis: {
@@ -80,7 +113,7 @@ export const resetUserBoardData = async (uid: string) => {
     },
   };
   try {
-    const docRef = doc(firestoreDb, "userBoardData", uid);
+    const docRef = doc(firestoreDb, USER_BOARD(boardID), uid);
     await setDoc(docRef, initialData);
   } catch (err) {
     console.log(err);

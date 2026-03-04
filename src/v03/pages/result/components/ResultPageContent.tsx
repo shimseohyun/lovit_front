@@ -12,27 +12,33 @@ import TotalResultList from "./total/TotalResultList";
 
 import BottomButton from "@componentsV03/button/BottomButton";
 import MoreButton from "./more/MoreButton";
-import Navigation from "@componentsV03/navigation/Navigation";
+
 import { useResultContext } from "../context/ResultProvider";
 import FullSpinner from "@componentsV03/spinner/Spinner";
 import ResultBoard from "./board/ResultBoard";
 import Footer from "./footer/Footer";
+import ResultNavigation from "./navigation/ResultNavigation";
 
 const ResultPageContent = () => {
-  const { isFetching } = useResultContext();
+  const { isFetching, itemList } = useResultContext();
+  const isEmpty = itemList.length === 0;
 
   if (isFetching) return <FullSpinner label="결과를 불러오고 있어요!" />;
   return (
     <>
       <PageContainer>
-        <Navigation />
+        <ResultNavigation />
         <PageViewPortScroll>
           <ResultBoard />
-          <Share />
-          <Separator $size={8} />
-          <TotalResultList />
-          <Spacing size={20} />
-          <Footer />
+          {!isEmpty && (
+            <>
+              <Share />
+              <Separator $size={8} />
+              <TotalResultList />
+              <Spacing size={20} />
+              <Footer />
+            </>
+          )}
         </PageViewPortScroll>
         <BottomButton>
           <MoreButton />

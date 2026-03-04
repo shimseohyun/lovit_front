@@ -209,7 +209,7 @@ export const ResultGradient = styled.div`
   height: calc(120px + 24px);
   transform: translate(-50%, 0%);
 
-  padding-top: 15%;
+  padding-top: 12%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -224,4 +224,33 @@ export const ResultGradient = styled.div`
     rgba(255, 255, 255, 0) 10%,
     rgba(255, 255, 255, 100) 50%
   );
+`;
+
+export const SortToggle = styled.button<{ $isSelected: boolean }>`
+  transition:
+    background-color 120ms ease-out,
+    color 120ms ease-out;
+
+  cursor: pointer;
+
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 80px;
+
+  ${({ theme, $isSelected }) => css`
+    ${theme.fonts.body2B}
+    background-color: ${$isSelected
+      ? theme.foregroundColors.foregroundLighter
+      : "#fff"};
+    color: ${$isSelected
+      ? theme.fontColors.textLight
+      : theme.fontColors.textLightest};
+
+    border: 2px solid ${theme.foregroundColors.foregroundLight};
+  `}
+  > span {
+    padding: 0px 2px;
+  }
 `;

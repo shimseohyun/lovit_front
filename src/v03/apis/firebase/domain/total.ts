@@ -3,6 +3,7 @@ import { doc, getDoc, runTransaction } from "firebase/firestore";
 
 import { firestoreAuth, firestoreDb } from "@apisV03/firebase/core";
 import type { BoardAxisType } from "@interfacesV03/type";
+import { TOTAL_BOARD } from "../path";
 
 // ===== Types =====
 export type TotalBoardItemData = Record<BoardAxisType, number[]>;
@@ -33,7 +34,7 @@ const isFiniteNumber = (v: unknown): v is number =>
 const isNumberArray = (v: unknown): v is number[] =>
   Array.isArray(v) && v.every(isFiniteNumber);
 
-const getTotalDocRef = () => doc(firestoreDb, "totalBoardData", "main");
+const getTotalDocRef = () => doc(firestoreDb, TOTAL_BOARD(0), "main");
 
 const normalizeItem = (raw: unknown): TotalBoardItemData => {
   const obj = (raw ?? {}) as Record<string, unknown>;

@@ -24,8 +24,7 @@ import {
 } from "react";
 import { useGetTotalBoardData } from "@hooksV03/api/userTotalData";
 import { useGetUserBoardData } from "@hooksV03/api/userBoardData";
-import { useAuth } from "@hooksV03/auth/useAuth";
-import { getItemCount } from "@dataV03/itemSummary";
+
 import { BOARD_INFO_DICT } from "@dataV03/boardInformation";
 
 type ResultValue = {
@@ -34,6 +33,11 @@ type ResultValue = {
   hasNoCalcData: boolean;
   resultLabel: string;
 
+  groupItemCount: number;
+  totalItemCount: number;
+  filteredItemCount: number;
+
+  pendingItemList: ItemIDList;
   resultImgURL: string;
   itemList: ItemIDList;
   itemPointDict: UserPointDict;
@@ -41,6 +45,7 @@ type ResultValue = {
   totalBoardDataDict: GetTotalBoardDataReturn;
   itemPositionDict: Record<BoardAxisType, UserAxisItemPositionDict>;
   boardID: number;
+  groupID?: number;
   boardInformation: BoardInformation;
   itemSummaryDict: ItemSummaryDict;
 
@@ -54,43 +59,35 @@ export const [ResultContext, useResultContext] =
 
 type Parms = PropsWithChildren<{
   boardID: number;
+  groupID?: number;
 }>;
 
 export const ResultProvider = (parms: Parms) => {
-  const { user } = useAuth();
-  const uid = user?.uid;
-
-  const { children, boardID } = parms;
+  const { children, boardID, groupID } = parms;
   const { boardInformation, itemSummaryDict } = BOARD_INFO_DICT[boardID];
 
   const { data: userBoardData, isFetching: isUserBoardFetching } =
-    useGetUserBoardData(uid, getItemCount(itemSummaryDict));
+    useGetUserBoardData({
+      boardID: boardID,
+      groupID: groupID,
+    });
+
   const { data: totalBoardDataDict, isFetching: isTotalBoardFetching } =
     useGetTotalBoardData();
 
   const isFetching = isUserBoardFetching || isTotalBoardFetching;
 
-  // 로딩 중에도 훅 호출 순서를 유지하기 위해 안전 기본값 준비
-  const safeUserBoardData = userBoardData ?? {
-    isMore: false,
-    itemList: [] as ItemIDList,
-    axis: {
-      HORIZONTAL: {
-        itemPositionDict: {} as UserAxisItemPositionDict,
-      },
-      VERTICAL: {
-        itemPositionDict: {} as UserAxisItemPositionDict,
-      },
-      PREFERENCE: {
-        itemPositionDict: {} as UserAxisItemPositionDict,
-      },
-    },
-  };
+  const {
+    itemList: originItemList,
+    filteredItemList,
+    pendingItemList,
+    groupItemCount,
+    totalItemCount,
+    isMore,
+    axis,
+  } = userBoardData;
 
-  const safeTotalBoardDataDict =
-    totalBoardDataDict ?? ({} as GetTotalBoardDataReturn);
-
-  const { itemList, axis } = safeUserBoardData;
+  const itemList = groupID !== undefined ? filteredItemList : originItemList;
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({
@@ -332,18 +329,24 @@ export const ResultProvider = (parms: Parms) => {
     <ResultContext.Provider
       value={{
         isFetching,
-        isMore: safeUserBoardData.isMore,
+        isMore,
+        groupItemCount,
+        totalItemCount,
+        filteredItemCount: filteredItemList.length,
+        itemList,
+        pendingItemList,
         boardID,
+        groupID,
         boardInformation,
         itemSummaryDict,
         hasNoCalcData,
 
         resultLabel: result().label,
         resultImgURL: result().img,
-        itemList,
+
         itemPointDict,
         likedItemPointList,
-        totalBoardDataDict: safeTotalBoardDataDict,
+        totalBoardDataDict,
         itemPositionDict,
         captureRef,
         handleCapture,

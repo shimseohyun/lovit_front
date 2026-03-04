@@ -1,4 +1,7 @@
-import { useBoardStepContext } from "@hooksV03/board/context/context";
+import {
+  useBoardStaticContext,
+  useBoardStepContext,
+} from "@hooksV03/board/context/context";
 
 import TouchEvaluationBoard from "./TouchEvaluationBoard";
 import SwipeEvaluationBoard from "./SwipeEvaluationBoard";
@@ -8,7 +11,14 @@ import Fin from "./Fin";
 import FullSpinner from "@componentsV03/spinner/Spinner";
 
 const Board = () => {
-  const { currentStep, isFin, isFetching } = useBoardStepContext();
+  const { isFetching: isStaticFetching } = useBoardStaticContext();
+  const {
+    isFin,
+    currentStep,
+    isFetching: isStepFetcing,
+  } = useBoardStepContext();
+
+  const isFetching = isStaticFetching || isStepFetcing;
 
   const getBoard = () => {
     if (isFetching) return <FullSpinner />;

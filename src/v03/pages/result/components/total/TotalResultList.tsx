@@ -1,7 +1,7 @@
 import * as S from "./TotalResult.style";
+
 import Flex from "@componentsV03/flex/Flex";
 import Label from "@componentsV03/label/Label";
-import { Section } from "@componentsV03/layout/DefaultLayout";
 
 import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 
@@ -9,37 +9,38 @@ import { BoardPoint } from "./TotalResult.style";
 import TotalResultCell from "./TotalResultCell";
 import useTotalResultCell from "./useTotalResult";
 import { getItemSummary } from "@dataV03/itemSummary";
-import { useAuth } from "@hooksV03/auth/useAuth";
 
+import { useState } from "react";
+
+type SortType = "user" | "avg";
 const TotalResultList = () => {
-  const { isLoggedIn } = useAuth();
+  const [srot, setSort] = useState<SortType>("user");
+
   const {
+    boardID,
     itemList,
+    pendingItemList,
     boardInformation,
-    itemSummaryDict,
     itemPositionDict,
     totalBoardDataDict,
     isMore,
   } = useResultContext();
 
   const { resultDict } = useTotalResultCell({
+    boardID,
     data: totalBoardDataDict,
     itemList,
     boardInformation,
     itemPositionDict,
-    itemSummaryDict: itemSummaryDict,
   });
 
   const More = () => {
-    if (!itemList || itemList.length === 0) return;
+    if (pendingItemList.length < 1) return;
 
-    const moreItem = getItemSummary(
-      itemList[itemList.length - 1] + 1,
-      itemSummaryDict,
-    );
+    const moreItem = getItemSummary(boardID, pendingItemList[0]);
 
     if (moreItem === undefined || moreItem === null) return;
-    if (isMore || !isLoggedIn) {
+    if (isMore) {
       return (
         <>
           <S.ResultGradient>
@@ -60,40 +61,53 @@ const TotalResultList = () => {
       );
     }
   };
+
   return (
     itemList.length > 0 && (
       <>
-        <Section $gap={20} style={{ position: "relative" }}>
-          <Flex justifyContent="space-between" alignItem="center" width="100%">
-            <Label font="head2" color="titleStrongest">
-              다른 유저와 비교해요!
-            </Label>
+        <Flex
+          gap={"20px"}
+          width="100%"
+          direction="column"
+          padding="20px 16px"
+          style={{ position: "relative" }}
+        >
+          <Label font="head2" color="titleStrongest">
+            다른 유저와 비교해요!
+          </Label>
 
-            <Flex gap="12px">
-              <Flex gap="2px" alignItem="center" justifyContent="center">
-                <BoardPoint $isUser={false} />
-                <Label font="body3" color="textLighter">
-                  평균
-                </Label>
-              </Flex>
+          <Flex gap="8px">
+            <S.SortToggle
+              $isSelected={srot === "user"}
+              onClick={() => setSort("user")}
+            >
+              <BoardPoint $isUser={true} />
+              <span>내 취향순</span>
+            </S.SortToggle>
 
-              <Flex gap="2px" alignItem="center" justifyContent="center">
-                <BoardPoint $isUser={true} />
-                <Label font="body3" color="textLighter">
-                  내 평가
-                </Label>
-              </Flex>
-            </Flex>
+            <S.SortToggle
+              $isSelected={srot === "avg"}
+              onClick={() => setSort("avg")}
+            >
+              <BoardPoint $isUser={false} />
+              <span>평균 취항순</span>
+            </S.SortToggle>
           </Flex>
 
           {Object.entries(resultDict)
-            .sort(([a], [b]) => Number(a) - Number(b))
+            .sort(([a], [b]) =>
+              srot === "avg"
+                ? resultDict[Number(b)].avg.PREFERENCE -
+                  resultDict[Number(a)].avg.PREFERENCE
+                : resultDict[Number(b)].user.PREFERENCE -
+                  resultDict[Number(a)].user.PREFERENCE,
+            )
             .map(([idx, cell]) => {
               if (!cell) return null;
               return <TotalResultCell key={idx} {...cell} />;
             })}
           <More />
-        </Section>
+        </Flex>
       </>
     )
   );

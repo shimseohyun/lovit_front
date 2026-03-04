@@ -23,13 +23,18 @@ const Button = styled.div`
   cursor: pointer;
 
   display: flex;
-  padding: 6px 12px;
+  padding: 4px 12px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
 
   border-radius: 20px;
+
+  > span {
+    padding: 0px 2px;
+  }
+
   ${(p) => css`
     ${p.theme.fonts.element2}
     background-color: ${p.theme.foregroundColors.foregroundStrongest};
@@ -64,7 +69,7 @@ const Footer = () => {
           );
         }}
       >
-        제보하기
+        <span>제보하기</span>
       </Button>
       <Label
         font="body3"

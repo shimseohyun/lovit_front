@@ -1,56 +1,51 @@
-import BottomButton from "@componentsV03/button/BottomButton";
-import FillButton from "@componentsV03/button/FillButton";
 import {
   PageContainer,
-  PageViewPort,
+  PageViewPortScroll,
+  Section,
+  Separator,
 } from "@componentsV03/layout/DefaultLayout";
 import Navigation from "@componentsV03/navigation/Navigation";
-import { useAuth } from "@hooksV03/auth/useAuth";
-import { useNavigate } from "react-router-dom";
-import LogoOnboarding from "@componentsV03/onboarding/LogoOnboarding";
+
 import Label from "@componentsV03/label/Label";
 import Spacing from "@componentsV03/spacing/Spacing";
+import Flex from "@componentsV03/flex/Flex";
+import BoardCard from "./components/BoardCard";
+import { Fragment } from "react";
 
 const HomePage = () => {
-  const { isLoggedIn } = useAuth();
-  const navigate = useNavigate();
-
   return (
     <>
       <PageContainer>
         <Navigation />
-        <Spacing size={16} />
-        <Label
-          font="head1"
-          color={"textStrongest"}
-          style={{ textAlign: "center" }}
-        >{`내 손으로 채우는\n나만의 취향 사분면`}</Label>
-        <Spacing size={10} />
-        <Label font="body1" color="textLight">
-          나의 취향 대삼각형을 찾아서...
-        </Label>
-        <PageViewPort>
-          <LogoOnboarding />
-        </PageViewPort>
-        <BottomButton>
-          <FillButton
-            buttonType="PRIMARY"
-            onClick={() => {
-              navigate("/evaluate/0");
-            }}
-          >
-            진단 시작하기
-          </FillButton>
-          {isLoggedIn && (
-            <FillButton
-              onClick={() => {
-                navigate("/result/0");
-              }}
-            >
-              내 사분면 확인하기
-            </FillButton>
-          )}
-        </BottomButton>
+
+        <PageViewPortScroll>
+          <Flex width="100%" direction="column" padding="10px 16px 0px 16px">
+            <Label
+              font="head2"
+              color={"textStrongest"}
+              children={`내 손으로 채우는\n나만의 취향 사분면`}
+            />
+            <Spacing size={4} />
+            <Label
+              font="body1"
+              color="textLight"
+              children={`나의 취향 대삼각형을 찾아서. . . ♪`}
+            />
+          </Flex>
+          <Spacing size={12} />
+          <Section>
+            <Flex direction="column" gap="20px" width="100%">
+              {[0].map((boardID) => {
+                return (
+                  <Fragment key={boardID}>
+                    <BoardCard boardID={boardID} />
+                    <Separator $size={1} />
+                  </Fragment>
+                );
+              })}
+            </Flex>
+          </Section>
+        </PageViewPortScroll>
       </PageContainer>
     </>
   );

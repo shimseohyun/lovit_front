@@ -16,8 +16,7 @@ import FullSpinner from "@componentsV03/spinner/Spinner";
 
 const TouchEvaluationBoard = () => {
   const {
-    boardInformation,
-    itemSummaryDict,
+    boardID,
 
     itemList,
     vertical,
@@ -77,11 +76,10 @@ const TouchEvaluationBoard = () => {
         사분면 중 어디에 속하는지 선택해주세요.
       </Title.BoardDescription>
       <EvaluationBoard
+        boardID={boardID}
         onClickGridItem={onClickBoardGrid}
         itemList={itemList}
         itemPointDict={points}
-        boardInformation={boardInformation}
-        itemSummaryDict={itemSummaryDict}
       />
       <Spacing size={20} />
     </>

@@ -4,53 +4,57 @@ import FillButton from "@componentsV03/button/FillButton";
 import { useAuth } from "@hooksV03/auth/useAuth";
 import { useBottomSheet } from "@hooksV03/bottomsheet/useBottomsheet";
 import { useNavigate } from "react-router-dom";
-import CompletedProgress from "./CompletedProgress";
+
 import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 
+import { maxItemCount } from "@constantsV03/auth";
+
+import CompletedProgress from "./CompletedProgress";
+import { EVALUATE, SELECT } from "@routersV03/path";
+
 const MoreButton = () => {
-  const { isMore } = useResultContext();
+  const { isMore, boardID, groupID, totalItemCount } = useResultContext();
   const { isLoggedIn } = useAuth();
   const { openBottomSheet } = useBottomSheet();
 
+  const isGroup = groupID !== undefined;
+
   const navigate = useNavigate();
-  const navigateEvaluationBoard = () => {
-    navigate("/evaluate/0");
+
+  const isFin = !isGroup && !isMore;
+  const isNeedLogin = !isLoggedIn && totalItemCount >= maxItemCount;
+
+  const onClickButton = (link: string) => {
+    if (isNeedLogin) {
+      openBottomSheet(<LoginBottomsheet />);
+    } else {
+      navigate(link);
+    }
   };
 
-  const isMoreItem = (isMore && isLoggedIn) || !isLoggedIn;
-  const isNeedLoginLogin = !isLoggedIn && !isMore;
+  return (
+    <>
+      {!isFin && <CompletedProgress />}
 
-  if (isMoreItem)
-    return (
-      <>
-        <CompletedProgress />
-
+      {isFin ? (
+        <span>추천 인물 분류를 완료했어요!</span>
+      ) : (
         <FillButton
-          buttonType="MAIN_PRIMARY"
-          onClick={
-            !isNeedLoginLogin
-              ? navigateEvaluationBoard
-              : () => openBottomSheet(<LoginBottomsheet />)
+          onClick={() =>
+            onClickButton(
+              isGroup && !isMore ? SELECT(boardID) : EVALUATE(boardID, groupID),
+            )
           }
+          buttonType={isMore ? "MAIN_PRIMARY" : "MAIN_ASSISTIVE"}
         >
-          더 많은 인물 분류하기
+          {isGroup
+            ? isMore
+              ? "계속 분류하기"
+              : "다른 그룹 분류하기"
+            : "더 많은 인물 분류하기"}
         </FillButton>
-      </>
-    );
-
-  if (isLoggedIn && !isMore) {
-    return (
-      <>
-        <span>대단해요 모든 인물을 추가했어요!</span>
-        {/* <FillButton
-          disabled={true}
-          onClick={navigateEvaluationBoard}
-          buttonType="PRIMARY"
-        >
-          사분면에 인물 추가하기
-        </FillButton> */}
-      </>
-    );
-  }
+      )}
+    </>
+  );
 };
 export default MoreButton;

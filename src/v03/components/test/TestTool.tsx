@@ -69,8 +69,7 @@ const ResetLocalSorage = () => {
 };
 
 const ResetDatabase = () => {
-  const { user } = useAuth();
-  const { mutate } = useResetUserBoardData(user?.uid);
+  const { mutate } = useResetUserBoardData(0);
   const onClick = () => {
     mutate();
   };
