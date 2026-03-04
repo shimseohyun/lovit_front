@@ -248,7 +248,7 @@ export const SortToggle = styled.button<{ $isSelected: boolean }>`
       ? theme.fontColors.textLight
       : theme.fontColors.textLightest};
 
-    border: 2px solid ${theme.foregroundColors.foregroundLight};
+    border: 1px solid ${theme.foregroundColors.foregroundLight};
   `}
   > span {
     padding: 0px 2px;

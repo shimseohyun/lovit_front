@@ -37,4 +37,10 @@ export const BOY_ITEM_GROUP_DICT: ItemGroupDict = {
     logoURL: "/assets/item/boy/logo/TXT_LOGO.png",
     itemIDList: [29, 22, 120, 121, 122],
   },
+  6: {
+    id: 6,
+    name: "LUCY",
+    logoURL: "/assets/item/boy/logo/LUCY_LOGO.png",
+    itemIDList: [128, 129, 130, 131],
+  },
 };
