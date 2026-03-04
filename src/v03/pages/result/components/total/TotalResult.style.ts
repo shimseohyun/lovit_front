@@ -209,7 +209,7 @@ export const ResultGradient = styled.div`
   height: calc(120px + 24px);
   transform: translate(-50%, 0%);
 
-  padding-top: 15%;
+  padding-top: 12%;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -3,25 +3,46 @@ import styled from "@emotion/styled";
 import GroupCard from "./GroupCard";
 import Flex from "@componentsV03/flex/Flex";
 import GroupAllCard from "./GroupAllCard";
-import Spacing from "@componentsV03/spacing/Spacing";
+
+import { Separator } from "@componentsV03/layout/DefaultLayout";
 
 type Parms = {
   boardID: number;
+  groupID?: number;
+  isResult?: boolean;
 };
 
 const GroupList = (parms: Parms) => {
-  const { boardID } = parms;
+  const {
+    boardID,
+    groupID: currentGroupID = undefined,
+    isResult = false,
+  } = parms;
   const groupList = getItemGroupIDList(boardID);
 
   const GroupItemList = () =>
     groupList.map((groupID, _) => {
-      return <GroupCard key={groupID} boardID={boardID} groupID={groupID} />;
+      return (
+        <GroupCard
+          key={groupID}
+          boardID={boardID}
+          groupID={groupID}
+          isResult={isResult}
+          isCurrent={currentGroupID === groupID}
+        />
+      );
     });
 
   return (
     <Flex width="100%" direction="column">
-      <GroupAllCard boardID={boardID} />
-      <Spacing size={24} />
+      <GroupAllCard
+        boardID={boardID}
+        isResult={isResult}
+        isCurrent={isResult && currentGroupID === undefined}
+      />
+
+      <Separator $size={2} />
+
       <Continaer>
         <GroupItemList />
       </Continaer>

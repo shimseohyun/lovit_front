@@ -1,3 +1,5 @@
+import styled from "@emotion/styled";
+
 import LoginBottomsheet from "@componentsV03/bottomsheet/contents/LoginBottomsheet";
 import FillButton from "@componentsV03/button/FillButton";
 
@@ -8,8 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useResultContext } from "@pagesV03/result/context/ResultProvider";
 
 import { maxItemCount } from "@constantsV03/auth";
-import Label from "@componentsV03/label/Label";
-import { getItemGroup } from "@dataV03/itemSummary";
+
 import CompletedProgress from "./CompletedProgress";
 import { EVALUATE, SELECT } from "@routersV03/path";
 
@@ -35,10 +36,6 @@ const MoreButton = () => {
 
   return (
     <>
-      <Label>
-        {isGroup ? getItemGroup(boardID, groupID).name : "전체 결과"}
-      </Label>
-
       {!isFin && <CompletedProgress />}
 
       {isFin ? (

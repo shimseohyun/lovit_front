@@ -12,11 +12,12 @@ import TotalResultList from "./total/TotalResultList";
 
 import BottomButton from "@componentsV03/button/BottomButton";
 import MoreButton from "./more/MoreButton";
-import Navigation from "@componentsV03/navigation/Navigation";
+
 import { useResultContext } from "../context/ResultProvider";
 import FullSpinner from "@componentsV03/spinner/Spinner";
 import ResultBoard from "./board/ResultBoard";
 import Footer from "./footer/Footer";
+import ResultNavigation from "./navigation/ResultNavigation";
 
 const ResultPageContent = () => {
   const { isFetching } = useResultContext();
@@ -25,7 +26,7 @@ const ResultPageContent = () => {
   return (
     <>
       <PageContainer>
-        <Navigation />
+        <ResultNavigation />
         <PageViewPortScroll>
           <ResultBoard />
           <Share />

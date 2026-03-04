@@ -87,7 +87,7 @@ export const ResultProvider = (parms: Parms) => {
     axis,
   } = userBoardData;
 
-  const itemList = groupID !== undefined ? originItemList : filteredItemList;
+  const itemList = groupID !== undefined ? filteredItemList : originItemList;
 
   const { horizontal, vertical, hasNoCalcData, topLikedItemIDList } =
     useGetBoardResult({

@@ -62,3 +62,9 @@ export const Title = styled.div`
     `}
   }
 `;
+
+export const ScrollView = styled.section`
+  width: 100%;
+  height: calc(100svh - 200px);
+  overflow: scroll;
+`;
