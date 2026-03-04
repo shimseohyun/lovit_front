@@ -41,7 +41,7 @@ const GroupList = (parms: Parms) => {
         isCurrent={isResult && currentGroupID === undefined}
       />
 
-      <Separator $size={2} />
+      <Separator $size={2} $margin={isResult ? undefined : 20} />
 
       <Continaer>
         <GroupItemList />

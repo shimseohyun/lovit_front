@@ -31,11 +31,12 @@ const ResultNavigation = () => {
   const { boardID, groupID } = useResultContext();
   const name =
     groupID !== undefined ? getItemGroup(boardID, groupID).name : "전체 결과";
+
   return (
     <>
       <S.Container>
         <S.Content>
-          <Flex onClick={onClickGroupButton} gap="2px">
+          <Flex onClick={onClickGroupButton} gap="0px">
             <Label font="body1B" color="titleStrongest">
               {name}
             </Label>

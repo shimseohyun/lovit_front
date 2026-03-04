@@ -31,11 +31,11 @@ const GroupAllCard = (parms: Parms) => {
     boardID: boardID,
   });
 
-  const { filteredItemList, itemList, totalItemCount } = data;
+  const { filteredItemList, itemList, groupItemCount } = data;
   const { openBottomSheet } = useBottomSheet();
 
   if (board === undefined) return;
-  const isFin = filteredItemList.length >= totalItemCount;
+  const isFin = filteredItemList.length >= groupItemCount;
   const isStart = filteredItemList.length > 0;
   const isNeedLogin = !isLoggedIn && itemList.length >= maxItemCount;
 
@@ -64,13 +64,15 @@ const GroupAllCard = (parms: Parms) => {
       }
     >
       <img src={board.randomButtonURL} />
+
       <Flex
-        padding=" 10px 10px 16px 10px"
+        padding=" 12px 10px"
         alignItem="center"
         justifyContent="center"
+        style={{ position: "relative", overflow: "visible" }}
       >
         <Label font={"element1"} color="textLight">
-          추천하는 순서로 할게요!
+          추천순으로 진행할게요!
         </Label>
       </Flex>
     </Wrapper>
@@ -80,15 +82,22 @@ const GroupAllCard = (parms: Parms) => {
 export default GroupAllCard;
 
 const Wrapper = styled.button`
+  display: flex;
+  flex-direction: column;
+  position: relative;
   cursor: pointer;
   border-radius: 12px;
   overflow: hidden;
+  gap: 0;
 
-  ${(p) => css`
-    background-color: ${p.theme.foregroundColors.foregroundLighter};
+  ${({ theme }) => css`
+    background-color: ${theme.foregroundColors.foregroundLighter};
+    border: solid 2px ${theme.foregroundColors.foregroundLight};
   `}
 
   > img {
     width: 100%;
+    aspect-ratio: 2/1;
+    object-fit: cover;
   }
 `;

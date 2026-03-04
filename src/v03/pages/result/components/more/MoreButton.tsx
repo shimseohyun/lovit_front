@@ -1,5 +1,3 @@
-import styled from "@emotion/styled";
-
 import LoginBottomsheet from "@componentsV03/bottomsheet/contents/LoginBottomsheet";
 import FillButton from "@componentsV03/button/FillButton";
 

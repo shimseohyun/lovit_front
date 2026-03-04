@@ -69,14 +69,18 @@ export const Section = styled.section<{ $gap?: number }>`
   `}
 `;
 
-export const Separator = styled.div<{ $size: number }>`
+export const Separator = styled.div<{
+  $size: number;
+  $margin?: number;
+}>`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   width: 100%;
-  margin: 12px 0px;
-  ${({ $size }) => css`
+
+  ${({ $size, $margin }) => css`
     height: ${$size}px;
+    margin: ${$margin === undefined ? "12px" : `${$margin}px`} 0px;
   `}
 
   ${(p) => css`

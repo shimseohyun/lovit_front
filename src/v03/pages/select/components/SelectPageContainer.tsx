@@ -8,26 +8,28 @@ import {
 import Navigation from "@componentsV03/navigation/Navigation";
 import Spacing from "@componentsV03/spacing/Spacing";
 import GroupList from "./groupList/GroupList";
+import { useAuth } from "@hooksV03/auth/useAuth";
 
 type Parms = {
   boardID: number;
 };
 const SelectPageContainer = (parms: Parms) => {
   const { boardID } = parms;
+  const { isLoggedIn } = useAuth();
+
+  const subLabel = isLoggedIn
+    ? `러빗이 고른 50명의 인물이 나와요!\n이 중 하나는 취향이겠지 ♪`
+    : `러빗이 고른 50명의 인물이 나와요!\n로그인 전에는 10명까지 분류 가능해요.`;
 
   const Title = () => (
     <Flex width="100%" direction="column" padding="10px 16px 0px 16px">
       <Label
         font="head1"
         color={"textStrongest"}
-        children={`관심있는 분야를 골라주세요!`}
+        children={`빠르게 취향 찾아보기`}
       />
       <Spacing size={4} />
-      <Label
-        font="body1"
-        color="textLight"
-        children={`해당 그룹군으로 분류를 시작합니다.`}
-      />
+      <Label font="body1" color="textLighter" children={subLabel} />
     </Flex>
   );
 
