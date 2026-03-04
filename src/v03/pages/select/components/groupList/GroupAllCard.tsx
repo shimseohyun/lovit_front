@@ -92,7 +92,7 @@ const Wrapper = styled.button`
 
   ${({ theme }) => css`
     background-color: ${theme.foregroundColors.foregroundLighter};
-    border: solid 2px ${theme.foregroundColors.foregroundLight};
+    border: solid 1px ${theme.foregroundColors.foregroundLight};
   `}
 
   > img {
