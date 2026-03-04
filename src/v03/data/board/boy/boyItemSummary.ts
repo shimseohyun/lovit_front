@@ -511,4 +511,31 @@ export const BOY_SUMMARY_LIST: ItemSummaryDict = {
     category: "B1A4",
     thumbnailURL: "/assets/item/boy/B1A4_JINYOUNG.jpg",
   },
+
+  // LUCY =============
+  128: {
+    itemSummaryID: 128,
+    name: "신예찬",
+    category: "루시",
+    thumbnailURL: "/assets/item/boy/LUCY_SHINYECHAN.jpg",
+  },
+  129: {
+    itemSummaryID: 129,
+    name: "최상엽",
+    category: "루시",
+    thumbnailURL: "/assets/item/boy/LUCY_CHOISANGYEOP.jpg",
+  },
+  130: {
+    itemSummaryID: 130,
+    name: "조원상",
+    category: "루시",
+    thumbnailURL: "/assets/item/boy/LUCY_CHOWONSANG.jpg",
+  },
+  131: {
+    itemSummaryID: 131,
+    name: "신광일",
+    category: "루시",
+    thumbnailURL: "/assets/item/boy/LUCY_SHINGWANGIL.jpg",
+  },
+  // LUCY =============
 };
